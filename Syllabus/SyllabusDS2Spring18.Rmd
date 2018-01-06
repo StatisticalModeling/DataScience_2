@@ -15,6 +15,9 @@ output:
 
 **Office Hours:** 1:00 p.m. --- 1:50 p.m. M-R and by appointment
 
+Make an appointment to see me by clicking https://arnholtat.youcanbook.me/.
+
+
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({
   TeX: { equationNumbers: { autoNumber: "AMS" } }
@@ -57,13 +60,22 @@ library(ggplot2)
 
 [*Modern Data Science with R*](https://msdr-book.github.io) by Baumer, Kaplan, and Horton. 
 
+**Optional References:**
+
+[_An Introduction to Statistical Learning with Applications in R_](http://www-bcf.usc.edu/~gareth/ISL/) by Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani
+
+[_Reproducible Research with R and RStudio, Second Edition_](https://github.com/christophergandrud/Rep-Res-Book) by Christopher Gandrud
+
+[_The Elements of Statistical Learning_](http://web.stanford.edu/~hastie/ElemStatLearn/) by Trevor Hastie, Robert Tibshirani, and Jerome Friedman
+
+[_R Graphics Cookbook_](http://www.amazon.com/R-Graphics-Cookbook-Winston-Chang/dp/1449316956) by Winston Chang - Available via `SafariBooksOnline` through the Appalachian State University [library](http://library.appstate.edu/). 
+
 * * *
 
 ### Tentative Schedule and Course Pacing: {-}
 
-Tentative course assignments and due dates are maintained at: [some url](https://yohoho.com).
+Tentative course assignments and due dates are maintained at: [https://stat-ata-asu.github.io/DataScience_2/CoursePacing/STT3531CoursePacingS2018.html](https://stat-ata-asu.github.io/DataScience_2/CoursePacing/STT3531CoursePacingS2018.html).
 
-* * *
 * * *
 
 ### Course Grading: {-}
@@ -103,9 +115,11 @@ You must have an active internet connection and be registered in the course to a
 knitr::include_graphics("../images/RStudioLogIn.png", dpi = 150)
 ```
 
+* * *
+
 If you have problems with your Appstate Username or Password visit [IT Support Services](http://support.appstate.edu/) or call 262-6266.  
 
-
+* * *
 
 
 
