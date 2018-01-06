@@ -1,0 +1,22 @@
+name: "my-website"
+output_dir: "."
+navbar:
+  title: "Data Science 2 (Introduction to Statistical Modeling)"
+  left:
+    - text: "Resources"
+      href: https://alanarnholt.github.io/resources.html
+    - text: "For Students"
+      href: https://alanarnholt.github.io/for-students.html
+    
+  right:
+    - text: "Alan T. Arnholt"
+      href: https://alanarnholt.github.io   
+    - icon: fa-github fa-lg
+      href: https://github.com/STAT-ATA-ASU/DataScience_2/         
+output:
+  html_document:
+    theme: yeti
+    highlight: textmate
+    include:
+      after_body: footer.html
+    css: alans.css  

@@ -1,0 +1,16 @@
+---
+title: "Welcome"
+---
+
+
+* The course syllabus is stored in the [`Syllabus`](./Syllabus/STT3531S2018.html) directory of the STT 3531 repository.
+
+* Course pacing and assignments are stored in the [`CoursePacing`](./CoursePacing/CoursePacingS2018.html) directory of the STT 3531 repository.
+
+* [Class RStudio Server](https://mathr.math.appstate.edu) (you must be registered in the course to access the server)
+
+* [Flow Control](../STT3851ClassRepo/Rmarkdown/FlowControl.html)
+
+* [The Bootstrap](../STT3851ClassRepo/Rmarkdown/TheBootstrap.html)
+
+* * *

@@ -1,0 +1,159 @@
+---
+title: "STT 3531 (Data Science II) Course Schedule"
+author: "Alan T. Arnholt"
+date: 'Last compiled: `r format(Sys.time(), "%A, %B %d, %Y - %X.")`'
+output: 
+  bookdown::html_document2: 
+    highlight: textmate
+    theme: yeti
+    css: "../css/style.css"
+---
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+
+### General Notes: {-}
+
+```{block, note-text, type='rmdnote'}
+1.  Please bring a notebook and pencil to every class.  
+2.  Access the [DataCamp](https://datacamp.com) assignments via [AsULearn](https://asulearn.appstate.edu)
+```
+
+* * *
+
+* Week 1: Review concepts and ideas from `rmarkdown`, `knitr`, `bookdown`, Git, and GitHub
+    
+    + [R Markdown](http://rmarkdown.rstudio.com/)
+    
+    + [knitr](https://yihui.name/knitr/)
+    
+    + [bookdown: Authoring Books and Technical Documents with R Markdown](https://bookdown.org/yihui/bookdown/)
+    
+    + [Happy Git and GitHub for the useR](http://happygitwithr.com/)
+
+    
+```{block, week1optional, type='rmdoptional'}   
+Optional Resources:
+
+* [DataCamp: Reporting with R Markdown course](https://www.datacamp.com/courses/reporting-with-r-markdown)
+
+* [DataCamp: Working with the RStudio IDE (1) course](https://www.datacamp.com/courses/working-with-the-rstudio-ide-part-1)
+
+* [DataCamp: Working with the RStudio IDE (2) course](https://www.datacamp.com/courses/working-with-the-rstudio-ide-part-2)
+``` 
+
+* Individual Assignment - Reproduce Appendix E.1 from MDSR using `bookdown`
+
+* * *
+
+* Weeks 2, 3, and 4
+
+    + Regression Modeling (Read Appendix E)
+
+    + Complete [DataCamp Correlation and Regression](https://www.datacamp.com/courses/correlation-and-regression)
+
+      + Complete [DataCamp Multiple and Logistic Regression](https://www.datacamp.com/courses/multiple-and-logistic-regression)
+
+```{block, type='rmdoptional'}   
+Optional Resources:
+
+* [DataCamp: Inference for Linear Regression](https://www.datacamp.com/courses/inference-for-linear-regression)
+
+```    
+
+* Team Assignment - Complete Exercises E.1 - E.4
+
+* * *
+
+* Weeks 5 and 6
+
+      + Data Wrangling (Read chapter 4 of MDSR)
+      
+      + Tidy data and iteration (Read chapter 5 of MDSR)
+      
+      + Complete [DataCamp: Introduction to the Tidyverse](https://www.datacamp.com/courses/introduction-to-the-tidyverse)
+      
+```{block, type='rmdoptional'}   
+Optional Resources:
+
+* [DataCamp: Data Manipulation in R with dplyr ](https://www.datacamp.com/courses/dplyr-data-manipulation-r-tutorial)
+
+```       
+      
+* Team Assignment - Complete Exercises 4.1 - 4.4; 5.1 - 5.4   
+
+* * *
+
+* Week 7 
+
+    + Statistical foundations (Read Chapter 7 of MDSR)
+    
+    +  Individual assignment - Complete Exercises 7.1 - 7.5
+
+* * *
+
+* Week 8 
+
+    + Simulation (Read Chapter 10 of MDSR)
+    
+    + Complete [DataCamp: Foundations of Probability in R](https://www.datacamp.com/courses/foundations-of-probability-in-r)
+    
+* Team assignment - Complete Exercises 10.3, 10.4, 10.6, and 10.7
+    
+* * *
+
+* Weeks 9, 10, 11
+
+    + Statistical learning and predictive analytics - Read Chapter 8 of MDSR
+    
+    + Complete [DataCamp: Supervised Learning in R: Regression](https://www.datacamp.com/courses/supervised-learning-in-r-regression)
+    
+    + Complete [DataCamp: Supervised Learning in R: Classification](https://www.datacamp.com/courses/supervised-learning-in-r-classification)
+
+* Individual assignment - Complete Exercises 8.1 - 8.3
+
+* * *
+
+* Weeks 12, 13
+
+* Unsupervised learning (Read chapter 9 of MDSR)
+
+    + Complete [DataCamp: Unsupervised Learning in R](https://www.datacamp.com/courses/unsupervised-learning-in-r)
+
+    + Individual Assignment - Complete Exercises 9.1 - 9.5
+    
+```{block, type='rmdoptional'}   
+Optional Resources:
+
+* [Machine Learning Toolbox](https://www.datacamp.com/courses/machine-learning-toolbox)
+```
+
+
+
+* * *
+
+* Final Exam Period
+
+* Team assignment - Present oral solution to Exercise 8.4
+
+
+* * *
+
+* Other topics as time permits might include:
+
+    + Working with spatial data (Chapter 14 of MDRS)
+
+    + [DataCamp: Working with Geospatial Data in R](https://www.datacamp.com/courses/working-with-geospatial-data-in-r)
+
+    + [DataCamp: Spatial Statics in R](https://www.datacamp.com/courses/spatial-statistics-in-r)
+    
+* * *    
+
+### Final Exam {-}
+
+```{block, FINAL, type='rmdnote'}
+*  Follow the TR meeting pattern on the [University Exam Schedule](https://registrar.appstate.edu/sites/registrar.appstate.edu/files/asu_fall_2017_exam_schedule_final_3.pdf) to determine when you will present your Project.
+```

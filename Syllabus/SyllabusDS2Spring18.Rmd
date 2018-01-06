@@ -1,0 +1,111 @@
+---
+title: "Introduction to Statistical Modeling"
+author: "Spring 2018"
+#date: 'Last compiled: `r format(Sys.time(), "%A, %B %d, %Y - %X.")`'
+output: 
+  bookdown::html_document2: 
+    highlight: textmate
+    theme: yeti
+    css: "../css/style.css"
+---
+
+**Instructor:** Dr. Alan T. Arnholt
+
+**Office:** Walker Hall 237
+
+**Office Hours:** 1:00 p.m. --- 1:50 p.m. M-R and by appointment
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+
+```{r, label = "SETUP", echo = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(comment = NA, message = FALSE, warning = FALSE, fig.align = "center")
+library(openintro)
+library(dplyr)
+library(ggplot2)
+```
+
+* * *
+
+### Course Description: {-}
+
+**Introduction to Statistical Modeling**: Introduction to Statistical Modeling is a continuation of Introduction to Data Management and Visualization with an emphasis on statistical modeling and reproducible reporting using professional tools.  Hypothesis testing is introduced via resampling, and bootstrapping is used to introduce estimation.  Cross-validation is used to evaluate and select models that take into account the bias-variance trade-off.  Supervised learning techniques discussed will include but are not limited to linear regression, regression trees, classification trees, and random forests.  Unsupervised learning techniques will include hierarchical clustering, k-means, and an introduction to Principal Components if time permits.
+
+```{block, note-text, type='rmdnote'}
+1.  Please bring a notebook and pencil to every class.  
+2.  Access the [DataCamp](https://datacamp.com) assignments via [AsULearn](https://asulearn.appstate.edu)
+```
+
+* * * 
+
+### Course Objectives: {-}
+
+* Students will learn to use a reproducible work flow for all assignments.
+
+* Students will improve their technology expertise.
+
+* Students will learn to create statistical models using both supervised and unsupervised learning techniques.
+
+* Students will learn to assess models via cross-validation.
+
+* * *
+
+### Course Text: {-}
+
+[*Modern Data Science with R*](https://msdr-book.github.io) by Baumer, Kaplan, and Horton. 
+
+* * *
+
+### Tentative Schedule and Course Pacing: {-}
+
+Tentative course assignments and due dates are maintained at: [some url](https://yohoho.com).
+
+* * *
+* * *
+
+### Course Grading: {-}
+
+* 30% of the course grade will come from 7 DataCamp modules.
+
+* 30% of the grade will come from 4 individual homework assignments.
+
+* 30% of the grade will come from 4 group projects.
+
+* 10% of the grade will come from class participation.
+
+* * *
+
+
+**How To Get Unstuck**
+
+If you have a course related question, please ask your question on [piazza](https://piazza.com/appstate/spring2017/stt/home).  Your classmates may have the same question or may answer your question before I can provide an answer.  Well constructed questions will elicit answers more rapidly than poorly constructed questions.  This [video](https://www.youtube.com/watch?v=ZFaWxxzouCY&list=PLjTlxb-wKvXNSDfcKPFH2gzHGyjpeCZmJ&index=3) provides some background on asking questions.  This stackoverflow thread details how to create a [minimal R reproducible example](http://stackoverflow.com/questions/5963269/how-to-make-a-great-r-reproducible-example/5963610#5963610). Please read [How To Ask Questions The Smart Way](http://www.catb.org/~esr/faqs/smart-questions.html) by Eric Raymond and Rick Moen and heed their advice.
+
+**University Policies**
+
+This course conforms with all Appalachian State University policies with respect to academic integrity, disability services, and class attendance.  The details of the policies may be found at <http://academicaffairs.appstate.edu/resources/syllabi>.
+
+
+**Computers and Software**
+
+This course will use the RStudio server  (https://mathr.math.appstate.edu/) that has the programs listed below and more installed.
+
+* [R](http://cran.r-project.org) 
+* [Git](http://git-scm.com/downloads) 
+* [RStudio](http://www.rstudio.com/products/rstudio/download/)
+* [LaTeX](http://www.ctan.org/starter)
+
+You must have an active internet connection and be registered in the course to access the server. To access the server, point any web browser to <https://mathr.math.appstate.edu/>.  You will need to acknowledge the connection is unsecure and possibly add a security exception to your web browser. Use your Appstate Username and Password to access the server.  A screen shot of the RStudio server is shown in Figure \@ref(fig:login).
+
+```{r, echo = FALSE, label = "login", fig.cap = "RStudio login screen"}
+knitr::include_graphics("../images/RStudioLogIn.png", dpi = 150)
+```
+
+If you have problems with your Appstate Username or Password visit [IT Support Services](http://support.appstate.edu/) or call 262-6266.  
+
+
+
+
+
