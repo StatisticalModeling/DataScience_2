@@ -160,8 +160,8 @@ Optional Resources:
 *  Follow the MWF meeting pattern on the [University Exam Schedule](https://registrar.appstate.edu/sites/registrar.appstate.edu/files/asu_spring_2018_exam_schedule.pdf) to determine when you will present your Project.
 ```
 
-* * *
+________________
 
-Last compiled: `r format(Sys.time(), "%A, %B %d, %Y - %X.")`
+<center> Last Updated on: `r format(Sys.time(), "%b %d, %Y at %X")` </center>
 
-* * *
+________________
