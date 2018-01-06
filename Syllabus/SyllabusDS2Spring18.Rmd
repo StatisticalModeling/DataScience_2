@@ -1,6 +1,6 @@
 ---
-title: "Introduction to Statistical Modeling"
-author: "Spring 2018"
+title: "Introduction to Statistical Modeling - Spring 2018"
+author: ""
 #date: 'Last compiled: `r format(Sys.time(), "%A, %B %d, %Y - %X.")`'
 output: 
   bookdown::html_document2: 
@@ -8,6 +8,8 @@ output:
     theme: yeti
     css: "../css/style.css"
 ---
+
+* * *
 
 **Instructor:** Dr. Alan T. Arnholt
 
@@ -17,12 +19,8 @@ output:
 
 Make an appointment to see me by clicking https://arnholtat.youcanbook.me/.
 
+* * *
 
-<script type="text/x-mathjax-config">
-MathJax.Hub.Config({
-  TeX: { equationNumbers: { autoNumber: "AMS" } }
-});
-</script>
 
 ```{r, label = "SETUP", echo = FALSE, message = FALSE, warning = FALSE}
 knitr::opts_chunk$set(comment = NA, message = FALSE, warning = FALSE, fig.align = "center")
@@ -31,7 +29,6 @@ library(dplyr)
 library(ggplot2)
 ```
 
-* * *
 
 ### Course Description: {-}
 
@@ -55,22 +52,25 @@ library(ggplot2)
 * Students will learn to assess models via cross-validation.
 
 * * *
+* * *
+
 
 ### Course Text: {-}
 
-[*Modern Data Science with R*](https://msdr-book.github.io) by Baumer, Kaplan, and Horton. 
+* [*Modern Data Science with R*](https://msdr-book.github.io) by Baumer, Kaplan, and Horton. 
 
 **Optional References:**
 
-[_An Introduction to Statistical Learning with Applications in R_](http://www-bcf.usc.edu/~gareth/ISL/) by Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani
+* [_An Introduction to Statistical Learning with Applications in R_](http://www-bcf.usc.edu/~gareth/ISL/) by Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani
 
-[_Reproducible Research with R and RStudio, Second Edition_](https://github.com/christophergandrud/Rep-Res-Book) by Christopher Gandrud
+* [_Reproducible Research with R and RStudio, Second Edition_](https://github.com/christophergandrud/Rep-Res-Book) by Christopher Gandrud
 
-[_The Elements of Statistical Learning_](http://web.stanford.edu/~hastie/ElemStatLearn/) by Trevor Hastie, Robert Tibshirani, and Jerome Friedman
+* [_The Elements of Statistical Learning_](http://web.stanford.edu/~hastie/ElemStatLearn/) by Trevor Hastie, Robert Tibshirani, and Jerome Friedman
 
-[_R Graphics Cookbook_](http://www.amazon.com/R-Graphics-Cookbook-Winston-Chang/dp/1449316956) by Winston Chang - Available via `SafariBooksOnline` through the Appalachian State University [library](http://library.appstate.edu/). 
+* [_R Graphics Cookbook_](http://www.amazon.com/R-Graphics-Cookbook-Winston-Chang/dp/1449316956) by Winston Chang - Available via `SafariBooksOnline` through the Appalachian State University [library](http://library.appstate.edu/). 
 
 * * *
+
 
 ### Tentative Schedule and Course Pacing: {-}
 
