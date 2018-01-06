@@ -135,7 +135,7 @@ Optional Resources:
 
 * * *
 
-* Final Exam Period
+* Final Exam Period (May 4)
 
 * Team assignment - Present oral solution to Exercise 8.4
 
@@ -155,5 +155,5 @@ Optional Resources:
 ### Final Exam {-}
 
 ```{block, FINAL, type='rmdnote'}
-*  Follow the TR meeting pattern on the [University Exam Schedule](https://registrar.appstate.edu/sites/registrar.appstate.edu/files/asu_fall_2017_exam_schedule_final_3.pdf) to determine when you will present your Project.
+*  Follow the MWF meeting pattern on the [University Exam Schedule](https://registrar.appstate.edu/sites/registrar.appstate.edu/files/asu_spring_2018_exam_schedule.pdf) to determine when you will present your Project.
 ```
