@@ -1,7 +1,7 @@
 name: "my-website"
 output_dir: "."
 navbar:
-  title: "Data Science 2 (Introduction to Statistical Modeling)"
+  title: "Introduction to Statistical Modeling"
   left:
     - text: "Resources"
       href: https://alanarnholt.github.io/resources.html
