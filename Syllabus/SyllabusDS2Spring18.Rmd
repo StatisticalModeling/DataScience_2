@@ -9,18 +9,15 @@ output:
     css: "../css/style.css"
 ---
 
-* * *
+--------------
 
-**Instructor:** Dr. Alan T. Arnholt
+**Instructor:**  Dr. Alan T. Arnholt  
+**Office:** Walker Hall 237      
+**Office Hours:** 1 p.m. - 1:50 p.m.  M-R and by appointment
 
-**Office:** Walker Hall 237
+* Make an appointment to see me by clicking https://arnholtat.youcanbook.me/.
 
-**Office Hours:** 1:00 p.m. --- 1:50 p.m. M-R and by appointment
-
-Make an appointment to see me by clicking https://arnholtat.youcanbook.me/.
-
-* * *
-
+--------------
 
 ```{r, label = "SETUP", echo = FALSE, message = FALSE, warning = FALSE}
 knitr::opts_chunk$set(comment = NA, message = FALSE, warning = FALSE, fig.align = "center")
@@ -52,8 +49,6 @@ library(ggplot2)
 * Students will learn to assess models via cross-validation.
 
 * * *
-* * *
-
 
 ### Course Text: {-}
 
