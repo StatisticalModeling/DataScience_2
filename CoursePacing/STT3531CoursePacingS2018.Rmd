@@ -1,7 +1,7 @@
 ---
 title: "STT 3531 (Data Science II) Course Schedule"
-author: "Alan T. Arnholt"
-date: 'Last compiled: `r format(Sys.time(), "%A, %B %d, %Y - %X.")`'
+author: ""
+date: ""
 output: 
   bookdown::html_document2: 
     highlight: textmate
@@ -14,6 +14,8 @@ MathJax.Hub.Config({
   TeX: { equationNumbers: { autoNumber: "AMS" } }
 });
 </script>
+
+* * *
 
 ### General Notes: {-}
 
@@ -157,3 +159,9 @@ Optional Resources:
 ```{block, FINAL, type='rmdnote'}
 *  Follow the MWF meeting pattern on the [University Exam Schedule](https://registrar.appstate.edu/sites/registrar.appstate.edu/files/asu_spring_2018_exam_schedule.pdf) to determine when you will present your Project.
 ```
+
+* * *
+
+Last compiled: `r format(Sys.time(), "%A, %B %d, %Y - %X.")`
+
+* * *
