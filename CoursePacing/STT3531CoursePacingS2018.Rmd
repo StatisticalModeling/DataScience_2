@@ -42,7 +42,7 @@ MathJax.Hub.Config({
 
     + [Clone your Repository](../../STT5812CourseRepo/Rmarkdown/CloningRepo.html)
     
-    
+    + [Set Global Options](../../STT5812CourseRepo/Rmarkdown/GlobalOptions.html)
     
     
 ```{block, week1optional, type='rmdoptional'}   
