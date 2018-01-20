@@ -26,7 +26,7 @@ MathJax.Hub.Config({
 
 * * *
 
-* Week 1: Review concepts and ideas from `rmarkdown`, `knitr`, `bookdown`, Git, and GitHub
+* Week 1 (Jan 22): Review concepts and ideas from `rmarkdown`, `knitr`, `bookdown`, Git, and GitHub
     
     + [R Markdown](http://rmarkdown.rstudio.com/)
     
@@ -55,7 +55,7 @@ Optional Resources:
 * [DataCamp: Working with the RStudio IDE (2) course](https://www.datacamp.com/courses/working-with-the-rstudio-ide-part-2)
 ``` 
 
-* Individual Assignment - Reproduce Appendix E.1 from MDSR using `bookdown` - When you are finished, it should look like this [document](./appE.html).
+* Individual Assignment - Reproduce Appendix E.1 from MDSR using `bookdown` - up to **E.2 Multiple regression** - When you are finished, your work should look like this [document](./appE.html). 
 
 * * *
 
