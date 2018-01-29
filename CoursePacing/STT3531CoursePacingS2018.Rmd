@@ -55,7 +55,9 @@ Optional Resources:
 * [DataCamp: Working with the RStudio IDE (2) course](https://www.datacamp.com/courses/working-with-the-rstudio-ide-part-2)
 ``` 
 
-* Individual Assignment - Reproduce Appendix E.1 from MDSR using `bookdown` - up to **E.2 Multiple regression** - When you are finished, your work should look like this [document](./appE.html). 
+* Individual Assignment - Reproduce Appendix E.1 from MDSR using `bookdown` - up to **E.2 Multiple regression** - When you are finished, your work should look like this [document](./appE.html).  
+
+* Some [code we discussed in class](https://raw.githubusercontent.com/alanarnholt/GeneralStatistics/master/rmarkdown/ResidualGraphs.Rmd) to help with reproducing Appendix E.1
 
 * * *
 
