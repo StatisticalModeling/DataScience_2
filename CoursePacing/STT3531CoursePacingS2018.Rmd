@@ -61,13 +61,13 @@ Optional Resources:
 
 * * *
 
-* Weeks 2, 3, and 4
+* Weeks 2, 3, and 4 (Jan 29, Feb 5, Feb 12)
 
     + Regression Modeling (Read Appendix E)
 
-    + Complete [DataCamp Correlation and Regression](https://www.datacamp.com/courses/correlation-and-regression)
+    + Complete [DataCamp Correlation and Regression](https://www.datacamp.com/courses/correlation-and-regression) - Finish by Feb 5
 
-      + Complete [DataCamp Multiple and Logistic Regression](https://www.datacamp.com/courses/multiple-and-logistic-regression)
+      + Complete [DataCamp Multiple and Logistic Regression](https://www.datacamp.com/courses/multiple-and-logistic-regression) - Finish by Feb 12
 
 ```{block, type='rmdoptional'}   
 Optional Resources:
@@ -76,11 +76,11 @@ Optional Resources:
 
 ```    
 
-* Team Assignment - Complete Exercises E.1 - E.4
+* Team Assignment - Complete Exercises E.1 - E.4 - Due Feb 19
 
 * * *
 
-* Weeks 5 and 6
+* Weeks 5 and 6 (Feb 19, Feb 26)
 
       + Data Wrangling (Read chapter 4 of MDSR)
       
