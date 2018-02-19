@@ -1,0 +1,340 @@
+---
+title: "*Train* and *Test* Partitions"
+author: "Alan T. Arnholt"
+date: 'Last knit on `r format(Sys.time(), "%B %d, %Y at %X")`'
+output: 
+  bookdown::html_document2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(comment = NA, fig.align = 'center', fig.height = 5, fig.width = 5, 
+                      prompt = TRUE, highlight = TRUE, tidy = FALSE, warning = FALSE, 
+                      message = FALSE)
+library(mdsr)
+HELP <- na.omit(HELPrct)
+# Parallel Processing
+library(doMC)
+registerDoMC(cores = 8)
+```
+
+# Partitions
+
+When building a model used for prediction, one measure of the model's usefulness is how well it performs on unseen (future) data.  One method to evaluate a model on unseen data is to partition the data into a *`training set`* and a *`testing set`*.  The *`training set`* is the data set one uses to build the model.  The *`test set`* is the data one uses to evaluate the model's predictions.  Three approaches are used to create a *`training set`* and a *`test set`*.
+
+The data set `HELPrct` after removing rows with missing values from the `mdsr` package is used to illustrate the three approaches with a 70/30 split of values.  That is, roughly 70% of the values will be used for the *`training set`* and the remainder will be used for the *`test set`*.  Note that there are `r nrow(HELP)` rows of data in `HELPrct` with complete information (no missing values), so a 70/30 split should result in roughly $`r nrow(HELP)`\times 0.70 \approx `r round(nrow(HELP)*.7,0)`$ values in the *`training set`* and the remaining `r nrow(HELP) - round(nrow(HELP)*.7,0)` values in the *`test set`*. 
+
+* Using the `sample()` function (method 1):
+
+```{r}
+library(mdsr)
+HELP <- na.omit(HELPrct)
+set.seed(123)
+trainIndex1 <- sample(x = c(TRUE, FALSE), size = nrow(HELP), replace = TRUE, prob = c(0.7, 0.3))
+testIndex1 <- (!trainIndex1)
+trainData1 <- HELP[trainIndex1, ]
+testData1 <- HELP[testIndex1, ]
+dim(HELP)
+dim(trainData1)
+dim(testData1)
+# Train Fraction
+dim(trainData1)[1]/dim(HELP)[1]
+# Test Fraction
+dim(testData1)[1]/dim(HELP)[1]
+```
+
+* Using the `sample()` function (method 2):
+
+```{r}
+set.seed(123)
+trainIndex2 <- sample(x = 1:nrow(HELP), size = round(0.70*nrow(HELP), 0), replace = FALSE)
+trainData2 <- HELP[trainIndex2, ]
+testData2 <- HELP[-trainIndex2, ]
+dim(trainData2)
+dim(testData2)
+# Train Fraction
+dim(trainData2)[1]/dim(HELP)[1]
+# Test Fraction
+dim(testData2)[1]/dim(HELP)[1]
+```
+
+* Using `runif()`:
+
+```{r}
+set.seed(123)
+HELP$Partition <- runif(dim(HELP)[1])
+trainData3 <- subset(HELP, HELP$Partition > 0.3)
+testData3 <- subset(HELP, HELP$Partition <= 0.3)
+dim(trainData3)
+dim(testData3)
+# Train Fraction
+dim(trainData3)[1]/dim(HELP)[1]
+# Test Fraction
+dim(testData3)[1]/dim(HELP)[1]
+```
+
+* Using the `createDataPartition` from the `caret` package:
+
+```{r}
+library(caret)  # load the caret package
+set.seed(123)
+trainIndex4 <- createDataPartition(y = HELP$homeless, p = .7, 
+                                  list = FALSE, 
+                                  times = 1)
+trainData4 <- HELP[trainIndex4, ]
+testData4 <- HELP[-trainIndex4, ]
+dim(trainData4)
+dim(testData4)
+# Train Fraction
+dim(trainData4)[1]/dim(HELP)[1]
+# Test Fraction
+dim(testData4)[1]/dim(HELP)[1]
+```
+
+**Note:**  When the `y` argument to `createDataPartition` is a factor, the random sampling occurs within each class and should preserve the overall class distribution of the data. 
+
+## Building a model
+
+In this section, a model is built using the *`training set`* to predict whether a person is `homeless`.
+
+```{r}
+model.null <- glm(homeless ~ 1, data = trainData4, family = binomial)
+model.full <- glm(homeless ~ ., data = trainData4, family = binomial)
+AICmod <- step(model.null, scope = list(lower = model.null, upper = model.full), direction = "both", data = trainData4)
+summary(AICmod)
+```
+### Pseudo $R^2$
+
+One can think of the pseudo $R^2$ for logistic regression as the analog to $R^2$ used in linear regression.  Pseudo $R^2$ measures how much of the deviance is explained by the model, where $R^2$ measures the variability explained by a linear model.
+
+```{r}
+resid.dev <- summary(AICmod)$deviance
+resid.dev
+null.dev <- summary(AICmod)$null.deviance
+null.dev
+PR2 <- 1 - (resid.dev / null.dev)
+PR2 # Pseudo R squared
+```
+
+The model only explains `r round(PR2*100,2)`% of the deviance in the training data.  This will likely be less for the test data suggesting there are likely other factors that have not been measured that predict homelessness.
+
+```{r}
+testmod <- glm(homeless ~ i1 + sex + g1b + pss_fr + dayslink + sexrisk, family = binomial, data = testData4)
+resid.dev <- summary(testmod)$deviance
+resid.dev
+null.dev <- summary(testmod)$null.deviance
+null.dev
+PR2 <- 1 - (resid.dev / null.dev)
+PR2 # Pseudo R squared
+# Note 'type = "response"' gives the predicted probabilities
+PM <- predict(AICmod, newdata = testData4, type = "response")
+pred <- ifelse(PM > 0.5, "homeless", "housed")
+T1 <- table(pred, testData4$homeless)
+T1
+Accuracy <- sum(diag(T1))/sum(T1)
+Accuracy
+# Using caret
+confusionMatrix(data = pred, reference = testData4$homeless)
+```
+See [Confusion Matrix](https://en.wikipedia.org/wiki/Confusion_matrix) on Wikipedia.
+
+## ROC 
+
+An ROC curve is a really useful shortcut for summarizing the performance of a classifier over all possible thresholds. This saves one a lot of tedious work computing class predictions for many different thresholds and examining the confusion matrix for each threshold.
+
+### AUC (Area Under the Curve)
+
+* Single-number summary of model accuracy
+* Summarizes performance accross all thresholds
+* Rank different models within the same dataset
+
+```{r}
+library(caTools)
+colAUC(PM, testData4$homeless, plotROC = TRUE)
+library(pROC)
+ROC <- roc(testData4$homeless, PM) # Note the order is switched here
+plot(ROC, col = "blue")
+auc(ROC)
+```
+
+An AUC of 0.5 is no better than random guessing, an AUC of 1.0 is a perfectly predictive model, and an AUC of 0.0 is perfectly anti-predictive (which rarely happens).  One can use the `trainControl()` function in `caret` to use AUC (instead of acccuracy), to tune the parameters of your models. The `twoClassSummary()` convenience function allows one to do this easily.
+
+When using `twoClassSummary()`, be sure to always include the argument `classProbs = TRUE` or your model will throw an error! (You cannot calculate AUC with just class predictions. You need to have class probabilities as well.)
+
+```{r}
+# Create trainControl object: myControl
+myControl <- trainControl(
+  # method = "cv",
+  # number = 10,
+  summaryFunction = twoClassSummary,
+  classProbs = TRUE, # IMPORTANT!
+  verbose = FALSE
+)
+#
+# Train glm with custom trainControl: model
+model <- train(homeless ~ ., data = trainData4, method = "glmStepAIC",
+               trControl = myControl)
+
+# Print model to console
+model
+summary(model)
+```
+
+
+
+## GLMNET
+
+* `alpha = 0` $\rightarrow$ ridge
+* `alpha = 1` $\rightarrow$ lasso
+
+```{r}
+set.seed(234)
+# Create custom trainControl: myControl
+myControl <- trainControl(
+  method = "cv", number = 10,
+  summaryFunction = twoClassSummary,
+  classProbs = TRUE, # IMPORTANT!
+  verboseIter = TRUE
+)
+# Train glmnet with custom trainControl and tuning: model
+model <- train(
+  homeless ~ ., data = trainData4,
+  tuneGrid = expand.grid(alpha  = 0:1, lambda = seq(0.0001, 4, length = 20)),
+  method = "glmnet",
+  trControl = myControl
+)
+# Print model to console
+model
+# Print maximum ROC statistic
+max(model[["results"]][["ROC"]])
+plot(model)
+```
+
+### Imputation
+
+* Median (`medianImpute`)
+* knn (`knnImpute`)
+* bagged tree model (`bagImpute`)
+
+```{r, label = "MedImp"}
+# Create custom trainControl: myControl
+myControl <- trainControl(
+  method = "cv", number = 10,
+  summaryFunction = twoClassSummary,
+  classProbs = TRUE, # IMPORTANT!
+  verboseIter = TRUE
+)
+
+# Train glmnet with custom trainControl and tuning: model
+
+model <- train(
+  homeless ~ ., data = HELPrct, 
+  tuneGrid = expand.grid(alpha  = 0:1, lambda = seq(0.0001, 100, length = 20)),
+  method = "glmnet",
+  metric = "ROC",
+  trControl = myControl,
+  preProcess = c("knnImpute"),
+  na.action = na.pass
+)
+
+# Print model to console
+model
+
+# Print maximum ROC statistic
+max(model[["results"]][["ROC"]])
+plot(model)
+plot(model$finalModel)
+# getting coefficients
+coef(model$finalModel, model$bestTune$lambda) 
+```
+
+## Working with ISLR data
+
+### First Ridge
+
+```{r}
+library(ISLR)
+library(caret)
+Hitters <- na.omit(Hitters)
+summary(Hitters)
+dim(Hitters)
+```
+
+
+```{r}
+set.seed(1)
+myControl <- trainControl(
+  method = "cv", 
+  number = 10
+)
+hit.model <- train(
+  Salary ~ ., data = Hitters,
+  tuneGrid = expand.grid(alpha = 0, lambda = 10^seq(3, -2, length = 100)),
+  method = "glmnet",
+  trControl = myControl
+)
+hit.model
+coef(hit.model$finalModel, s = 11498)
+coef(hit.model$finalModel, s = 705) 
+coef(hit.model$finalModel, s = 50) 
+plot(hit.model)
+coef(hit.model$finalModel, hit.model$bestTune$lambda) 
+hit.model$bestTune$lambda
+```
+
+Following ISLR, the data set is split into a training and a test set in order to estimate the error of each method.
+
+```{r}
+library(caret)
+set.seed(52)
+trainIndex <- createDataPartition(y = Hitters$Salary, p = 0.5,
+                                list = FALSE,
+                                times = 1)
+HittersTrain <- Hitters[trainIndex, ]
+HittersTest <- Hitters[-trainIndex, ]
+dim(HittersTrain)
+dim(HittersTest)
+myControl <- trainControl(
+  method = "repeatedcv", 
+  repeats = 3
+)
+hit.modelT <- train(
+  Salary ~ ., data = HittersTrain,
+  tuneGrid = expand.grid(alpha = 0, lambda = 10^seq(3, -2, length = 100)),
+  method = "glmnet",
+  trControl = myControl
+)
+hit.modelT
+plot(hit.modelT)
+coef(hit.modelT$finalModel, hit.modelT$bestTune$lambda) 
+# Test RMSE error
+preds <- predict(hit.modelT, HittersTest)
+TestRMSE1 <- sqrt(mean((HittersTest$Salary - preds)^2))
+TestRMSE1
+```
+
+
+### Next Lasso
+
+
+```{r}
+set.seed(14)
+myControl <- trainControl(
+  method = "repeatedcv", 
+  repeats = 3
+)
+hit.modelT1 <- train(
+  Salary ~ ., data = HittersTrain,
+  tuneGrid = expand.grid(alpha = 1, lambda = 10^seq(3, -2, length = 100)),
+  method = "glmnet",
+  trControl = myControl
+)
+hit.modelT1
+plot(hit.modelT1)
+coef(hit.modelT1$finalModel, hit.model$bestTune$lambda)
+# Test RMSE error
+preds1 <- predict(hit.modelT1, HittersTest)
+TestRMSE2 <- sqrt(mean((HittersTest$Salary - preds1)^2))
+TestRMSE2
+```
+
+Note the test RMSE of the ridge model is `r TestRMSE1` while the test RMSE of the lasso model is `r TestRMSE2`.  In this scenario, the lasso has an advantage over the ridge model in terms of *parsimony* because 11 of the coefficients in the lasso model are exactly zero.
