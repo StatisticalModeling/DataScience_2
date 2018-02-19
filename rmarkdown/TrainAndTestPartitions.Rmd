@@ -3,8 +3,26 @@ title: "*Train* and *Test* Partitions"
 author: "Alan T. Arnholt"
 date: 'Last knit on `r format(Sys.time(), "%B %d, %Y at %X")`'
 output: 
-  bookdown::html_document2
+  bookdown::html_document2:
+    theme: yeti
+    highlight: textmate
 ---
+
+<style>
+body, h1, h2, h3, h4 {
+    font-family: "Georgia", serif;
+}
+
+body {
+    color: black;
+}
+a, a:hover {
+    color: blue;
+}
+pre {
+    font-size: 12px;
+}
+</style>
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(comment = NA, fig.align = 'center', fig.height = 5, fig.width = 5, 
