@@ -67,7 +67,7 @@ Optional Resources:
 
     + Complete [DataCamp Correlation and Regression](https://www.datacamp.com/courses/correlation-and-regression) - Finish by Feb 5
 
-      + Complete [DataCamp Multiple and Logistic Regression](https://www.datacamp.com/courses/multiple-and-logistic-regression) - Finish by Feb 12
+    + Complete [DataCamp Multiple and Logistic Regression](https://www.datacamp.com/courses/multiple-and-logistic-regression) - Finish by Feb 12
 
 ```{block, type='rmdoptional'}   
 Optional Resources:
@@ -77,6 +77,8 @@ Optional Resources:
 ```    
 
 * Team Assignment - Complete Exercises E.1 - E.4 - Due Feb 19
+
+* Go over [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
 
 * * *
 
@@ -93,9 +95,14 @@ Optional Resources:
 
 * [DataCamp: Data Manipulation in R with dplyr ](https://www.datacamp.com/courses/dplyr-data-manipulation-r-tutorial)
 
-```       
+* [DataCamp: Working with Dates and Times in R](https://www.datacamp.com/courses/working-with-dates-and-times-in-r)
+
+```  
+
+* Go over [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
       
-* Team Assignment - Complete Exercises 4.1 - 4.4; 5.1 - 5.4   
+* Team Assignment - Complete Exercises 4.1 - 4.4; 5.2 - 5.4 --- 5.1 is Extra Credit --- Due NLT 5pm March 2, 2018 --- 
+Please make sure all group members names are on the document you want me to grade --- Have one group member email me the exact location of the document you want me to grade --- I will put my comments in the `InstructorComments` directory of the group member where I evaluate your work.  
 
 * * *
 
