@@ -97,6 +97,8 @@ Optional Resources:
 
 * [DataCamp: Working with Dates and Times in R](https://www.datacamp.com/courses/working-with-dates-and-times-in-r)
 
+* [Dates and Times with `lubridate`](http://r4ds.had.co.nz/dates-and-times.html)
+
 ```  
 
 * Go over [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
