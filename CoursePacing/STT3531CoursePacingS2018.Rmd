@@ -88,7 +88,7 @@ Optional Resources:
       
       + Tidy data and iteration (Read chapter 5 of MDSR)
       
-      + Complete [DataCamp: Introduction to the Tidyverse](https://www.datacamp.com/courses/introduction-to-the-tidyverse)
+      + Complete [DataCamp: Introduction to the Tidyverse](https://www.datacamp.com/courses/introduction-to-the-tidyverse) --- Finish by Mar 2
       
 ```{block, type='rmdoptional'}   
 Optional Resources:
@@ -102,7 +102,7 @@ Optional Resources:
 * Go over [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
       
 * Team Assignment - Complete Exercises 4.1 - 4.4; 5.2 - 5.4 --- 5.1 is Extra Credit --- Due NLT 5pm March 2, 2018 --- 
-Please make sure all group members names are on the document you want me to grade --- Have one group member email me the exact location of the document you want me to grade --- I will put my comments in the `InstructorComments` directory of the group member where I evaluate your work.  
+Please make sure all group members names are on the document you want me to grade --- Have one group member email me the exact location of the document you want me to grade --- I will put my comments in the `InstructorComments` directory of the group member where your work is stored.
 
 * * *
 
