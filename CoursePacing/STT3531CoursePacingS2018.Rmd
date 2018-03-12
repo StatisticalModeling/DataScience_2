@@ -108,11 +108,11 @@ Please make sure all group members names are on the document you want me to grad
 
 * * *
 
-* Week 7 
+* Week 7 --- ASU cancelled classes because of snow 3/12/18 --- we will meet via zoom normal class time
 
     + Statistical foundations (Read Chapter 7 of MDSR)
     
-    +  Individual assignment - Complete Exercises 7.1 - 7.5
+    +  Individual assignment - Complete Exercises 7.1 - 7.5 --- Due (Friday) March 16, 2018 NLT 5:00 pm. 
 
 * * *
 
@@ -122,7 +122,7 @@ Please make sure all group members names are on the document you want me to grad
     
     + Complete [DataCamp: Foundations of Probability in R](https://www.datacamp.com/courses/foundations-of-probability-in-r)
     
-* Team assignment - Complete Exercises 10.3, 10.4, 10.6, and 10.7
+* Team assignment - Complete Exercises 10.3, 10.4, 10.6, and 10.7 --- Due NLT 5:00 pm Friday, March 23, 2018
     
 * * *
 
