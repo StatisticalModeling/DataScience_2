@@ -122,7 +122,7 @@ Please make sure all group members names are on the document you want me to grad
     
     + Complete [DataCamp: Foundations of Probability in R](https://www.datacamp.com/courses/foundations-of-probability-in-r)
     
-* Team assignment - Complete Exercises 10.3, 10.4, 10.6, and 10.7 --- Due NLT 5:00 pm Friday, March 23, 2018
+* Team assignment - Complete Exercises 10.4, 10.6, and 10.7---10.3 is Extra Credit---Due NLT 5:00 pm Friday, March 23, 2018
     
 * * *
 
