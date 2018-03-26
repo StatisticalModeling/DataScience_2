@@ -128,6 +128,8 @@ Please make sure all group members names are on the document you want me to grad
 
 * Weeks 9, 10, 11
 
+    + (March 26)---In class group assignment---see AsuLearn
+
     + Statistical learning and predictive analytics - Read Chapter 8 of MDSR
     
     + Complete [DataCamp: Supervised Learning in R: Regression](https://www.datacamp.com/courses/supervised-learning-in-r-regression)
