@@ -1,0 +1,79 @@
+---
+title: "Fitting Regression Trees from ISLR"
+author: "Alan T. Arnholt"
+date: 'Last knit on `r format(Sys.time(), "%B %d, %Y at %X")`'
+output: 
+  bookdown::html_document2:
+    theme: yeti
+    highlight: textmate
+---
+
+
+
+```{r label = "setup", include=FALSE}
+knitr::opts_chunk$set(comment = NA, fig.align = 'center', fig.height = 7, fig.width = 7, 
+                      prompt = TRUE, highlight = TRUE, tidy = FALSE, warning = FALSE, 
+                      message = FALSE)
+# Parallel Processing
+library(doMC)
+registerDoMC(cores = 12)
+```
+
+Here we fit a regression tree to the `Boston` data set.  First, we create a training set, and fit the tree to the training data.
+
+```{r, label = "train"}
+library(MASS)
+library(rpart)
+set.seed(1)
+train <- sample(1:nrow(Boston), nrow(Boston)/2)
+tree_boston <- rpart(medv ~ ., data = Boston, subset = train)
+summary(tree_boston)
+```
+
+```{r, fig.width = 7, fig.height = 7}
+plot(tree_boston)
+text(tree_boston, pretty = 0, use.n = TRUE, all = TRUE, cex = 0.7)
+```
+
+```{r}
+library(tree)
+tree_boston2 <- tree(medv ~ ., data = Boston, subset = train)
+summary(tree_boston2)
+```
+
+
+Notice that the output of `summary()` indicates that only three of the variables have been used in constructing the tree.  In the context of a regression tree, the deviance is simply the sum of the squared errors for the tree.  We now plot the tree with the package `partykit` which only works on trees created with the package `rpart` not `tree`.
+
+
+```{r, fig.width = 12}
+library(partykit)
+plot(as.party(tree_boston))
+```
+
+The variable `lstat` measures the percentage of individuals with lower socioeconomic status.  The tree indicates that lower values of `lstat` correspond to more expensive houses.  The tree predicts a median house price of $46,000 for larger homes in suburbs in which residents have high socioeconomic status (`rm >= 7.437` and `lstat < 9.715`).  Now we use the `cv.tree()` function to see whether pruning the tree will improve performance.
+
+```{r}
+cv_boston2 <- cv.tree(tree_boston2)
+plot(cv_boston2$size, cv_boston2$dev, type = "b")
+```
+IN this case, the most complex tree is selected by cross-validation.  However, if we wish to prune the tree, we could do so as follows, using the `prune.tree()` function:
+
+```{r}
+prune_boston2 <- prune.tree(tree_boston2, best = 5)
+plot(prune_boston2)
+text(prune_boston2, pretty = 0, all = TRUE, cex = 0.7)
+```
+
+In keeping with the cross-validation results, we use the pruned tree to make predictions on the test set.
+
+```{r}
+yhat <- predict(tree_boston2, newdata = Boston[-train, ])
+boston_test <- Boston[-train, "medv"]
+plot(yhat, boston_test)
+abline(0, 1)
+MSE <- mean((yhat - boston_test)^2)
+RMSE <- sqrt(mean((yhat - boston_test)^2))
+c(MSE, RMSE)
+```
+
+In other words, the test MSE associated with the regression tree is `r round(MSE,4)`.  The square root of the MSE is `r round(RMSE,4)`, indicating that this model leads to test predictions that are within around $`r round(RMSE*1000,2)` of the true median home value for the suburb.
