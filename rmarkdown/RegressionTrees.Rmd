@@ -19,13 +19,32 @@ library(doMC)
 registerDoMC(cores = 12)
 ```
 
-Here we fit a regression tree to the `Boston` data set.  First, we create a training set, and fit the tree to the training data.
+# Training data set
 
 ```{r, label = "train"}
 library(MASS)
 library(rpart)
 set.seed(1)
 train <- sample(1:nrow(Boston), nrow(Boston)/2)
+```
+
+## Fitting a linear model
+
+```{r}
+modstep <- stepAIC(lm(medv ~ ., data = Boston, subset = train), k = log(506))
+summary(modstep)
+```
+```{r}
+yhat1 <- predict(modstep, newdata= Boston[-train, ])
+boston_test1 <- Boston[-train, "medv"]
+MSE1 <- mean((yhat1 - boston_test1)^2)
+RMSE1 <- sqrt(MSE1)
+c(MSE1, RMSE1)
+```
+
+Here we fit a regression tree to the `Boston` data set.  
+
+```{r}
 tree_boston <- rpart(medv ~ ., data = Boston, subset = train)
 summary(tree_boston)
 ```
@@ -56,7 +75,7 @@ The variable `lstat` measures the percentage of individuals with lower socioecon
 cv_boston2 <- cv.tree(tree_boston2)
 plot(cv_boston2$size, cv_boston2$dev, type = "b")
 ```
-IN this case, the most complex tree is selected by cross-validation.  However, if we wish to prune the tree, we could do so as follows, using the `prune.tree()` function:
+In this case, the most complex tree is selected by cross-validation.  However, if we wish to prune the tree, we could do so as follows, using the `prune.tree()` function:
 
 ```{r}
 prune_boston2 <- prune.tree(tree_boston2, best = 5)
