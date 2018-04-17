@@ -1,5 +1,5 @@
 ---
-title: "Fitting Regression Trees from ISLR"
+title: "Regression Trees from ISLR"
 author: "Alan T. Arnholt"
 date: 'Last knit on `r format(Sys.time(), "%B %d, %Y at %X")`'
 output: 
@@ -19,14 +19,78 @@ library(doMC)
 registerDoMC(cores = 12)
 ```
 
+# Advantages and Disadvantages of Trees
+
+## Pros
+
+* Trees are very easy to explain to people.  In fact, they are even easier to explain than linear regression!
+
+* Some people believe that decision trees more closely mirror human decision-making than do regression and classification approaches.
+
+* Trees can be displayed graphically, and are easily interpreted even by a non-expert (especially if they are small).
+
+* Trees can easily handle qualitative predictors without the need to create dummy variables (`model.matrix()`).
+
+## Cons
+
+* Trees generally do not have the same level of predictive accuracy as some of the other regression and classification approaches.
+
+* Trees suffer from _high variance_.  This means if we split the training data into two parts at random, and fit a decision tree to both halves, the results that we get could be quite different.  In contrast, a procedure with _low variance_ will yield similar results if applied repeatedly to distinct data sets.
+
+However, by aggregating many decision trees, using methods like _bagging_, _random forests_, and _boosting_, the predictive performance of trees can be substantially improved.
+
+
+* Bagging---Bootstrap aggregation---Bagging is a general-purpose procedure for reducing the variance of a statistical learning method.
+
 # Training data set
 
 ```{r, label = "train"}
 library(MASS)
 library(rpart)
-set.seed(1)
+set.seed(8341)
 train <- sample(1:nrow(Boston), nrow(Boston)/2)
 ```
+
+## Create `train1` and `test1` with `caret`
+
+```{r}
+library(caret)
+set.seed(821)
+trainIndex <- createDataPartition(y = Boston$medv,
+                                  p = 0.50,
+                                  list = FALSE,
+                                  times = 1)
+train1 <- Boston[trainIndex, ]
+test1 <- Boston[-trainIndex, ]
+dim(train1)
+dim(test1)
+```
+
+### Stepwise selection with `caret`
+
+```{r}
+fitControl <- trainControl(method = "cv",
+                           number = 10)
+set.seed(434)
+stepMod <- train(medv ~., 
+              data = train1,
+              method = "leapSeq",
+              trControl = fitControl,
+              verbose = FALSE)
+stepMod
+summary(stepMod)
+summary(stepMod$finalModel)
+coef(stepMod$finalModel, id = 3)
+```
+
+#### Test
+
+```{r}
+yhat <- predict(stepMod, newdata = test1)
+RMSE <- sqrt(mean((test1$medv - yhat)^2))
+RMSE
+```
+
 
 ## Fitting a linear model
 
@@ -47,6 +111,8 @@ Here we fit a regression tree to the `Boston` data set.
 ```{r}
 tree_boston <- rpart(medv ~ ., data = Boston, subset = train)
 summary(tree_boston)
+tree_boston1 <- rpart(medv ~ ., data = train1)
+summary(tree_boston1)
 ```
 
 ```{r, fig.width = 7, fig.height = 7}
@@ -58,15 +124,18 @@ text(tree_boston, pretty = 0, use.n = TRUE, all = TRUE, cex = 0.7)
 library(tree)
 tree_boston2 <- tree(medv ~ ., data = Boston, subset = train)
 summary(tree_boston2)
+plot(tree_boston2)
+text(tree_boston2, pretty = 0, use.n = TRUE, all = TRUE, cex = 0.7)
 ```
 
 
-Notice that the output of `summary()` indicates that only three of the variables have been used in constructing the tree.  In the context of a regression tree, the deviance is simply the sum of the squared errors for the tree.  We now plot the tree with the package `partykit` which only works on trees created with the package `rpart` not `tree`.
+Notice that the output of `summary()` indicates that five of the variables have been used in constructing the tree.  In the context of a regression tree, the deviance is simply the sum of the squared errors for the tree.  We now plot the tree with the package `partykit` which only works on trees created with the package `rpart` not `tree`.
 
 
 ```{r, fig.width = 12}
 library(partykit)
 plot(as.party(tree_boston))
+plot(as.party(tree_boston1))
 ```
 
 The variable `lstat` measures the percentage of individuals with lower socioeconomic status.  The tree indicates that lower values of `lstat` correspond to more expensive houses.  The tree predicts a median house price of $46,000 for larger homes in suburbs in which residents have high socioeconomic status (`rm >= 7.437` and `lstat < 9.715`).  Now we use the `cv.tree()` function to see whether pruning the tree will improve performance.
@@ -96,3 +165,49 @@ c(MSE, RMSE)
 ```
 
 In other words, the test MSE associated with the regression tree is `r round(MSE,4)`.  The square root of the MSE is `r round(RMSE,4)`, indicating that this model leads to test predictions that are within around $`r round(RMSE*1000,2)` of the true median home value for the suburb.
+
+## Using `test1`
+
+```{r}
+yhat1 <- predict(tree_boston1, newdata = test1)
+MSE <- mean((test1$medv - yhat1)^2)
+RMSE <- sqrt(MSE)
+c(MSE, RMSE)
+```
+
+## Random Forest
+
+```{r}
+library(randomForest)
+set.seed(32)
+mod_forest <- randomForest(medv ~ ., data = train1, ntree = 1000)
+mod_forest
+yhat_rf <- predict(mod_forest, newdata = test1)
+MSE_test <- mean((test1$medv - yhat_rf)^2)
+RMSE_test <- sqrt(MSE_test)
+c(MSE_test, RMSE_test)
+```
+
+## Random Forest with `caret`
+
+```{r}
+fitControl <- trainControl(method = "cv", number = 10)
+set.seed(352)
+mtry = 4
+tunegrid <- expand.grid(.mtry = mtry)
+mod_rfc <- train(medv ~ .,
+                 data = train1,
+                 method = "rf",
+                 tuneGrid = tunegrid,
+                 trControl = fitControl)
+mod_rfc
+```
+
+```{r}
+yhat2 <- predict(mod_rfc, newdata = test1)
+MSE_test <- mean((test1$medv - yhat2)^2)
+RMSE_test <- sqrt(MSE_test)
+c(MSE_test, RMSE_test)
+```
+
+
