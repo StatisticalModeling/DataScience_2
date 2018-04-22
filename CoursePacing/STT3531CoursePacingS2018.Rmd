@@ -136,7 +136,7 @@ Please make sure all group members names are on the document you want me to grad
     
     + Complete [DataCamp: Supervised Learning in R: Classification](https://www.datacamp.com/courses/supervised-learning-in-r-classification)
 
-* Individual assignment - Complete Exercises 8.1 - 8.3
+* Individual assignment - Complete Exercises 8.1
 
 * * *
 
@@ -146,7 +146,9 @@ Please make sure all group members names are on the document you want me to grad
 
     + Complete [DataCamp: Unsupervised Learning in R](https://www.datacamp.com/courses/unsupervised-learning-in-r)
 
-    + Individual Assignment - Complete Exercises 9.1 - 9.5
+    + Group Assignment - Work on kaggle project
+    
+    + [Regression Trees](../rmarkdown/RegressionTrees.html)
     
 ```{block, type='rmdoptional'}   
 Optional Resources:
@@ -160,7 +162,7 @@ Optional Resources:
 
 * Final Exam Period (May 4)
 
-* Team assignment - Present oral solution to Exercise 8.4
+* Individual presentation - 3 minutes and three slides
 
 
 * * *
