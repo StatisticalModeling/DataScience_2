@@ -69,9 +69,11 @@ dim(test1)
 ### Stepwise selection with `caret`
 
 ```{r}
-fitControl <- trainControl(method = "cv",
-                           number = 10)
-set.seed(434)
+fitControl <- trainControl(method = "repeatedcv",
+                          number = 10,
+                          repeats = 3,
+                          allowParallel = TRUE)
+set.seed(34)
 stepMod <- train(medv ~., 
               data = train1,
               method = "leapSeq",
@@ -95,7 +97,7 @@ RMSE
 ## Fitting a linear model
 
 ```{r}
-modstep <- stepAIC(lm(medv ~ ., data = Boston, subset = train), k = log(506))
+modstep <- stepAIC(lm(medv ~ ., data = Boston, subset = train), k = log(253))
 summary(modstep)
 ```
 ```{r}
@@ -138,9 +140,10 @@ plot(as.party(tree_boston))
 plot(as.party(tree_boston1))
 ```
 
-The variable `lstat` measures the percentage of individuals with lower socioeconomic status.  The tree indicates that lower values of `lstat` correspond to more expensive houses.  The tree predicts a median house price of $46,000 for larger homes in suburbs in which residents have high socioeconomic status (`rm >= 7.437` and `lstat < 9.715`).  Now we use the `cv.tree()` function to see whether pruning the tree will improve performance.
+The variable `lstat` measures the percentage of individuals with lower socioeconomic status.  The tree indicates that lower values of `lstat` correspond to more expensive houses.  The tree predicts a median house price of $46,000 for larger homes in suburbs in which residents have high socioeconomic status (`rm >= 7.437` and `lstat < 9.545`).  Now we use the `cv.tree()` function to see whether pruning the tree will improve performance.
 
 ```{r}
+set.seed(3)
 cv_boston2 <- cv.tree(tree_boston2)
 plot(cv_boston2$size, cv_boston2$dev, type = "b")
 ```
@@ -152,7 +155,7 @@ plot(prune_boston2)
 text(prune_boston2, pretty = 0, all = TRUE, cex = 0.7)
 ```
 
-In keeping with the cross-validation results, we use the pruned tree to make predictions on the test set.
+In keeping with the cross-validation results, we use the unpruned tree to make predictions on the test set.
 
 ```{r}
 yhat <- predict(tree_boston2, newdata = Boston[-train, ])
@@ -191,13 +194,17 @@ c(MSE_test, RMSE_test)
 ## Random Forest with `caret`
 
 ```{r}
-fitControl <- trainControl(method = "cv", number = 10)
-set.seed(352)
-mtry = 4
+fitControl <- trainControl(method = "repeatedcv",
+                          number = 10,
+                          repeats = 3,
+                          allowParallel = TRUE)
+set.seed(32)
+mtry = c(2, 4, 8)
 tunegrid <- expand.grid(.mtry = mtry)
 mod_rfc <- train(medv ~ .,
                  data = train1,
                  method = "rf",
+                 ntree = 1000,
                  tuneGrid = tunegrid,
                  trControl = fitControl)
 mod_rfc
@@ -206,6 +213,180 @@ mod_rfc
 ```{r}
 yhat2 <- predict(mod_rfc, newdata = test1)
 MSE_test <- mean((test1$medv - yhat2)^2)
+RMSE_test <- sqrt(MSE_test)
+c(MSE_test, RMSE_test)
+```
+
+# Using `caret` and `caretEnsemble`
+
+This time, we will create a `training` set of roughly 80% of the values in `Boston`.
+
+```{r}
+library(caret)
+set.seed(757)
+trainIndex <- createDataPartition(y = Boston$medv,
+                                  p = 0.80,
+                                  list = FALSE)
+training <- Boston[trainIndex, ]
+testing <- Boston[-trainIndex, ]
+dim(training)
+dim(testing)
+```
+
+Consider the type of each variable.
+
+```{r}
+sapply(training, class)
+str(training)
+summary(training)
+```
+
+Let us take a quick look at the correlation between all of the predictors.
+
+```{r}
+cor(training[, -14])
+```
+
+There are a lot of correlated variables...
+
+## Unimodal Data Visualizations
+
+Getting a quick look at the distribution of all predictors.
+
+```{r, fig.width = 12, fig.height = 6}
+par(mfrow = c(2, 7))
+for(i in 1:13){
+  hist(training[, i], main = names(training)[i], col = "pink")
+}
+par(mfrow = c(1, 1))
+```
+
+```{r}
+par(mfrow = c(4, 4))
+for(i in 1:13){
+  plot(density(training[, i]), main = names(training)[i], col = "blue")
+}
+par(mfrow = c(1, 1))
+```
+
+It appears that some variables follow an exponential distribution while a few others might be bimodal.  Consider boxplots of each predictor next.
+
+```{r}
+par(mfrow = c(4, 4))
+for(i in 1:13){
+  boxplot(training[, i], main = names(training)[i])
+}
+par(mfrow = c(1, 1))
+```
+
+## Multimodal Data Visualizations
+
+```{r}
+pairs(training[, -14]) # Yuck
+```
+
+```{r}
+library(corrplot)
+rs <- cor(training[, -14])
+corrplot(rs, method = "circle")
+```
+
+### Trying Different Algorithms
+
+```{r}
+myControl <- trainControl(method = "repeatedcv",
+                          number = 10,
+                          repeats = 3,
+                          allowParallel = TRUE)
+library(caretEnsemble)
+set.seed(32)
+models <- caretList(log(medv) ~ .,
+                    data = training,
+                    trControl = myControl,
+                    tuneList = list(
+                      mod_lm = caretModelSpec(method = "lm"),
+                      mod_svm = caretModelSpec(method = "svmRadial"),
+                      mod_knn = caretModelSpec(method = "knn"),
+                      mod_gbm = caretModelSpec(method = "gbm"),
+                      mod_BIC = caretModelSpec(method = "lmStepAIC", k = log(407)),
+                      mod_AIC = caretModelSpec(method = "lmStepAIC"),
+                      mod_BE = caretModelSpec(method = "leapBackward"),
+                      mod_FS = caretModelSpec(method = "leapForward"),
+                      mod_SS = caretModelSpec(method = "leapSeq"),
+                      mod_RF = caretModelSpec(method = "ranger"),
+                      mod_EN = caretModelSpec(method = "glmnet", 
+                                              tuneGrid = expand.grid(alpha = c(0, 0.5, 1), 
+                                                                     lambda = seq(0.0001, 1, length = 20)))
+                      
+                    ))
+
+models_pred <- lapply(models, predict, newdata = testing)
+models_pred <- as.data.frame((models_pred))
+models_pred <- exp(models_pred)
+head(models_pred)
+bwplot(resamples(models))
+modelCor(resamples(models))
+```
+
+Let us pick on the three best algorithms (RF, svm, and gbm).
+
+```{r}
+set.seed(32)
+models <- caretList(log(medv) ~ .,
+                    data = training,
+                    trControl = myControl,
+                    tuneList = list(
+                      mod_svm = caretModelSpec(method = "svmRadial"),
+                      mod_gbm = caretModelSpec(method = "gbm"),
+                      mod_RF = caretModelSpec(method = "ranger")
+                    ))
+
+models_pred <- lapply(models, predict, newdata = testing)
+models_pred <- as.data.frame((models_pred))
+models_pred <- exp(models_pred)
+head(models_pred)
+bwplot(resamples(models))
+modelCor(resamples(models))
+```
+
+```{r}
+set.seed(32)
+models <- caretList(medv ~ .,
+                    data = training,
+                    trControl = myControl,
+                    preProc = c("center", "scale", "BoxCox"),
+                    tuneList = list(
+                      # mod_svm = caretModelSpec(method = "svmRadial"),
+                      mod_gbm = caretModelSpec(method = "gbm"),
+                      mod_RF = caretModelSpec(method = "ranger")
+                    ))
+
+models_pred <- lapply(models, predict, newdata = testing)
+models_pred <- as.data.frame((models_pred))
+# models_pred <- exp(models_pred)
+head(models_pred)
+bwplot(resamples(models))
+modelCor(resamples(models))
+```
+
+## Should tune (next course)
+
+## Ensemble
+
+```{r}
+set.seed(31)
+ensemble <- caretEnsemble(models, trControl = myControl)
+summary(ensemble)
+coef(ensemble$ens_model$finalModel)[-1]
+####
+sum(coef(ensemble$ens_model$finalModel)[-1])
+####
+BM <- as.matrix(models_pred)
+BETA <- t(coef(ensemble$ens_model$finalModel)[-1])
+dim(BETA)
+ANS <- BM %*% t(BETA)
+head(ANS) 
+MSE_test <- mean((testing$medv - ANS)^2)
 RMSE_test <- sqrt(MSE_test)
 c(MSE_test, RMSE_test)
 ```
