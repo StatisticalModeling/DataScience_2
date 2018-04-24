@@ -120,7 +120,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Regression Trees from ISLR</h1>
 <h4 class="author"><em>Alan T. Arnholt</em></h4>
-<h4 class="date"><em>Last knit on April 22, 2018 at 04:07:09 PM</em></h4>
+<h4 class="date"><em>Last knit on April 24, 2018 at 06:04:57 AM</em></h4>
 
 </div>
 
@@ -1301,22 +1301,23 @@ The fit for each individual model on the RMSE is:
 <pre><code>[1] 1.086464</code></pre>
 <pre class="r"><code>&gt; ####
 &gt; BM &lt;- as.matrix(models_pred)
-&gt; BETA &lt;- t(coef(ensemble$ens_model$finalModel)[-1])
+&gt; X &lt;- cbind(rep(1, dim(BM)[1]), BM)
+&gt; BETA &lt;- t(coef(ensemble$ens_model$finalModel))
 &gt; dim(BETA)</code></pre>
-<pre><code>[1] 1 2</code></pre>
-<pre class="r"><code>&gt; ANS &lt;- BM %*% t(BETA)
+<pre><code>[1] 1 3</code></pre>
+<pre class="r"><code>&gt; ANS &lt;- X %*% t(BETA)
 &gt; head(ANS) </code></pre>
 <pre><code>         [,1]
-[1,] 18.99619
-[2,] 22.08118
-[3,] 20.74261
-[4,] 23.83692
-[5,] 32.17882
-[6,] 26.16956</code></pre>
+[1,] 17.08554
+[2,] 20.17053
+[3,] 18.83196
+[4,] 21.92627
+[5,] 30.26817
+[6,] 24.25892</code></pre>
 <pre class="r"><code>&gt; MSE_test &lt;- mean((testing$medv - ANS)^2)
 &gt; RMSE_test &lt;- sqrt(MSE_test)
 &gt; c(MSE_test, RMSE_test)</code></pre>
-<pre><code>[1] 13.084549  3.617257</code></pre>
+<pre><code>[1] 11.431996  3.381124</code></pre>
 </div>
 </div>
 

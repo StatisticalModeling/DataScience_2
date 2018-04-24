@@ -382,9 +382,10 @@ coef(ensemble$ens_model$finalModel)[-1]
 sum(coef(ensemble$ens_model$finalModel)[-1])
 ####
 BM <- as.matrix(models_pred)
-BETA <- t(coef(ensemble$ens_model$finalModel)[-1])
+X <- cbind(rep(1, dim(BM)[1]), BM)
+BETA <- t(coef(ensemble$ens_model$finalModel))
 dim(BETA)
-ANS <- BM %*% t(BETA)
+ANS <- X %*% t(BETA)
 head(ANS) 
 MSE_test <- mean((testing$medv - ANS)^2)
 RMSE_test <- sqrt(MSE_test)
