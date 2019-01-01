@@ -12,7 +12,7 @@ navbar:
     - text: "Alan T. Arnholt"
       href: https://alanarnholt.github.io   
     - icon: fa-github fa-lg
-      href: https://github.com/STAT-ATA-ASU/DataScience_2/         
+      href: https://github.com/StatisticalModeling/DataScience_2/         
 output:
   html_document:
     theme: yeti
