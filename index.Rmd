@@ -4,9 +4,9 @@ title: "Welcome!"
 
 **STT 3531 (Data Science II --- Introduction to Statistical Modeling)**
 
-* The course [syllabus](./Syllabus/SyllabusDS2Spring18.html) is stored in the `Syllabus` directory of the `DataScience_2` repository.
+* The course [syllabus](./Syllabus/SyllabusDS2Spring19.html) is stored in the `Syllabus` directory of the `DataScience_2` repository.
 
-* [Course pacing and assignments](./CoursePacing/STT3531CoursePacingS2018.html) are stored in the `CoursePacing` directory of the `DataScience_2` repository.
+* [Course pacing and assignments](./CoursePacing/STT3531CoursePacingS2019.html) are stored in the `CoursePacing` directory of the `DataScience_2` repository.
 
 * [Class RStudio Server](https://mathr.math.appstate.edu) (you must be registered in the course to access the server)
 
