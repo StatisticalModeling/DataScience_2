@@ -10,8 +10,8 @@ title: "Welcome!"
 
 * [Class RStudio Server](https://mathr.math.appstate.edu) (you must be registered in the course to access the server)
 
-* [Flow Control](../STT3851ClassRepo/Rmarkdown/FlowControl.html)
+* [Flow Control](https://stat-ata-asu.github.io/STT3851ClassRepo/Rmarkdown/FlowControl.html)
 
-* [The Bootstrap](../STT3851ClassRepo/Rmarkdown/TheBootstrap.html)
+* [The Bootstrap](https://stat-ata-asu.github.io/STT3851ClassRepo/Rmarkdown/TheBootstrap.html)
 
 * * *
