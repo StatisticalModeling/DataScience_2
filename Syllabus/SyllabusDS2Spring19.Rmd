@@ -66,7 +66,7 @@ Please bring a notebook and pencil to every class.
 
 ### Tentative Schedule and Course Pacing: {-}
 
-Tentative course assignments and due dates are maintained at: [https://StatisticalModeling.github.io/DataScience_2/CoursePacing/STT3531CoursePacingS2018.html](https://StatisticalModeling.github.io/DataScience_2/CoursePacing/STT3531CoursePacingS2018.html).
+Tentative course assignments and due dates are maintained at: [https://StatisticalModeling.github.io/DataScience_2/CoursePacing/STT3531CoursePacingS2019.html](https://StatisticalModeling.github.io/DataScience_2/CoursePacing/STT3531CoursePacingS2019.html).
 
 * * *
 
