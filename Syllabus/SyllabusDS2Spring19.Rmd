@@ -72,7 +72,7 @@ Tentative course assignments and due dates are maintained at: [https://Statistic
 
 ### Course Grading: {-}
 
-* 28% of the course grade will come from 4 DataCamp modules.
+* 28% of the course grade will come from 4 [DataCamp](https://www.datacamp.com/home) modules.
 
 * 28% of the grade will come from 4 individual bookdown assignments.
 
@@ -80,7 +80,15 @@ Tentative course assignments and due dates are maintained at: [https://Statistic
 
 * 16% of the grade will come from a final project/presentation.
 
-* There will be up to 5% (extra credit) for particiaption with [flipd](https://dashboard.flipdapp.co/)---details will be presented in class. 
+* There will be up to 5% (extra credit) for participation with [flipd](https://dashboard.flipdapp.co/).
+
+      +  Download the free flipd app from [http://www.flipdapp.co/](http://www.flipdapp.co/)---do not purchase the premium upgrade on the App Store.
+      
+      +  Go to [https://dashboard.flipdapp.co/students/classaccess](https://dashboard.flipdapp.co/students/classaccess) and purchase access ($7.99)---Use your Appstate email.  I will write a promotional discount on the board which will lower the price to $3.99.  Additional details will be presented in class.
+      
+      + The five digit flipd class code: 47544
+      
+      + If you have issues with flipd, please inquire here: [https://intercom.help/flipdapp/for-students](https://intercom.help/flipdapp/for-students) 
 
 * * *
 
