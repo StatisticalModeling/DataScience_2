@@ -39,7 +39,7 @@ Please bring a notebook and pencil to every class.
     
     + Follow the directions from [Happy Git and GitHub for the useR](http://happygitwithr.com/) to [Introduce yourself to Git](http://happygitwithr.com/hello-git.html), [Connect to GitHub](http://happygitwithr.com/push-pull-github.html), and [Cache credentials for HTTPS](http://happygitwithr.com/credential-caching.html).
     
-    + [Set Global Options](../../STT5812CourseRepo/Rmarkdown/GlobalOptions.html)
+    + [Set Global Options](https://stat-ata-asu.github.io/STT5812CourseRepo/Rmarkdown/GlobalOptions.html)
     
     + [GitHub Classroom Information/Practice Assignment --- Click link and accept assignment --- must be enrolled in the class](https://classroom.github.com/a/jfwFmKWD)
     
