@@ -41,6 +41,7 @@ Please bring a notebook and pencil to every class.
     
     + [Set Global Options](../../STT5812CourseRepo/Rmarkdown/GlobalOptions.html)
     
+    + [GitHub Classroom Information/Practice Assignment --- Click link and accept assignment --- must be enrolled in the class](https://classroom.github.com/a/jfwFmKWD)
     
 ```{block, week1optional, type='rmdoptional'}   
 Optional Resources:
@@ -65,6 +66,8 @@ Optional Resources:
 
     + Complete [DataCamp Correlation and Regression](https://www.datacamp.com/courses/correlation-and-regression) - Finish by Jan 25
     
+    + [GitHub Bookdown Assignment #1--- Click link and accept assignment --- must be enrolled in the class---Due Feb 1 NLT 5:00 PM](https://classroom.github.com/a/aR0VkDlh)
+    
 
 ```{block, type='rmdoptional'}   
 Optional Resources:
@@ -76,7 +79,7 @@ Optional Resources:
 
 * Week 3 (Jan 29, 31)
 
-    + Complete GitHub bookdown assignment---due Feb 1
+    + [GitHub Bookdown Assignment #1--- Click link and accept assignment --- must be enrolled in the class---Due Feb 1 NLT 5:00 PM](https://classroom.github.com/a/aR0VkDlh)
     
 * * *
 
