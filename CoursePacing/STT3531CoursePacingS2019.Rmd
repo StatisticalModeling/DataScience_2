@@ -84,6 +84,8 @@ Optional Resources:
 * * *
 
 * Week 4 (Feb 5, 7)
+    
+    + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
 
     + Prepare **group** presentation #1 (Feb 7)
 
@@ -104,6 +106,8 @@ Optional Resources:
 
 * Week 7 (Feb 26, 28)
 
+    + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
+    
     + Prepare **group** presentation #2 (Feb 28)
 
 * * *      
@@ -124,6 +128,8 @@ Optional Resources:
 
 * Week 10 (Mar 26, 28)
 
+    + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
+    
     + Prepare **group** presentation #3 (Feb 28)
 
 * * * 
@@ -143,6 +149,8 @@ Optional Resources:
 * * *
 
 * Week 13 (Apr 16, 18)
+
+    + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
 
     + Prepare **group** presentation #4 (Apr 18)
 
