@@ -84,6 +84,9 @@ Optional Resources:
 * * *
 
 * Week 4 (Feb 5, 7)
+    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the group assignment.
+    
+    + Please read [this](../GroupProjectEval/GroupEvaluation.pdf) docucment for how to rate your partners.
     
     + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
 
