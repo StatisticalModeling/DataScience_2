@@ -104,6 +104,7 @@ Optional Resources:
 * Week 6 (Feb 19, 21)
 
     + Complete GitHub bookdown assignment---due Feb 22
+    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the group assignment.
 
 * * *
 
