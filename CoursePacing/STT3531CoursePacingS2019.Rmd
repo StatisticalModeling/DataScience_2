@@ -105,6 +105,7 @@ Optional Resources:
 
     + Complete GitHub bookdown assignment---due Feb 22
     + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the group assignment.
+    + [Logistic Regression](../rmarkdown/HW1later.html)
 
 * * *
 

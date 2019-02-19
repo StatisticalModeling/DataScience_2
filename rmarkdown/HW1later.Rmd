@@ -1,0 +1,139 @@
+---
+title: "Applied Logistic Regression"
+author: ""
+date: '`r format(Sys.time(), "%b %d, %Y")`'
+output:
+  bookdown::html_document2: default
+  bookdown::pdf_document2: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, fig.align = "center")
+library(tidyverse)
+```
+
+For this exercise, you will need the Myopia Study dataset.  Use google to find the datasets for Applied Logistic Regression.  Upload the Myopia dataset to a Data directory on the server.  Read the data into an object named `myopia` and show the first six rows of data.
+
+```{r}
+myopia <- read.table("./Data/MYOPIA.txt", sep = "\t", header = TRUE)
+head(myopia)
+```
+
+Write down the equation for the logistic regression model of  `MYOPIC` on `SPHEQ`.   Write down the equation for the logit transformation of this logistic regression model. What characteristic of the outcome variable, `MYOPIC`, leads us to consider the logistic regression model as opposed to the usual linear regression model to describe the relationship between `MYOPIC` and `SPHEQ`? 
+
+According to the code book, `MYOPIC` is 1 when the subject has myopia and 0 when the subject shows no sign of myopia in the first five years of follow up. The logistic regression model is
+
+\begin{align}
+\pi(x) &= E(Y|x)=\frac{\exp(\beta_0 + \beta_1x)}{1 + \exp(\beta_0 + \beta_1x)} \\
+\pi(\texttt{SPEQ}) &= E(\texttt{MYOPIC}|\texttt{SPEQ})=\frac{\exp(\beta_0 + \beta_1\texttt{SPEQ})}{1 + \exp(\beta_0 + \beta_1\texttt{SPEQ})}\nonumber
+\end{align}
+
+The logit tranformation of this logistic regression model is
+
+\begin{equation}
+\ln\left(\frac{\pi(x)}{1 - \pi(x)}\right) = \beta_0 + \beta_1x.
+\end{equation}
+
+Normal regression can not be used to describe the relationship between `MYOPIC` and `SPHEQ` since the response variable (`MYOPIC`) is binary.
+
+Form a scatterplot of `MYOPIC` vs. `SPHEQ`.
+
+```{r}
+library(ggplot2)
+ggplot(data = myopia, aes(x = SPHEQ, y = MYOPIC)) + 
+  geom_jitter(width = 0, height = 0.05, alpha = 0.5) + 
+  theme_bw() + 
+  labs(x = "Spherical Equivalent Refraction", 
+       y = "Absence (0) or presence (1) of myopia")
+```
+
+
+
+```{r}
+ggplot(data = myopia, aes(x = SPHEQ, y = MYOPIC)) + 
+   geom_jitter(width = 0, height = 0.05, alpha = 0.5) + 
+   theme_bw() + 
+   labs(x = "Spherical Equivalent Refraction", 
+        y = "Absence (0) or presence (1) of myopia") +
+   stat_smooth(method = "glm", method.args = list(family = "binomial"))
+```
+
+What is the expected probability of myopia for a patient with a `SPHEQ` value of 0.0?
+
+```{r}
+mod <- glm(MYOPIC ~ SPHEQ, data = myopia, family = "binomial")
+summary(mod)
+predict(mod, newdata = data.frame(SPHEQ = 0.0), type = "response")
+```
+
+# Logistic Regression Example from ISLR{-}
+
+Consider the `Default` data set, where the response `default` falls into one of two categories, `Yes` or `No`.  Rather than modeling this response $Y$ directly, logistic regression models the *probability* that $Y$ belongs to a particular category.  The predicted probabilities of default using logistic regression is shown in Figure \@ref(fig:log)
+
+```{r, label = "log", fig.cap = "Predicted probabilities of `default` using logistic regression."}
+library(ISLR)
+Default$default_bin <- ifelse(Default$default == "Yes", 1, 0)
+ggplot(data = Default, aes(x = balance, y = default_bin)) + 
+  geom_jitter(width = 0, height = 0.05, alpha = 0.1) + 
+  theme_bw() + 
+  labs(x = "Balance", 
+       y = "Probability of Default") + 
+  geom_smooth(method = "glm", se = FALSE, method.args = list(family = "binomial"))
+
+```
+
+## The Logistic Model {-}
+
+How should we model the relationship between $p(X) = \text{Pr}(Y=1|X)$ and $X$?  In logistic regression, we use the *logistic* function,
+
+\begin{equation}
+p(X) = \text{Pr}(Y=1|X) = \frac{\exp(\beta_0 + \beta_1X)}{1 + \exp(\beta_0 + \beta_1X)}.
+(\#eq:logreg)
+\end{equation}
+
+Notice that for low bablances we predict the probability of default as close to, but never below, zero.  Likewise, for high balbnces we predicgt a default probability close, to, but never above, one.  The logistic function will always produce an *S_shaped* curve of this form, and so regardless of the value of $X$, we will obtain a sensible prediction.  With some algebra,
+
+\begin{equation}
+\frac{p(X)}{1 - p(X)}= \exp(\beta_0 + \beta_1 X).
+(\#eq:odds)
+\end{equation}
+
+The quantity $p(X)/(1 - p(X))$ is called the *odds*, and can take on any value between $0$ and $\infty$.  Values of the odds close to $0$ and $\infty$ indicate very low and very high probabilities of default, respectively.
+
+For example, on average 1 in 5 people with an odds of 1/4 will default, since $p(X)=0.2$ implies an odds of $\frac{0.2}{1 - 0.2} = 1/4$.  Likewise on average nine out of every ten people with an odds of 9 will default, since $p(X)=0.9$ implies an odds of $\frac{0.9}{1 - 0.9}=9$.
+
+By taking logarithm of both sides of \@ref(eq:odds), we arrive at
+
+\begin{equation}
+\log\left(\frac{p(X)}{1 - p(X)}\right)= \beta_0 + \beta_1 X.
+(\#eq:logodds)
+\end{equation}
+
+The left hand side of \@ref(eq:odds) is called the *log-odds* or *logit*.  In a logistic regression mode, increasing $X$ by one unit changes the log odds by $\beta_1$, or equivalently it multiplies the odds by $\exp(\beta_1)$
+
+The relationship between $p(X)$ and $X$ is \@ref(eq:logreg) is not a straight line, $\beta_1$ does not correspond to the change in $p(X)$ with a one-unit increase in $X$.  The amount that $p(X)$ changes due to a one-unit change in $X$ will depend on the current value of $X$.  But regardless of the value of $X$, if $\beta_1$ is positive then increasing $X$ will be associated with increasing $p(X)$, and if $\beta_1$ is negative then increasing $X$ will be associated with decreasing $p(X)$.
+
+```{r}
+logmod <- glm(default_bin ~ balance, data = Default, family = "binomial")
+summary(logmod)
+```
+
+```{r, label = "logtab", echo = FALSE}
+knitr::kable(coef(summary(logmod)), caption ="Summary table for logistic regression of `default_bin` on `balance`.")
+```
+
+## Making Predictions{-}
+
+Using the estimated coefficients from Table \@ref(tab:logtab), predict the probability of default for an individual with a `balance` of $1,000, and $2,000.
+
+\begin{equation}
+\hat{p}(X) = \frac{\exp(\hat{\beta}_0 + \hat{\beta}_1X)}{1 + \exp(\hat{\beta}_0 + \hat{\beta}_1X)}=  \frac{\exp(-10.6513 + 0.0055\times 1000)}{1 + \exp(-10.6513 + 0.0055\times 1000)}  = 0.00575.
+(\#eq:logregfit)
+\end{equation}
+
+```{r}
+predict(logmod, newdata = data.frame(balance = c(1000, 2000)), type = "response")
+```
+
+
+
