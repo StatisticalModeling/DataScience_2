@@ -104,16 +104,20 @@ Optional Resources:
 * Week 6 (Feb 19, 21)
 
     + Complete GitHub bookdown assignment---due Feb 22
-    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the group assignment.
+    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the assignment.
     + [Logistic Regression](../rmarkdown/HW1later.html)
 
 * * *
 
 * Week 7 (Feb 26, 28)
 
+    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the group assignment.
+
     + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
     
     + Prepare **group** presentation #2 (Feb 28)
+    
+    
 
 * * *      
 
