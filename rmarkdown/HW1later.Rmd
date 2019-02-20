@@ -78,8 +78,9 @@ ggplot(data = Default, aes(x = balance, y = default_bin)) +
   theme_bw() + 
   labs(x = "Balance", 
        y = "Probability of Default") + 
-  geom_smooth(method = "glm", se = FALSE, method.args = list(family = "binomial"))
-
+  geom_smooth(method = "glm", se = FALSE, 
+              method.args = list(family = binomial(link = "logit")),
+              color = "purple") 
 ```
 
 ## The Logistic Model {-}
@@ -135,5 +136,39 @@ Using the estimated coefficients from Table \@ref(tab:logtab), predict the proba
 predict(logmod, newdata = data.frame(balance = c(1000, 2000)), type = "response")
 ```
 
+```{r}
+logmodstu <- glm(default_bin ~ student, data = Default, family = "binomial")
+summary(logmodstu)
+```
 
+```{r, label = "logtabstu", echo = FALSE}
+knitr::kable(coef(summary(logmodstu)), caption ="Summary table for logistic regression of `default_bin` on `student`.")
+```
 
+The results in Table \@ref(tab:logtabstu) suggest students tend to have higher default probabilities than non-students.
+
+```{r}
+predict(logmodstu, newdata = data.frame(student = c("Yes", "No")), type = "response")
+```
+
+\begin{equation}
+\widehat{\text{Pr}}(\text{default = Yes | student = Yes}) = \frac{\exp(-3.50413 + 0.40489 \times 1)}{1 + \exp(-3.50413 + 0.40489 \times 1)} = 0.0431
+\end{equation}
+
+\begin{equation}
+\widehat{\text{Pr}}(\text{default = Yes | student = No}) = \frac{\exp(-3.50413 + 0.40489 \times 0)}{1 + \exp(-3.50413 + 0.40489 \times 0)} = 0.0292
+\end{equation}
+
+## Multiple Logistic Regression {-}
+
+```{r}
+mlog <- glm(default ~balance + income + student, data = Default, 
+            family = "binomial")
+summary(mlog)
+```
+
+```{r, label = "mlogcoef", echo = FALSE}
+knitr::kable(coef(summary(mlog)), caption ="Summary table for logistic regression of `default` on `balance`, `income`, and `student`.")
+```
+
+Note that students are less likely to default than non-students.  The negative coefficient for `student` in the multiple logistic regression indicates that for a fixed value of `balance` and `income`, a student is less likely to default than a non-student.
