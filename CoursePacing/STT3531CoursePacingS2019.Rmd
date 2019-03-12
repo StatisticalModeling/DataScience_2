@@ -123,6 +123,7 @@ Optional Resources:
 
 * Week 8 (Mar 12, 14)
 
+    + Read *A Unified Introduction to Predictive Model Building* --- paper is on [ASULEARN](https://asulearn.appstate.edu/)
     + Complete [Machine Learning Toolbox](https://www.datacamp.com/courses/machine-learning-toolbox)- Finish by Mar 15
     +  Go over [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
     +  Go over [Regression Trees](../rmarkdown/RegressionTrees.html)
