@@ -133,6 +133,8 @@ Optional Resources:
 
 * Week 9 (Mar 19, 21)
 
+    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the bookdown assignment.
+    
     + Complete GitHub bookdown assignment---due Mar 22
 
 * * *
