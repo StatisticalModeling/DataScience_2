@@ -393,3 +393,37 @@ c(MSE_test, RMSE_test)
 ```
 
 
+## Trees for Classification
+
+```{r}
+url <- "https://assets.datacamp.com/production/course_3022/datasets/credit.csv"
+GC <- read.csv(url)
+library(caret)
+set.seed(321)
+trainIndex <- createDataPartition(y = GC$default,
+                                  p = 0.80,
+                                  list = FALSE,
+                                  times = 1)
+train80 <- GC[trainIndex, ]
+test20 <- GC[-trainIndex, ]
+dim(train80)
+dim(test20)
+library(rpart)
+# library(partykit)
+credit_model <- rpart(default ~ ., data = train80, method = "class")
+plot(partykit::as.party(credit_model))
+rpart.plot::rpart.plot(x = credit_model, type = 5)
+```
+
+Evaluating the performance of the model with test set classification error.
+
+```{r}
+library(caret)
+class_prediction <- predict(object = credit_model,  
+                        newdata = test20,   
+                        type = "class")  
+                            
+# Calculate the confusion matrix for the test set
+confusionMatrix(data = class_prediction,       
+                reference = test20$default)  
+```
