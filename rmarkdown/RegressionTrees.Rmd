@@ -408,10 +408,18 @@ train80 <- GC[trainIndex, ]
 test20 <- GC[-trainIndex, ]
 dim(train80)
 dim(test20)
+```
+
+
+```{r, fig.width = 12}
 library(rpart)
-# library(partykit)
+library(partykit)
 credit_model <- rpart(default ~ ., data = train80, method = "class")
 plot(partykit::as.party(credit_model))
+```
+
+
+```{r, fig.width = 12}
 rpart.plot::rpart.plot(x = credit_model, type = 5)
 ```
 
