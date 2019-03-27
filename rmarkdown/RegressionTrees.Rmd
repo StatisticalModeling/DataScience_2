@@ -427,3 +427,58 @@ class_prediction <- predict(object = credit_model,
 confusionMatrix(data = class_prediction,       
                 reference = test20$default)  
 ```
+
+Cross-validate a bagged tree model with `caret`
+
+```{r}
+# Specify the training configuration
+ctrl <- trainControl(method = "cv",     # Cross-validation
+                     number = 5,      # 5 folds
+                     classProbs = TRUE,                  # For AUC
+                     summaryFunction = twoClassSummary)  # For AUC
+
+# Cross validate the credit model using "treebag" method; 
+# Track AUC (Area under the ROC curve)
+set.seed(1)  # for reproducibility
+credit_caret_model <- train(default ~ .,
+                            data = train80, 
+                            method = "treebag",
+                            metric = "ROC",
+                            trControl = ctrl)
+
+# Look at the model object
+print(credit_caret_model)
+
+# Inspect the contents of the model list 
+names(credit_caret_model)
+
+# Print the CV AUC
+credit_caret_model$results[,"ROC"]
+```
+
+```{r}
+# Generate predictions on the test set
+pred <- predict(object = credit_caret_model, 
+                newdata = test20,
+                type = "prob")
+
+# Compute the AUC (`actual` must be a binary (or 1/0 numeric) vector)
+Metrics::auc(actual = ifelse(test20$default == "yes", 1, 0), 
+                    predicted = pred[,"yes"])
+```
+
+## Random Forest with `GC` data
+
+```{r}
+# Train a Random Forest
+set.seed(1)  # for reproducibility
+credit_model <- train(default ~ .,
+                        data = train80, 
+                        method = "ranger",
+                        metric = "ROC",
+                        trControl = ctrl)
+                             
+# Print the model output                             
+print(credit_model)
+```
+

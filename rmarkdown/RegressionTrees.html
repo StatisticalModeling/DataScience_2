@@ -186,7 +186,7 @@ $(document).ready(function () {
 
 <h1 class="title toc-ignore">Regression Trees from ISLR</h1>
 <h4 class="author"><em>Alan T. Arnholt</em></h4>
-<h4 class="date"><em>Last knit on March 27, 2019 at 09:49:55 AM</em></h4>
+<h4 class="date"><em>Last knit on March 27, 2019 at 10:03:18 AM</em></h4>
 
 </div>
 
@@ -1443,6 +1443,93 @@ Prediction  no yes
                                          
        'Positive' Class : no             
                                          </code></pre>
+<p>Cross-validate a bagged tree model with <code>caret</code></p>
+<pre class="r"><code>&gt; # Specify the training configuration
+&gt; ctrl &lt;- trainControl(method = &quot;cv&quot;,     # Cross-validation
++                      number = 5,      # 5 folds
++                      classProbs = TRUE,                  # For AUC
++                      summaryFunction = twoClassSummary)  # For AUC
+&gt; 
+&gt; # Cross validate the credit model using &quot;treebag&quot; method; 
+&gt; # Track AUC (Area under the ROC curve)
+&gt; set.seed(1)  # for reproducibility
+&gt; credit_caret_model &lt;- train(default ~ .,
++                             data = train80, 
++                             method = &quot;treebag&quot;,
++                             metric = &quot;ROC&quot;,
++                             trControl = ctrl)
+&gt; 
+&gt; # Look at the model object
+&gt; print(credit_caret_model)</code></pre>
+<pre><code>Bagged CART 
+
+800 samples
+ 16 predictor
+  2 classes: 'no', 'yes' 
+
+No pre-processing
+Resampling: Cross-Validated (5 fold) 
+Summary of sample sizes: 640, 640, 640, 640, 640 
+Resampling results:
+
+  ROC        Sens       Spec     
+  0.7731399  0.8589286  0.4708333</code></pre>
+<pre class="r"><code>&gt; # Inspect the contents of the model list 
+&gt; names(credit_caret_model)</code></pre>
+<pre><code> [1] &quot;method&quot;       &quot;modelInfo&quot;    &quot;modelType&quot;    &quot;results&quot;     
+ [5] &quot;pred&quot;         &quot;bestTune&quot;     &quot;call&quot;         &quot;dots&quot;        
+ [9] &quot;metric&quot;       &quot;control&quot;      &quot;finalModel&quot;   &quot;preProcess&quot;  
+[13] &quot;trainingData&quot; &quot;resample&quot;     &quot;resampledCM&quot;  &quot;perfNames&quot;   
+[17] &quot;maximize&quot;     &quot;yLimits&quot;      &quot;times&quot;        &quot;levels&quot;      
+[21] &quot;terms&quot;        &quot;coefnames&quot;    &quot;contrasts&quot;    &quot;xlevels&quot;     </code></pre>
+<pre class="r"><code>&gt; # Print the CV AUC
+&gt; credit_caret_model$results[,&quot;ROC&quot;]</code></pre>
+<pre><code>[1] 0.7731399</code></pre>
+<pre class="r"><code>&gt; # Generate predictions on the test set
+&gt; pred &lt;- predict(object = credit_caret_model, 
++                 newdata = test20,
++                 type = &quot;prob&quot;)
+&gt; 
+&gt; # Compute the AUC (`actual` must be a binary (or 1/0 numeric) vector)
+&gt; Metrics::auc(actual = ifelse(test20$default == &quot;yes&quot;, 1, 0), 
++                     predicted = pred[,&quot;yes&quot;])</code></pre>
+<pre><code>[1] 0.705</code></pre>
+</div>
+<div id="random-forest-with-gc-data" class="section level2">
+<h2><span class="header-section-number">3.6</span> Random Forest with <code>GC</code> data</h2>
+<pre class="r"><code>&gt; # Train a Random Forest
+&gt; set.seed(1)  # for reproducibility
+&gt; credit_model &lt;- train(default ~ .,
++                         data = train80, 
++                         method = &quot;ranger&quot;,
++                         metric = &quot;ROC&quot;,
++                         trControl = ctrl)
+&gt;                              
+&gt; # Print the model output                             
+&gt; print(credit_model)</code></pre>
+<pre><code>Random Forest 
+
+800 samples
+ 16 predictor
+  2 classes: 'no', 'yes' 
+
+No pre-processing
+Resampling: Cross-Validated (5 fold) 
+Summary of sample sizes: 640, 640, 640, 640, 640 
+Resampling results across tuning parameters:
+
+  mtry  splitrule   ROC        Sens       Spec     
+   2    gini        0.7803571  0.9750000  0.1416667
+   2    extratrees  0.7681176  0.9785714  0.1208333
+  18    gini        0.7880952  0.8785714  0.4208333
+  18    extratrees  0.7749628  0.8785714  0.4291667
+  35    gini        0.7902158  0.8660714  0.4666667
+  35    extratrees  0.7742560  0.8678571  0.4416667
+
+Tuning parameter 'min.node.size' was held constant at a value of 1
+ROC was used to select the optimal model using the largest value.
+The final values used for the model were mtry = 35, splitrule = gini
+ and min.node.size = 1.</code></pre>
 </div>
 </div>
 
