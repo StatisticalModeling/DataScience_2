@@ -158,6 +158,7 @@ Optional Resources:
 
 * Week 12 (Apr 9, 11)
 
+    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the bookdown assignment. (Equipo1-Chapter2: Reilly, Syndey, Audrey, Gayle; Equipo2-Chapter3: Caity, Ansen, Andrew; Equipo3-Chapter1: Jared, Morgan, Isabel; Equipo4-Chapter4: Taylor, Joshua, Maya)---Please coordinate with each group to compllete the entire project.
     + Complete GitHub bookdown assignment #4---due Apr 12
 
 * * *
