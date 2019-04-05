@@ -1,0 +1,142 @@
+---
+title: "Ideas for Grupo2"
+author: "Alan T. Arnholt"
+date: "4/4/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", comment = NA)
+```
+
+```{r}
+vars <- c("Age", "Sex", "ChestPainType", "RestingBloodPressure", "SerumCholestoral", "FastingBloodSugar", "RestingElectrocardiographicResults", "MaximumHeartRate", "ExerciseInducedAnigna", "Oldpeak", "SlopeOfPeak", "NumberOfMajorVessels", "Thal", "StatusOfDisease")
+Heart <- read.table("http://archive.ics.uci.edu/ml/machine-learning-databases/statlog/heart/heart.dat", header = FALSE, col.names = vars)
+Heart$StatusOfDisease<- factor(Heart$StatusOfDisease, labels = c("Absence", "Presence"))
+Heart$Sex <- factor(Heart$Sex, labels = c("Female", "Male"))
+summary(Heart)
+```
+
+## Partition Data
+
+```{r}
+library(caret)
+set.seed(221)
+in_train <- createDataPartition(y = Heart$StatusOfDisease,
+                                p = 0.70,
+                                list = FALSE)
+training <- Heart[in_train, ]
+testing  <- Heart[-in_train, ]
+dim(training)
+```
+
+## Train Model to find $c_p$
+
+```{r}
+set.seed(21)
+tree_model <- train(StatusOfDisease ~ . , 
+                    data = training,
+                    method = "rpart",
+                    tuneLength = 10,
+                    trControl = trainControl(method = "repeatedcv",
+                                             number = 10,
+                                             repeats = 5)
+                    )
+tree_model
+tree_model$bestTune
+```
+
+```{r}
+library(rpart)
+sod_tree <- rpart(StatusOfDisease ~ . , data = training, method = "class", cp = tree_model$bestTune)
+rpart.plot::rpart.plot(sod_tree, type = 1)
+```
+
+## Prediction
+
+```{r}
+class_prediction <- predict(tree_model, newdata = testing, type = "raw")
+confusionMatrix(class_prediction, testing$StatusOfDisease)
+```
+
+## Can we do better with Random Forest?
+
+```{r}
+set.seed(21)
+rf_model <- train(StatusOfDisease ~ . , 
+                    data = training,
+                    method = "ranger",
+                    tuneLength = 10,
+                    trControl = trainControl(method = "repeatedcv",
+                                             number = 10,
+                                             repeats = 5)
+                    )
+rf_model
+```
+
+## Check Test Accuracy
+
+```{r}
+class_prediction <- predict(rf_model, newdata = testing, type = "raw")
+confusionMatrix(class_prediction, testing$StatusOfDisease)
+```
+
+## Fit Elastic Net model
+
+```{r}
+set.seed(21)
+en_model <- train(StatusOfDisease ~ . , 
+                    data = training,
+                    method = "glmnet",
+                    tuneLength = 10,
+                    trControl = trainControl(method = "repeatedcv",
+                                             number = 10,
+                                             repeats = 5)
+                    )
+en_model
+en_model$bestTune
+plot(en_model)
+```
+
+## Check Test Accuracy
+
+```{r}
+class_prediction <- predict(en_model, newdata = testing, type = "raw")
+confusionMatrix(class_prediction, testing$StatusOfDisease)
+```
+
+
+## Fit a GLM
+
+```{r}
+set.seed(21)
+glm_model <- train(StatusOfDisease ~ . , 
+                    data = training,
+                    method = "glm",
+                    family = "binomial",
+                    tuneLength = 10,
+                    trControl = trainControl(method = "repeatedcv",
+                                             number = 10,
+                                             repeats = 5)
+                    )
+glm_model
+```
+
+## Check Test Accuracy
+
+```{r}
+class_prediction <- predict(glm_model, newdata = testing, type = "raw")
+confusionMatrix(class_prediction, testing$StatusOfDisease)
+```
+
+## Use `resamples()`
+
+```{r}
+ANS <- resamples(list(TR = tree_model, RF = rf_model, EN = en_model, GLM = glm_model))
+summary(ANS)
+```
+
+```{r}
+bwplot(ANS)
+```
+

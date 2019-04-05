@@ -152,7 +152,8 @@ Optional Resources:
     + Complete [Supervised Learning in R: Case Studies](https://www.datacamp.com/courses/supervised-learning-in-r-case-studies)- Finish by Apr 6
     +  Review [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
     +  Review [Regression Trees](../rmarkdown/RegressionTrees.html)
-
+    +  Additional ideas for [Grupo1](../GroupProjectEval/commentsG1.html), [Grupo2](../GroupProjectEval/commentsG2.html), [Grupo3](../GroupProjectEval/commentsG3.html), and [Grupo4](../GroupProjectEval/commentsG4.html).
+    
 * * *
 
 * Week 12 (Apr 9, 11)

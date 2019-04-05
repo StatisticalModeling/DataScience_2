@@ -1,0 +1,169 @@
+---
+title: "Ideas for Grupo3"
+author: "Alan T. Arnholt"
+date: "4/1/2019"
+output: html_document
+---
+
+```{r label = "setup", include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, fig.align = "center")
+library(ggplot2)
+library(dplyr)
+library(tree)
+library(party)
+library(readr)
+library(caret)
+# Parallel Processing
+library(doMC)
+registerDoMC(cores = 12)
+######
+student_por <- data.table::fread("student-por.csv")
+```
+
+# Data Cleaning
+
+```{r}
+makeBin<-function(x){
+  case_when(x== "yes" ~ 1, 
+            x== "no" ~ 0)}
+
+student_porBin<-student_por[,16:23] %>%
+  mutate_each(makeBin)
+
+student_por[,16:23]<-student_porBin
+
+student_por<-student_por%>%
+  mutate(guardM = ifelse(guardian == "mother", 1, 0)) %>%
+  mutate(guardF = ifelse(guardian =="father", 1, 0)) %>%
+  mutate(schoolB= ifelse(school == "GP", 1, 0)) %>%
+  mutate(sexB = ifelse(sex=="M",1,0)) %>%
+  mutate(PstatusB = ifelse(Pstatus == "T", 1, 0))
+#
+student_por$Mjob <- factor(student_por$Mjob)
+student_por$Fjob <- factor(student_por$Fjob)
+student_por$famsize <- factor(student_por$famsize)
+summary(student_por)
+```
+
+## Splitting into `Test` and `Train` Data
+
+```{r}
+set.seed(234)
+in_train <- createDataPartition(y = student_por$G3,
+                                p = 0.70,
+                                list = FALSE)
+training <- student_por[in_train, ]
+testing  <- student_por[-in_train, ]
+dim(training)
+dim(testing)
+```
+
+## Random Forest Model
+
+```{r}
+set.seed(21)
+model3 <- train(
+  G3 ~ .,
+  tuneLength = 5,
+  data = training, 
+  method = "ranger",
+  trControl = trainControl(
+    method = "repeatedcv",
+    number = 5,
+    repeats = 2,
+    verboseIter = FALSE),
+  preProcess = c("knnImpute")
+)
+model3
+```
+
+## Predict RMSE with `Test`
+
+```{r}
+RMSE(predict(model3, testing), testing$G3)
+```
+
+
+## Train Model to find $c_p$
+
+```{r}
+set.seed(21)
+tree_model <- train(G3 ~ . , 
+                    data = training,
+                    method = "rpart",
+                    tuneLength = 10,
+                    trControl = trainControl(method = "repeatedcv",
+                                             number = 5,
+                                             repeats = 2),
+                    preProcess = c("knnImpute")
+                    )
+tree_model
+```
+
+```{r, fig.width = 8}
+tree_model$bestTune  # 0.009719615	
+library(rpart)
+G_tree <- rpart(G3 ~ . , data = training, cp = tree_model$bestTune)
+rpart.plot::rpart.plot(G_tree, type = 1)
+```
+
+## Predict RMSE with `Test`
+
+```{r}
+RMSE(predict(tree_model, testing), testing$G3)
+```
+
+## Linear Model to Predict Final Grade
+
+```{r}
+set.seed(21)
+lm_model <- train(G3 ~ . , 
+                    data = training,
+                    method = "leapSeq",
+                    tuneLength = 10,
+                    preProcess = c("knnImpute"),
+                    trControl = trainControl(method = "repeatedcv",
+                                             number = 5,
+                                             repeats = 2)
+                    )
+lm_model
+coef(lm_model$finalModel, id = 3)
+```
+
+## Predict RMSE with `Test`
+
+```{r}
+RMSE(predict(lm_model, testing), testing$G3)
+```
+
+## One more model GLMNET
+
+```{r}
+set.seed(21)
+en_model <- train(G3 ~ . , 
+                    data = training,
+                    method = "glmnet",
+                    tuneLength = 10,
+                    preProcess = c("knnImpute"),
+                    trControl = trainControl(method = "repeatedcv",
+                                             number = 5,
+                                             repeats = 2)
+                    )
+en_model
+en_model$bestTune
+```
+
+## Predict RMSE with `Test`
+
+```{r}
+RMSE(predict(en_model, testing), testing$G3)
+```
+
+## Use `resamples()`
+
+```{r}
+ANS <- resamples(list(RF = model3, TR = tree_model, LM = lm_model, EN = en_model))
+summary(ANS)
+bwplot(ANS, scales = "free", layout = c(1, 3))
+dotplot(ANS, scales = "free", layout = c(1, 3))
+```

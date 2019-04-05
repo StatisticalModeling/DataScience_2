@@ -1,0 +1,133 @@
+---
+title: "Ideas for Grupo4"
+author: "Alan T. Arnholt"
+date: "4/1/2019"
+output: html_document
+---
+
+```{r label = "setup", include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, warning = FALSE, message = FALSE, fig.align = "center")
+library(ISLR)
+library(tidyverse)
+library(xaringan)
+library(caret)
+library(MASS)
+library(rpart)
+library(partykit)
+```
+
+## Read in Data
+
+```{r}
+seeds <- read.table("https://archive.ics.uci.edu/ml/machine-learning-databases/00236/seeds_dataset.txt", col.names = c("area", "perimemter", "compactness", "lengthkernel", "widthkernel", "asymcoef", "lengthgroove", "kernnumber"))
+
+#Create New Variables for each Kernal Size
+library(tidyverse)
+seeds <- seeds %>%
+  mutate(kernname = case_when(kernnumber == 1 ~ "Kama", kernnumber == 2 ~ "Rosa", kernnumber == 3 ~ "Canadian")) 
+seeds$kernname <- factor(seeds$kernname)
+summary(seeds)
+```
+
+
+## Partition Data
+
+```{r}
+set.seed(934)
+in_train <- createDataPartition(y = seeds$kernname,
+                                p = 0.70,
+                                list = FALSE)
+training <- seeds[in_train, ]
+testing  <- seeds[-in_train, ]
+dim(training)
+dim(testing)
+```
+
+## Train Model to find $c_p$
+
+```{r}
+set.seed(21)
+tree_model <- train(kernname ~ . -kernnumber, 
+                    data = training,
+                    method = "rpart",
+                    tuneLength = 10,
+                    trControl = trainControl(method = "repeatedcv",
+                                             number = 10,
+                                             repeats = 5)
+                    )
+tree_model
+```
+
+```{r, fig.width = 8}
+tree_model$bestTune
+seeds_tree <- rpart(kernname ~ . - kernnumber, data = training, method = "class", cp = tree_model$bestTune)
+rpart.plot::rpart.plot(seeds_tree, type = 1)
+```
+
+## Prediction
+
+```{r}
+class_prediction <- predict(tree_model, newdata = testing, type = "raw")
+confusionMatrix(class_prediction, testing$kernname)
+```
+
+## Can we do better with Random Forest?
+
+```{r}
+set.seed(21)
+rf_model <- train(kernname ~ . -kernnumber, 
+                    data = training,
+                    method = "ranger",
+                    tuneLength = 10,
+                    trControl = trainControl(method = "repeatedcv",
+                                             number = 10,
+                                             repeats = 5)
+                    )
+rf_model
+```
+
+## Check Test Accuracy
+
+```{r}
+class_prediction <- predict(rf_model, newdata = testing, type = "raw")
+confusionMatrix(class_prediction, testing$kernname)
+```
+
+## Fit one more model (Elastic Net)
+
+```{r}
+set.seed(21)
+en_model <- train(kernname ~ . -kernnumber, 
+                    data = training,
+                    method = "glmnet",
+                    tuneLength = 10,
+                    trControl = trainControl(method = "repeatedcv",
+                                             number = 10,
+                                             repeats = 5)
+                    )
+en_model
+en_model$bestTune
+# coef(en_model$finalModel)
+```
+
+```{r, fig.width = 8}
+plot(en_model)
+```
+
+Note: $\alpha = 1 \rightarrow$ LASSO.
+
+## Check Test Accuracy
+
+```{r}
+class_prediction <- predict(en_model, newdata = testing, type = "raw")
+confusionMatrix(class_prediction, testing$kernname)
+```
+
+## Use `resamples()`
+
+```{r}
+ANS <- resamples(list(TR = tree_model, RF = rf_model, EN = en_model))
+summary(ANS)
+bwplot(ANS)
+```
+

@@ -1,0 +1,139 @@
+---
+title: "Ideas for Grupo1"
+author: "Alan T. Arnholt"
+date: "4/4/2019"
+output: html_document
+---
+
+
+```{r label = "setup", include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, warning = FALSE, message = FALSE, fig.align = "center")
+library(ISLR)
+library(tidyverse)
+library(caret)
+library(dplyr)
+library(ggplot2)
+library(randomForest)
+library(rpart)
+# Parallel Processing
+library(doMC)
+registerDoMC(cores = 12)
+```
+
+## Get the Data
+
+```{r}
+adult <- read.csv("http://archive.ics.uci.edu/ml/machine-learning-databases/adult/adult.data", header = FALSE)
+adult <- adult %>% rename(age = V1, workclass = V2, fnlwgt = V3, 
+                          education = V4 , educationnum = V5, maritalstatus = V6,
+                          occupation = V7, relationship = V8, race = V9, sex = V10 , capitalgain = V11, 
+                          capitalloss = V12, hoursperweek = V13, nativecountry = V14, income = V15)
+summary(adult)
+```
+
+Note the class descrepancy in `income`....could use upsampling to get a better model here.  Also, due to the size of the data set will only use 10% for training.  
+
+## Partition Data
+
+```{r}
+library(caret)
+set.seed(224)
+in_train <- createDataPartition(y = adult$income,
+                                p = 0.10,
+                                list = FALSE)
+training <- adult[in_train, ]
+testing  <- adult[-in_train, ]
+dim(training)
+dim(testing)
+```
+
+## Train Model to find $c_p$
+
+```{r}
+# use sampling = "up" for income balance problem
+set.seed(21)
+tree_model <- train(income ~ . , 
+                    data = training,
+                    method = "rpart",
+                    tuneLength = 10,
+                    trControl = trainControl(method = "repeatedcv",
+                                             number = 5,
+                                             repeats = 2,
+                                             sampling = "up")
+                    )
+tree_model
+tree_model$bestTune
+```
+
+
+```{r}
+library(rpart)
+income_tree <- rpart(income ~ ., data = training, method = "class", cp = tree_model$bestTune)
+rpart.plot::rpart.plot(income_tree, type = 1)
+```
+
+## Prediction
+
+```{r}
+class_prediction <- predict(tree_model, newdata = testing, type = "raw")
+confusionMatrix(class_prediction, testing$income)
+```
+
+## Can we do better with Random Forest?
+
+```{r}
+set.seed(21)
+rf_model <- train(income ~ . , 
+                    data = training,
+                    method = "ranger",
+                    tuneLength = 3,
+                    trControl = trainControl(method = "repeatedcv",
+                                             number = 5,
+                                             repeats = 2,
+                                             sampling = "up")
+                    )
+rf_model
+```
+
+## Check Test Accuracy
+
+```{r}
+class_prediction <- predict(rf_model, newdata = testing, type = "raw")
+confusionMatrix(class_prediction, testing$income)
+```
+
+## Fit Elastic Net Model
+
+```{r}
+set.seed(21)
+en_model <- train(income ~ . , 
+                    data = training,
+                    method = "glmnet",
+                    tuneLength = 3,
+                    trControl = trainControl(method = "repeatedcv",
+                                             number = 5,
+                                             repeats = 2,
+                                             sampling = "up")
+                    )
+en_model
+en_model$bestTune
+plot(en_model)
+```
+
+## Check Test Accuracy
+
+```{r}
+class_prediction <- predict(en_model, newdata = testing, type = "raw")
+confusionMatrix(class_prediction, testing$income)
+```
+
+## Use `resamples()`
+
+```{r}
+ANS <- resamples(list(TR = tree_model, RF = rf_model, EN = en_model))
+summary(ANS)
+bwplot(ANS)
+```
+
+
+
