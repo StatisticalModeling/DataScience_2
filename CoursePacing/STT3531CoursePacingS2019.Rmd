@@ -158,7 +158,7 @@ Optional Resources:
 
 * Week 12 (Apr 9, 11)
 
-    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the bookdown assignment. (Equipo1-Chapter2: Reilly, Syndey, Audrey, Gayle; Equipo2-Chapter3: Caity, Ansen, Andrew; Equipo3-Chapter1: Jared, Morgan, Isabel; Equipo4-Chapter4: Taylor, Joshua, Maya)---Please coordinate with each group to compllete the entire project.
+    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the bookdown assignment. (Equipo1-Chapter2: Reilly, Sydney, Audrey, Gayle; Equipo2-Chapter3: Caity, Ansen, Andrew; Equipo3-Chapter1: Jared, Morgan, Isabel; Equipo4-Chapter4: Taylor, Joshua, Maya)---Please coordinate with each group to complete the entire project.
     + Complete GitHub bookdown assignment #4---due Apr 12
 
 * * *
@@ -168,10 +168,15 @@ Optional Resources:
     + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
 
     + Prepare **group** presentation #4 (Apr 18)
+    
+    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the bookdown assignment. (Team/Group Names are Ultimo----Ultimo1: Caity, Ansen, Gayle, Audrey; Ultimo2: Sydney, Reilly, Andrew; Ultimo3: Isabel, Jared, Morgan; Ultimo4: Joshua, Taylor, Maya)
+    
 
 * * * 
 
 * Week 14 (Apr 23 (No class), 25)
+
+    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the group assignment.  Please use the groups assigned for Project 4 with Name of `Final#`----Final1: Isabel, Gayle, Joshua; Final2: Maya, Reilly, Answen; Final3: Morgan, Andrew, Caity; Final4: Sydney, Jared, Audrey, Taylor
   
     + Work on final **group** project
 
@@ -185,7 +190,7 @@ Optional Resources:
 
 * Final Exam Period (May 7---2-4:30)
 
-    + Oral Presentations
+    + Final Group Project Due
 
 * * *
 
