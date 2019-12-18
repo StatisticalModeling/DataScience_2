@@ -74,7 +74,7 @@ Tentative course assignments and due dates are maintained at: [https://Statistic
 
 * 28% of the course grade will come from 4 [DataCamp](https://www.datacamp.com/home) modules.
 
-* 28% of the grade will come from 4 individual bookdown assignments.
+* 28% of the grade will come from 3 individual and 1 group bookdown assignments.
 
 * 28% of the grade will come from 4 group projects/presentations.
 

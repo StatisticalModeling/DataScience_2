@@ -76,7 +76,7 @@ Optional Resources:
 
 * Week 3 (Jan 28, 30)
 
-    + [GitHub Bookdown Assignment #1--- Click link and accept assignment --- must be enrolled in the class---Due Jan 31 NLT 5:00 PM](https://classroom.github.com/a/SL6Kw5mj)
+    + [GitHub Bookdown Assignment #1 (CorrelationRegression)--- Click link and accept assignment --- must be enrolled in the class---Due Jan 31 NLT 5:00 PM](https://classroom.github.com/a/SL6Kw5mj)
     
 * * *
 
@@ -100,7 +100,7 @@ Optional Resources:
 
 * Week 6 (Feb 18, 20)
 
-    + Complete GitHub bookdown assignment---due Feb 21
+    + Complete GitHub bookdown assignment #2 (MultipleLogisticRegression)---due Feb 21
     + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the assignment.
     + [Logistic Regression](../rmarkdown/HW1later.html)
 
@@ -134,8 +134,7 @@ March 9 - 13 Spring Break
 
 * Week 9 (Mar 17, 19)
 
-    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the bookdown assignment.
-    
+    + GitHub Bookdown Assignment #3 (MachineLearningToolbox)---Please accept assignment in ASULEARN
     + Complete GitHub bookdown assignment---due Mar 20
 
 * * *
@@ -153,13 +152,12 @@ March 9 - 13 Spring Break
     + Complete [Supervised Learning in R: Case Studies](https://www.datacamp.com/courses/supervised-learning-in-r-case-studies)- Finish by Apr 6
     +  Review [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
     +  Review [Regression Trees](../rmarkdown/RegressionTrees.html)
-    +  Additional ideas for [Grupo1](../GroupProjectEval/commentsG1.html), [Grupo2](../GroupProjectEval/commentsG2.html), [Grupo3](../GroupProjectEval/commentsG3.html), and [Grupo4](../GroupProjectEval/commentsG4.html).
     
 * * *
 
 * Week 12 (Apr 7, 9)
 
-    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the bookdown assignment. (Post group assignments here later)---Please coordinate with each group to complete the entire project.
+    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept bookdown assignment #4. (Post group assignments here later)---Please coordinate with each group to complete the entire project.
     + Complete GitHub bookdown assignment #4---due Apr 10
 
 * * *
