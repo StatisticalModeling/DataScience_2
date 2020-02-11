@@ -101,7 +101,7 @@ Optional Resources:
 * Week 6 (Feb 18, 20)
 
     + Complete GitHub bookdown assignment #2 (MultipleLogisticRegression)---due Feb 21
-    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the assignment.
+    + [GitHub Bookdown Assignment #2 (MultipleRegression)--- Click link and accept assignment --- must be enrolled in the class---Due Feb 21 NLT 5:00 PM](https://classroom.github.com/a/VBT-8U_J)
     + [Logistic Regression](../rmarkdown/HW1later.html)
 
 * * *
