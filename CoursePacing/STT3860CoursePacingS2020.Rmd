@@ -132,64 +132,73 @@ March 9 - 13 Spring Break
 
 * * *
 
-* Week 9 (Mar 17, 19)
-
-    + GitHub Bookdown Assignment #3 (MachineLearningToolbox)---Please accept assignment in ASULEARN
-    + Complete GitHub bookdown assignment---due Mar 20
-
-* * *
-
-* Week 10 (Mar 24, 26)
-
-    + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
-    
-    + Prepare **group** presentation #3 (Mar 26)
+Mar 16 - 20 Classes cancelled: COVID-19
 
 * * * 
 
+* **Remainder of semester moves to online delivery due to COVID-19**
+
+* * * 
+
+* Week 10 (Mar 24, 26)
+
+
+    +  Class will meet via zoom 12:30-1:45 pm to dicuss class format for remainder of semester, address questions, etc.
+    +  Extension for [Machine Learning Toolbox](https://www.datacamp.com/courses/machine-learning-toolbox)- Complete NLT Mar 27    
+    +  GitHub Bookdown Assignment #3 (MachineLearningToolbox)---Please accept assignment in ASULEARN
+    +  Complete GitHub bookdown assignment---due Mar 27
+    +  Review as needed [Lab Chapter 6](https://stat-ata-asu.github.io/STT3851ClassRepo/Rmarkdown/BookLabs/Lab_Chapter6.html)
+    +  Review as needed [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
+    +  Review as needed [Regression Trees](../rmarkdown/RegressionTrees.html)
+
+* * *
+
 * Week 11 (Mar 31, Apr 2)
 
-    + Complete [Supervised Learning in R: Case Studies](https://www.datacamp.com/courses/supervised-learning-in-r-case-studies)- Finish by Apr 6
-    +  Review [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
-    +  Review [Regression Trees](../rmarkdown/RegressionTrees.html)
+    + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
     
-* * *
+    + Prepare **individual** two page report #1 (Mar 26)
+
+* * * 
 
 * Week 12 (Apr 7, 9)
 
-    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept bookdown assignment #4. (Post group assignments here later)---Please coordinate with each group to complete the entire project.
-    + Complete GitHub bookdown assignment #4---due Apr 10
-
+    + Complete [Supervised Learning in R: Case Studies](https://www.datacamp.com/courses/supervised-learning-in-r-case-studies)- Finish by Apr  10
+    +  Review as needed [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
+    +  Review as needed [Regression Trees](../rmarkdown/RegressionTrees.html)
+    
 * * *
 
 * Week 13 (Apr 14, 16)
 
+    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept bookdown assignment #4. 
+    + Complete GitHub bookdown assignment #4---due Apr 17
+
+* * *
+
+* Week 14 (Apr 21, 23)
+
     + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
 
-    + Prepare **group** presentation #4 (Apr 16)
+    + Prepare **individual** two page report #2 (Apr 24)
     
-    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the bookdown assignment. (Team/Group Names posted here with members later)
+    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the bookdown assignment. 
     
 
 * * * 
 
-* Week 14 (21, 23)
-
-    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the group assignment.  Please use the groups assigned for Project 4. 
-  
-    + Work on final **group** project
-
-* * *
-
 * Week 15 (Apr 28, Apr 30 (No class-reading day))
 
-    + Work on final **group** project
+    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the **individual** assignment.  
+  
+    + Work on final **individual** two page report #2
 
 * * *
+
 
 * Final Exam Period (May 7---11-1:30)
 
-    + Final Group Project Due
+    + Final **individual** two page report #2 due
 
 * * *
 
