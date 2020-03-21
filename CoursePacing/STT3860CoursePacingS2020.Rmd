@@ -138,12 +138,18 @@ Mar 16 - 20 Classes cancelled: COVID-19
 
 * **Remainder of semester moves to online delivery due to COVID-19**
 
+* Sites where free wifi is advertised.   I don't know if any or all of them work, but if you aren't set with wifi yet, please check on them & report back.
+
+    + [Xfinity](https://www.internetessentials.com/)
+    + [Comcast](https://corporate.comcast.com/covid-19)
+    + [Spectrum](https://corporate.charter.com/newsroom/charter-to-offer-free-access-to-spectrum-broadband-and-wifi-for-60-days-for-new-K12-and-college-student-households-and-more)
+
 * * * 
 
 * Week 10 (Mar 24, 26)
 
 
-    +  Class will meet via zoom 12:30-1:45 pm to dicuss class format for remainder of semester, address questions, etc.
+    +  Class will meet via zoom 12:30-1:45 pm to dicuss class format for remainder of semester, address questions, etc.  Permanent zoom link is in AsuLearn.
     +  Extension for completeing DataCamp [Machine Learning Toolbox](https://www.datacamp.com/courses/machine-learning-toolbox)---Complete NLT Mar 27    
     +  [GitHub Bookdown Assignment #3 (MachineLearningToolbox)---- Click link and accept assignment --- must be enrolled in the class---Due Mar 27 NLT 5:00 PM](https://classroom.github.com/a/kamvGbld)
     +  Review as needed [Lab Chapter 6](https://stat-ata-asu.github.io/STT3851ClassRepo/Rmarkdown/BookLabs/Lab_Chapter6.html)
