@@ -169,6 +169,8 @@ Mar 16 - 20 Classes cancelled: COVID-19
 
 * Week 12 (Apr 7, 9)
 
+
+    + Read *A Unified Introduction to Predictive Model Building* --- paper is on [ASULEARN](https://asulearn.appstate.edu/)
     + Complete DataCamp [Supervised Learning in R: Case Studies](https://www.datacamp.com/courses/supervised-learning-in-r-case-studies) by Apr 10
     +  Review as needed [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
     +  Review as needed [Regression Trees](../rmarkdown/RegressionTrees.html)
@@ -187,6 +189,8 @@ Mar 16 - 20 Classes cancelled: COVID-19
     + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
 
     + [Complete individual (two page) report #2 (Supervised Learning in R: Case Studies)---- Click link and accept assignment --- must be enrolled in the class---Due Apr 24 NLT 5:00 PM](https://classroom.github.com/a/Bfuc8tFC)
+    
+    + [Example Repo for Linear Regression](https://github.com/STAT-ATA-ASU/STT3851Spring2016/blob/gh-pages/BDbetaTemplate)
     
     
 
