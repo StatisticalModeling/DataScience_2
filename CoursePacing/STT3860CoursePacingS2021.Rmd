@@ -183,7 +183,7 @@ Optional Resources:
     
      + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
     
-    + [Complete individual (less than 2500 words) report #1 ---- Click link and accept assignment --- must be enrolled in the class---Due May 6 NLT 5:00 PM]()
+    + [Complete individual (less than 2500 words) report #1 ---- Click link and accept assignment --- must be enrolled in the class---Due May 6 NLT 11:00 AM]()
     
 
 * * *
@@ -191,7 +191,7 @@ Optional Resources:
 * Week 14 (Apr 20, 22)
 
    
-  + [Complete individual (less than 2500 words) report #1 ---- Click link and accept assignment --- must be enrolled in the class---Due May 6 NLT 5:00 PM]()
+  + [Complete individual (less than 2500 words) report #1 ---- Click link and accept assignment --- must be enrolled in the class---Due May 6 NLT 11:00 AM]()
     
   + [Example Repo for Linear Regression Write Up](https://github.com/STAT-ATA-ASU/BDwriteUp)
     
@@ -201,7 +201,7 @@ Optional Resources:
 
 * Week 15 (Apr 27)
   
-  + [Complete individual (less than 2500 words) report #1 ---- Click link and accept assignment --- must be enrolled in the class---Due May 6 NLT 5:00 PM]()
+  + [Complete individual (less than 2500 words) report #1 ---- Click link and accept assignment --- must be enrolled in the class---Due May 6 NLT 11:00 AM]()
     
   + [Example Repo for Linear Regression Write Up](https://github.com/STAT-ATA-ASU/BDwriteUp)
 
