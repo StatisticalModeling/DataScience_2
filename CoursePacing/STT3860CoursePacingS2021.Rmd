@@ -68,7 +68,7 @@ Optional Resources:
 
     + Complete [DataCamp Correlation and Regression](https://www.datacamp.com/courses/correlation-and-regression) - Finish by Feb 5
     
-    + [GitHub Bookdown Assignment #1--- Click link and accept assignment --- must be enrolled in the class---Due Feb 12 NLT 5:00 PM]()
+    + [GitHub Bookdown Assignment #1--- Click link and accept assignment --- must be enrolled in the class---Due Feb 12 NLT 5:00 PM](https://classroom.github.com/a/47Q1PSRP)
     
 
 ```{block, type='rmdoptional'}   
@@ -81,7 +81,7 @@ Optional Resources:
 
 * Week 4 (Feb 9, 11)
 
-    + [GitHub Bookdown Assignment #1--- Click link and accept assignment --- must be enrolled in the class---Due Feb 12 NLT 5:00 PM]()
+    + [GitHub Bookdown Assignment #1--- Click link and accept assignment --- must be enrolled in the class---Due Feb 12 NLT 5:00 PM](https://classroom.github.com/a/47Q1PSRP)
      
     + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
     
@@ -89,6 +89,8 @@ Optional Resources:
 
 * Week 5 (Feb 16, 18)
     + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the group assignment.
+    
+    + [Group Presentation #1--- Click link and accept assignment --- must be enrolled in the class---Due Feb 18 NLT 12:30 PM](https://classroom.github.com/g/9m3OCsBs)
     
     + Please read [this](../GroupProjectEval/GroupEvaluation.pdf) docucment for how to rate your partners.
     
@@ -108,17 +110,19 @@ Optional Resources:
 
 * Week 7 (Mar 2, 4)
 
-  + [GitHub Bookdown Assignment #2--- Click link and accept assignment --- must be enrolled in the class---Due Mar 5 NLT 5:00 PM]()  
+  + [GitHub Bookdown Assignment #2--- Click link and accept assignment --- must be enrolled in the class---Due Mar 5 NLT 5:00 PM](https://classroom.github.com/a/x1QVqBsz)  
     
   + [Logistic Regression](../rmarkdown/HW1later.html)
     
-  + [Predictive Mode Building](https://stat-ata-asu.github.io/PredictiveModelBuilding/)
+  + [Predictive Model Building](https://stat-ata-asu.github.io/PredictiveModelBuilding/)
 
 * * *
 
 * Week 8 (Mar 9, 11)
 
     + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the group assignment.
+    
+    + [Group Presentation #2--- Click link and accept assignment --- must be enrolled in the class---Due Mar 11 NLT 12:30 PM](https://classroom.github.com/g/bfG49-y2)
 
     + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
     
@@ -143,7 +147,7 @@ Optional Resources:
 
 * Week 10 (Mar 23, 25)
 
-    +  [GitHub Bookdown Assignment #3 (MachineLearningToolbox)---- Click link and accept assignment --- must be enrolled in the class---Due Mar 26 NLT 5:00 PM]()
+    +  [GitHub Bookdown Assignment #3 (MachineLearningWithCaret)---- Click link and accept assignment --- must be enrolled in the class---Due Mar 26 NLT 5:00 PM](https://classroom.github.com/a/O16T0RTh)
     
     +  Review as needed [Lab Chapter 6](https://stat-ata-asu.github.io/STT3851ClassRepo/Rmarkdown/BookLabs/Lab_Chapter6.html)
     
@@ -158,6 +162,8 @@ Optional Resources:
 * Week 11 (Mar 30, Apr 1)
 
     + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the group assignment.
+    
+    + [Group Presentation #3--- Click link and accept assignment --- must be enrolled in the class---Due Apr 1 NLT 12:30 PM](https://classroom.github.com/g/hMjy4ZfH)
 
     + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
     
@@ -183,7 +189,7 @@ Optional Resources:
     
      + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
     
-    + [Complete individual (less than 2500 words) report #1 ---- Click link and accept assignment --- must be enrolled in the class---Due May 6 NLT 11:00 AM]()
+    + [Complete individual (less than 2500 words) report #1 ---- Click link and accept assignment --- must be enrolled in the class---Due May 6 NLT 11:00 AM](https://classroom.github.com/a/b0rLHpqG)
     
 
 * * *
@@ -191,7 +197,7 @@ Optional Resources:
 * Week 14 (Apr 20, 22)
 
    
-  + [Complete individual (less than 2500 words) report #1 ---- Click link and accept assignment --- must be enrolled in the class---Due May 6 NLT 11:00 AM]()
+  + [Complete individual (less than 2500 words) report #1 ---- Click link and accept assignment --- must be enrolled in the class---Due May 6 NLT 11:00 AM](https://classroom.github.com/a/b0rLHpqG)
     
   + [Example Repo for Linear Regression Write Up](https://github.com/STAT-ATA-ASU/BDwriteUp)
     
@@ -201,7 +207,7 @@ Optional Resources:
 
 * Week 15 (Apr 27)
   
-  + [Complete individual (less than 2500 words) report #1 ---- Click link and accept assignment --- must be enrolled in the class---Due May 6 NLT 11:00 AM]()
+  + [Complete individual (less than 2500 words) report #1 ---- Click link and accept assignment --- must be enrolled in the class---Due May 6 NLT 11:00 AM](https://classroom.github.com/a/b0rLHpqG)
     
   + [Example Repo for Linear Regression Write Up](https://github.com/STAT-ATA-ASU/BDwriteUp)
 
