@@ -100,6 +100,15 @@ Optional Resources:
 
 * * *
 
+```{block, type='rmdoptional'}   
+Optional Resources:
+
+* [Web Pages](https://alanarnholt.github.io/classexample/about.html)
+
+```  
+
+* * *
+
 * Week 6 (Feb 23, 25)
 
     + Review [Appendix E](./appE.html). 
