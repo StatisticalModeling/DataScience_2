@@ -149,49 +149,43 @@ Optional Resources:
 
 * * *
 
-* Week 9 (Mar 16, 18)
+* Week 9 (Mar 15, 17)
 
-   + [Predictive Mode Building](https://stat-ata-asu.github.io/PredictiveModelBuilding/)
-   
-    + Complete [Machine Learning With Caret in R](https://learn.datacamp.com/courses/machine-learning-with-caret-in-r)- Finish by Mar 19
+    + [Linear models with the bodyfat data Lab --- Click link and accept assignment --- must be enrolled in the class---Due Jan 18 NLT 5:00 PM](https://classroom.github.com/)
     
-    +  Go Over [Lab Chapter 6](https://stat-ata-asu.github.io/STT3851ClassRepo/Rmarkdown/BookLabs/Lab_Chapter6.html)
-    
-    +  Go over [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
-    
-    +  Go over [Regression Trees](../rmarkdown/RegressionTrees.html)
+    + Review as needed [Lab Chapter 6](https://stat-ata-asu.github.io/STT3851ClassRepo/Rmarkdown/BookLabs/Lab_Chapter6.html)
+
 
 * * *
 
 * Week 10 (Mar 23, 25)
 
-    +  [GitHub Bookdown Assignment #3 (MachineLearningWithCaret)---- Click link and accept assignment --- must be enrolled in the class---Due Mar 26 NLT 5:00 PM](https://classroom.github.com/a/O16T0RTh)
-    
-    +  Review as needed [Lab Chapter 6](https://stat-ata-asu.github.io/STT3851ClassRepo/Rmarkdown/BookLabs/Lab_Chapter6.html)
+    + Complete [DataCamp Tree Based Models in R](https://www.datacamp.com/courses/tree-based-models-in-r) - Finish by Mar 26
     
     +  Review as needed [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
     
     +  Review as needed [Regression Trees](../rmarkdown/RegressionTrees.html)
     
-    + [Predictive Mode Building](https://stat-ata-asu.github.io/PredictiveModelBuilding/)
+    + [Predictive Model Building](https://stat-ata-asu.github.io/PredictiveModelBuilding/)
 
+    
+
+    
+    
 * * *
 
-* Week 11 (Mar 30, Apr 1)
 
-    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the group assignment.
-    
-    + [Group Presentation #3--- Click link and accept assignment --- must be enrolled in the class---Due Apr 1 NLT 12:30 PM](https://classroom.github.com/g/hMjy4ZfH)
+* Week 11 (Mar 29, 31)
 
-    + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
+    +  [GitHub Bookdown Assignment #3 (TreeBasedModelsInR)---- Click link and accept assignment --- must be enrolled in the class---Due Apr 1 NLT 5:00 PM](https://classroom.github.com/)
     
-    + Prepare **group** presentation #3 (Apr 1)
+    
     
 * * * 
 
-* Week 12 (Apr 6, 8)
+* Week 12 (Apr 5, 7)
 
-    + Complete DataCamp [Hyperparameter Tuning in R](https://learn.datacamp.com/courses/hyperparameter-tuning-in-r) by Apr 16
+    +  + [Non-linear models with the bodyfat data Lab --- Click link and accept assignment --- must be enrolled in the class---Due Jan 18 NLT 5:00 PM](https://classroom.github.com/)
     
     +  Review as needed [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
     
@@ -202,6 +196,14 @@ Optional Resources:
 * * *
 
 * Week 13 (Apr 13, 15)
+
+    + [Group Presentation #3--- Click link and accept assignment --- must be enrolled in the class---Due Apr 1 NLT 12:30 PM](https://classroom.github.com/g/hMjy4ZfH)
+     
+     + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
+    
+    + Prepare **group** presentation #3 (Apr 1)
+    
+    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the group assignment.
 
     + Complete DataCamp [Hyperparameter Tuning in R](https://learn.datacamp.com/courses/hyperparameter-tuning-in-r) by Apr 16
     
