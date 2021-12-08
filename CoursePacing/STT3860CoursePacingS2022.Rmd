@@ -219,12 +219,12 @@ Optional Resources:
 
 * Week 15 (Apr 27)
   
-  +  [GitHub Bookdown Assignment #4 (Machine Learning with `caret` In R)---- Click link and accept assignment --- must be enrolled in the class---Due May 2 NLT 5:00 PM](https://classroom.github.com/)
+  +  [GitHub Bookdown Assignment #4 (Machine Learning with `caret` In R)---- Click link and accept assignment --- must be enrolled in the class---Due May 5 NLT 11:00 am PM](https://classroom.github.com/)
 
 * * *
 
 
-* Final Exam Period (May 2---11-1:30???)
+* Final Exam Period (May 5---11 am -1:30 pm)
 
 
 * * *
@@ -240,7 +240,7 @@ Optional Resources:
 ### Final Exam {-}
 
 ```{block, FINAL, type='rmdnote'}
-*  [University Exam Schedule](https://registrar.appstate.edu/sites/registrar.appstate.edu/files/asu_spring_2022_exam_schedule.pdf)
+*  [University Exam Schedule](https://registrar.appstate.edu/sites/default/files/asu_spring_2022_exam_schedule_final_cns.pdf)
 ```
 
 ________________
