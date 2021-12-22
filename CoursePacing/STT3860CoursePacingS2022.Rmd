@@ -151,7 +151,7 @@ Optional Resources:
 
 * Week 9 (Mar 15, 17)
 
-    + [LAB 2: Linear models with the bodyfat data Lab --- Click link and accept assignment --- must be enrolled in the class---Due Jan 17 NLT 5:00 PM](https://classroom.github.com/)
+    + [LAB 2: Linear models with the bodyfat data Lab --- Click link and accept assignment --- must be enrolled in the class---Due Mar 17 NLT 5:00 PM](https://classroom.github.com/)
     
     + Review as needed [Lab Chapter 6](https://stat-ata-asu.github.io/STT3851ClassRepo/Rmarkdown/BookLabs/Lab_Chapter6.html)
 

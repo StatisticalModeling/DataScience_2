@@ -1,0 +1,112 @@
+---
+title: "STT 3860 - Introduction to Statistical Modeling - Spring 2022"
+author: ""
+#date: 'Last compiled: `r format(Sys.time(), "%A, %B %d, %Y - %X.")`'
+output: 
+  bookdown::html_document2: 
+    highlight: textmate
+    theme: yeti
+    css: "../css/style.css"
+---
+
+--------------
+
+**Instructor:**  Dr. Alan T. Arnholt  
+**Office:** Walker Hall 237      
+**Office Hours:** M-F 10:00 am -- 11:00 am, and by appointment
+
+* Make an appointment to see me by clicking [here]( https://calendar.google.com/calendar/u/0/selfsched?sstoken=UUtZb3I1Z1pFczdjfGRlZmF1bHR8MTZjOTU5MGY0ZTFlOTA2MmExNzhlYWQ5MGIzZWQ0OGM).
+
+--------------
+
+```{r, label = "SETUP", echo = FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(comment = NA, message = FALSE, warning = FALSE, fig.align = "center")
+library(openintro)
+library(dplyr)
+library(ggplot2)
+```
+
+
+### Course Description: {-}
+
+**Introduction to Statistical Modeling**: Introduction to Statistical Modeling is a continuation of Introduction to Data Management and Visualization with an emphasis on statistical modeling and reproducible reporting using professional tools.  Hypothesis testing is introduced via resampling, and bootstrapping is used to introduce estimation.  Cross-validation is used to evaluate and select models that take into account the bias-variance trade-off.  Supervised learning techniques discussed will include but are not limited to linear regression, regression trees, classification trees, and random forests.
+
+```{block, note-text, type='rmdnote'}
+Please bring a notebook and pencil to every class / zoom session.  
+```
+
+* * * 
+
+### Course Objectives: {-}
+
+* Students will learn to use a reproducible work flow for all assignments.
+
+* Students will improve their technology expertise.
+
+* Students will learn to create statistical models using both supervised and unsupervised learning techniques.
+
+* Students will learn to assess models via cross-validation.
+
+* * *
+
+### Course Text: {-}
+
+* [_An Introduction to Statistical Learning with Applications in R_](http://www-bcf.usc.edu/~gareth/ISL/) by Gareth James, Daniela Witten, Trevor Hastie and Robert Tibshirani
+
+**Optional References:**
+
+* [_Reproducible Research with R and RStudio, Second Edition_](https://github.com/christophergandrud/Rep-Res-Book) by Christopher Gandrud
+
+* [_The Elements of Statistical Learning_](http://web.stanford.edu/~hastie/ElemStatLearn/) by Trevor Hastie, Robert Tibshirani, and Jerome Friedman
+
+* [_R Graphics Cookbook_](http://www.amazon.com/R-Graphics-Cookbook-Winston-Chang/dp/1449316956) by Winston Chang - Available via `SafariBooksOnline` through the Appalachian State University [library](http://library.appstate.edu/). 
+
+* * *
+
+
+### Tentative Schedule and Course Pacing: {-}
+
+Tentative course assignments and due dates are maintained [here](https://StatisticalModeling.github.io/DataScience_2/CoursePacing/STT3860CoursePacingS2022.html).
+
+* * *
+
+### Course Grading: {-}
+
+* 10% of the course grade will come from 4 [DataCamp](https://www.datacamp.com/home) modules.
+
+* 40% of the grade will come from 4 individual bookdown/reproduction assignments.
+
+* 30% of the grade will come from 3 bookdown labs.
+
+* 20% of the grade will come from 3 group presentations.
+
+* * *
+
+**University Policies**
+
+This course conforms with all Appalachian State University policies with respect to academic integrity, disability services, and class attendance.  The details of the policies may be found at <http://academicaffairs.appstate.edu/resources/syllabi>.
+
+
+**Computers and Software**
+
+This course will use the RStudio server  (https://mathr.math.appstate.edu/) that has the programs listed below and more installed.
+
+* [R](http://cran.r-project.org) 
+* [Git](http://git-scm.com/downloads) 
+* [RStudio](http://www.rstudio.com/products/rstudio/download/)
+* [LaTeX](http://www.ctan.org/starter)
+
+You must have an active internet connection and be registered in the course to access the server. To access the server, point any web browser to <https://mathr.math.appstate.edu/>.  You will need to acknowledge the connection is unsecure and possibly add a security exception to your web browser. Use your Appstate Username and Password to access the server.  A screen shot of the RStudio server is shown in Figure \@ref(fig:login).
+
+```{r, echo = FALSE, label = "login", fig.cap = "RStudio login screen"}
+knitr::include_graphics("../images/RStudioLogIn.png", dpi = 150)
+```
+
+* * *
+
+If you have problems with your Appstate Username or Password visit [IT Support Services](http://support.appstate.edu/) or call 262-6266.  
+
+* * *
+
+
+
