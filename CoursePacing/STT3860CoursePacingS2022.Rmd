@@ -204,7 +204,7 @@ Optional Resources:
 
 * Week 14 (Apr 19, 21)
 
-+ Complete [DataCamp Machine Learning with `caret` in R](https://app.datacamp.com/learn/courses/machine-learning-with-caret-in-r) - Finish by Mar 21 NLT 5:00 PM   
++ Complete [DataCamp Machine Learning with `caret` in R](https://app.datacamp.com/learn/courses/machine-learning-with-caret-in-r) - Finish by Apr 21 NLT 5:00 PM   
   
     
     
