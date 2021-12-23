@@ -60,7 +60,7 @@ Optional Resources:
 
 * Week 2 (Jan 18, 20)
   
-     + [LAB 1: Questioning and Cleaning the bodyfat data Lab --- Click link and accept assignment --- must be enrolled in the class---Due Jan 20 NLT 5:00 PM](https://classroom.github.com/)
+     + [LAB 1: Questioning and Cleaning the bodyfat data Lab --- Click link and accept assignment --- must be enrolled in the class---Due Jan 20 NLT 5:00 PM](https://classroom.github.com/a/dEsl3uY8)
 
 * * * 
 
@@ -83,17 +83,15 @@ Optional Resources:
 
 * Week 4 (Feb 1, 3)
 
-    + [GitHub Bookdown Assignment #1 (Reproduction of Correlation and Regression) --- Click link and accept assignment --- must be enrolled in the class---Due Feb 3 NLT 5:00 PM](https://classroom.github.com/)
+    + [GitHub Bookdown Assignment #1 (Reproduction of Correlation and Regression) --- Click link and accept assignment --- must be enrolled in the class---Due Feb 3 NLT 5:00 PM](https://classroom.github.com/a/lMcfGumn)
 
     + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
     
 * * *
 
 * Week 5 (Feb 8, 10)
-
-    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the group assignment.
     
-    + [Group Presentation #1--- Click link and accept assignment --- must be enrolled in the class---Due Feb 10 NLT 12:30 PM](https://classroom.github.com/)
+    + [Group Presentation #1--- Click link and accept assignment --- must be enrolled in the class---Due Feb 10 NLT 12:30 PM](https://classroom.github.com/a/p9Uih_D5)
     
     + Please read [this](../GroupProjectEval/GroupEvaluation.pdf) docucment for how to rate your partners.
     
@@ -126,7 +124,7 @@ Optional Resources:
 
 * Week 7 (Feb 22, 24)
 
-  + [GitHub Bookdown Assignment #2 (Reproduction of Multiple and Logistic Regression)--- Click link and accept assignment --- must be enrolled in the class---Due Feb 24 NLT 5:00 PM](https://classroom.github.com/)  
+  + [GitHub Bookdown Assignment #2 (Reproduction of Multiple and Logistic Regression)--- Click link and accept assignment --- must be enrolled in the class---Due Feb 24 NLT 5:00 PM](https://classroom.github.com/a/v_Du3MYa)  
     
   + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
 
@@ -135,10 +133,8 @@ Optional Resources:
 * Week 8 (Mar 1, 3)
 
     + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
-
-    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the group assignment.
     
-    + [Group Presentation #2--- Click link and accept assignment --- must be enrolled in the class---Due Mar 3 NLT 12:30 PM](https://classroom.github.com/)
+    + [Group Presentation #2--- Click link and accept assignment --- must be enrolled in the class---Due Mar 3 NLT 12:30 PM](https://classroom.github.com/a/4DQmH6jd)
     
     + Prepare **group** presentation #2 (Mar 3)
     
@@ -151,7 +147,7 @@ Optional Resources:
 
 * Week 9 (Mar 15, 17)
 
-    + [LAB 2: Linear models with the bodyfat data Lab --- Click link and accept assignment --- must be enrolled in the class---Due Mar 17 NLT 5:00 PM](https://classroom.github.com/)
+    + [LAB 2: Linear models with the bodyfat data Lab --- Click link and accept assignment --- must be enrolled in the class---Due Mar 17 NLT 5:00 PM](https://classroom.github.com/a/o_bfNL_Z)
     
     + Review as needed [Lab Chapter 6](https://stat-ata-asu.github.io/STT3851ClassRepo/Rmarkdown/BookLabs/Lab_Chapter6.html)
 
@@ -177,7 +173,7 @@ Optional Resources:
 
 * Week 11 (Mar 29, 31)
 
-    +  [GitHub Bookdown Assignment #3 (Tree Based Models In R)---- Click link and accept assignment --- must be enrolled in the class---Due Mar 31 NLT 5:00 PM](https://classroom.github.com/)
+    +  [GitHub Bookdown Assignment #3 (Tree Based Models In R)---- Click link and accept assignment --- must be enrolled in the class---Due Mar 31 NLT 5:00 PM](https://classroom.github.com/a/EiHDck8k)
     
     
     
@@ -185,7 +181,7 @@ Optional Resources:
 
 * Week 12 (Apr 5, 7)
 
-    +  [LAB 3: Non-linear models with the bodyfat data Lab --- Click link and accept assignment --- must be enrolled in the class---Due Apr 7 NLT 5:00 PM](https://classroom.github.com/)
+    +  [LAB 3: Non-linear models with the bodyfat data Lab --- Click link and accept assignment --- must be enrolled in the class---Due Apr 7 NLT 5:00 PM](https://classroom.github.com/a/45gzFn4C)
     
     +  Review as needed [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
     
@@ -201,9 +197,7 @@ Optional Resources:
 
     + Prepare **group** presentation #3 (Apr 14)
 
-    + [Group Presentation #3--- Click link and accept assignment --- must be enrolled in the class---Due Apr 14 NLT 12:30 PM](https://classroom.github.com/)
-    
-    + Please see [AsuLearn](https://asulearn.appstate.edu) for the GitHub link to accept the group assignment.
+    + [Group Presentation #3--- Click link and accept assignment --- must be enrolled in the class---Due Apr 14 NLT 12:30 PM](https://classroom.github.com/a/M2Ow50lT)
 
     
 * * *
@@ -219,7 +213,7 @@ Optional Resources:
 
 * Week 15 (Apr 27)
   
-  +  [GitHub Bookdown Assignment #4 (Machine Learning with `caret` In R)---- Click link and accept assignment --- must be enrolled in the class---Due May 5 NLT 11:00 am PM](https://classroom.github.com/)
+  +  [GitHub Bookdown Assignment #4 (Machine Learning with `caret` In R)---- Click link and accept assignment --- must be enrolled in the class---Due May 5 NLT 11:00 am](https://classroom.github.com/a/j3w568NR)
 
 * * *
 
