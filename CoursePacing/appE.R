@@ -49,7 +49,7 @@ ggplot(aes(x = hightemp, y = volume)) +
 
 ## ---- label = "RESIDS", fig.width = 10, echo = FALSE, fig.cap = "At left, the model based on the overall average high temperature.  At right, the simple linear regression model."----
 ggplot(data = ndf, aes(x = hightemp, y = volume)) +
-  facet_grid(.~ model) + 
+  facet_grid(cols = vars(model)) + 
   geom_line(aes(x = hightemp, y = .fitted), color = "gray") + 
   theme_bw() + 
   geom_segment(aes(x = hightemp, xend = hightemp, y = volume, yend = .fitted), size = 0.25) + 
@@ -63,6 +63,9 @@ SSE <- var(residuals(mod)) * (n - 1)
 1 - SSE / SST
 # Or
 rsquared(mod)
+# Or by the formula...
+# sum(residuals(slr)^2)
+
 
 
 ## ---------------------------------------------------------------
