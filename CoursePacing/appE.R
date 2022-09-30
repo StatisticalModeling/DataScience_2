@@ -19,8 +19,9 @@ coef(mod)
 plotModel(mod, system = "ggplot2") + 
   theme_bw()
 ####
-ggplot(data = RailTrail, mapping = aes(x = hightemp, y = volume)) + 
-  geom_point() +
+ggplot(data = RailTrail, 
+       mapping = aes(x = hightemp, y = volume)) + 
+  geom_point(color = "blue") +
   geom_smooth(method = "lm", se = FALSE) + 
   theme_bw()
 
@@ -53,7 +54,7 @@ ggplot(data = ndf, aes(x = hightemp, y = volume)) +
   geom_line(aes(x = hightemp, y = .fitted), color = "gray") + 
   theme_bw() + 
   geom_segment(aes(x = hightemp, xend = hightemp, y = volume, yend = .fitted), size = 0.25) + 
-  geom_point(color = "blue") 
+  geom_point(color = "#cc00ff") 
 
 
 ## ---------------------------------------------------------------
@@ -170,6 +171,7 @@ summary(mod_interact)
 
 ## ---- label = "IM", fig.cap = "Visualization of interaction model for the rail trail data."----
 ggplot(data = RailTrail, aes(x = hightemp, y = volume, color = weekday)) + 
+  geom_point() +
   geom_smooth(method = "lm", se = FALSE) + 
   theme_bw()
 

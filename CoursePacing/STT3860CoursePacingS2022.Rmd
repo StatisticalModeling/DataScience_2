@@ -68,9 +68,9 @@ Optional Resources:
 
 * Week 3 (Jan 25, 27)
    
-    + Read [Appendix E](./appE.html).
+    + Read [Appendix E](https://mdsr-book.github.io/mdsr2e/ch-regression.html#simple-linear-regression).
   
-    + [Code](https://raw.githubusercontent.com/alanarnholt/GeneralStatistics/master/rmarkdown/ResidualGraphs.Rmd) to help with reproducing Appendix E.
+    + [Code](https://raw.githubusercontent.com/alanarnholt/GeneralStatistics/master/rmarkdown/ResidualGraphs.Rmd) to help with reproducing residual plots in Appendix E.
 
     + Complete [DataCamp Correlation and Regression](https://www.datacamp.com/courses/correlation-and-regression) - Finish by Jan 27 NLT 5:00 PM 
     
@@ -114,7 +114,7 @@ Optional Resources:
 
 * Week 6 (Feb 15, 17)
 
-    + Review [Appendix E](./appE.html). 
+    + Review [Appendix E](https://mdsr-book.github.io/mdsr2e/ch-regression.html#simple-linear-regression). 
     
     + [Logistic Regression](../rmarkdown/HW1later.html)
     
