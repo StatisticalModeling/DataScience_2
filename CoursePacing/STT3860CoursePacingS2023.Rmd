@@ -1,0 +1,246 @@
+---
+title: "STT 3860 - Introduction to Statistical Modeling - Tentative Course Schedule - Spring 2023"
+author: ""
+date: ""
+output: 
+  bookdown::html_document2: 
+    highlight: textmate
+    theme: yeti
+    css: "../css/style.css"
+---
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  TeX: { equationNumbers: { autoNumber: "AMS" } }
+});
+</script>
+
+* * *
+
+### General Notes: {-}
+
+```{block, note-text, type='rmdnote'}
+Please bring a notebook and pencil to every class.  
+```
+
+* * *
+
+* Week 1 (Jan 17, 19): Review concepts and ideas from `rmarkdown`, `knitr`, `bookdown`, Git, and GitHub
+    
+    + [R Markdown](http://rmarkdown.rstudio.com/)
+    
+    + [knitr](https://yihui.name/knitr/)
+    
+    + [bookdown: Authoring Books and Technical Documents with R Markdown](https://bookdown.org/yihui/bookdown/)
+    
+    + [Happy Git and GitHub for the useR](http://happygitwithr.com/)
+
+    + Send an email to arnholtat@appstate.edu with a Subject line of **STT3860 - GitHub Username**, and tell me in the body of your email your first name, last name, and your GitHub username.  
+    
+    + Make sure RStudio is set up to communicate with Git by following the directions in [HappyGitWithR](https://happygitwithr.com/hello-git.html) for introducing yourself to Git.---[VIDEO of the setup process](https://drive.google.com/file/d/1G9G8IeYu9QetYB1nxMmAFLgRtw5YC-c8/view?usp=sharing)
+
+    + Set cache your credentials and set up a personal access token (PAT) by following the directions in [HappyGitWithR](https://happygitwithr.com/credential-caching.html). 
+    
+    + [Set Global Options](https://stat-ata-asu.github.io/STT5812CourseRepo/Rmarkdown/GlobalOptions.html)
+    
+    + [Miscellaneous Tips](https://alanarnholt.github.io/GeneralStatistics/rmarkdown/MiscRmarkdown.html)
+    
+```{block, week1optional, type='rmdoptional'}   
+Optional Resources:
+
+* [DataCamp: Communicating with Data in the Tidyverse](https://www.datacamp.com/courses/communicating-with-data-in-the-tidyverse)
+
+* [Data Science with R](https://stat-ata-asu.github.io/R_DS_BD2020/)
+
+* [DataCamp: Introduction to Git for Data Science](https://www.datacamp.com/courses/introduction-to-git-for-data-science)
+
+* [Reading in Data](https://alanarnholt.github.io/STT3850/Handouts/WorkingWithDataRevised.html)
+``` 
+
+
+* * *
+
+* Week 2 (Jan 18, 20)
+  
+     + [LAB 1: Questioning and Cleaning the bodyfat data Lab --- Click link and accept assignment --- must be enrolled in the class---Due Jan 20 NLT 5:00 PM](https://classroom.github.com/a/dEsl3uY8)
+
+* * * 
+
+* Week 3 (Jan 25, 27)
+   
+    + Read [Appendix E](https://mdsr-book.github.io/mdsr2e/ch-regression.html#simple-linear-regression).
+  
+    + [Code](https://raw.githubusercontent.com/alanarnholt/GeneralStatistics/master/rmarkdown/ResidualGraphs.Rmd) to help with reproducing residual plots in Appendix E.
+
+    + Complete [DataCamp Correlation and Regression](https://www.datacamp.com/courses/correlation-and-regression) - Finish by Jan 27 NLT 5:00 PM 
+    
+
+```{block, type='rmdoptional'}   
+Optional Resources:
+
+* [DataCamp: Inference for Linear Regression](https://www.datacamp.com/courses/inference-for-linear-regression)
+```    
+
+* * *
+
+* Week 4 (Feb 1, 3)
+
+    + [GitHub Bookdown Assignment #1 (Reproduction of Correlation and Regression) --- Click link and accept assignment --- must be enrolled in the class---Due Feb 3 NLT 5:00 PM](https://classroom.github.com/a/lMcfGumn)
+
+    + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
+    
+* * *
+
+* Week 5 (Feb 8, 10)
+    
+    + [Group Presentation #1--- Click link and accept assignment --- must be enrolled in the class---Due Feb 10 NLT 12:30 PM](https://classroom.github.com/a/p9Uih_D5)
+    
+    + Please read [this](../GroupProjectEval/GroupEvaluation.pdf) docucment for how to rate your partners.
+    
+    + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
+
+    + Prepare **group** presentation #1 (Feb 10)
+
+* * *
+
+```{block, type='rmdoptional'}   
+Optional Resources:
+
+* [Web Pages](https://alanarnholt.github.io/classexample/about.html)
+
+```  
+
+* * *
+
+* Week 6 (Feb 15, 17)
+
+    + Review [Appendix E](https://mdsr-book.github.io/mdsr2e/ch-regression.html#simple-linear-regression). 
+    
+    + [Logistic Regression](../rmarkdown/HW1later.html)
+    
+    + [Predictive Model Building](https://stat-ata-asu.github.io/PredictiveModelBuilding/)
+    
+    + Complete [DataCamp Multiple and Logistic Regression](https://www.datacamp.com/courses/multiple-and-logistic-regression) - Finish by Feb 17 NLT 5:00 PM
+
+* * *
+
+* Week 7 (Feb 22, 24)
+
+  + [GitHub Bookdown Assignment #2 (Reproduction of Multiple and Logistic Regression)--- Click link and accept assignment --- must be enrolled in the class---Due Feb 24 NLT 5:00 PM](https://classroom.github.com/a/v_Du3MYa)  
+    
+  + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
+
+* * *
+
+* Week 8 (Mar 1, 3)
+
+    + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
+    
+    + [Group Presentation #2--- Click link and accept assignment --- must be enrolled in the class---Due Mar 3 NLT 12:30 PM](https://classroom.github.com/a/4DQmH6jd)
+    
+    + Prepare **group** presentation #2 (Mar 3)
+    
+    
+* * *   
+
+* March 7-11 __Spring Break__
+
+* * *
+
+* Week 9 (Mar 15, 17)
+
+    + [LAB 2: Linear models with the bodyfat data Lab --- Click link and accept assignment --- must be enrolled in the class---Due Mar 17 NLT 5:00 PM](https://classroom.github.com/a/o_bfNL_Z)
+    
+    + Review as needed [Lab Chapter 6](https://stat-ata-asu.github.io/STT3851ClassRepo/Rmarkdown/BookLabs/Lab_Chapter6.html)
+
+
+* * *
+
+* Week 10 (Mar 22, 24)
+
+    + Complete [DataCamp Tree Based Models in R](https://www.datacamp.com/courses/tree-based-models-in-r) - Finish by Mar 24 NLT 5:00 PM
+    
+    +  Review as needed [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
+    
+    +  Review as needed [Regression Trees](../rmarkdown/RegressionTrees.html)
+    
+    + [Predictive Model Building](https://stat-ata-asu.github.io/PredictiveModelBuilding/)
+
+    
+
+    
+    
+* * *
+
+
+* Week 11 (Mar 29, 31)
+
+    +  [GitHub Bookdown Assignment #3 (Tree Based Models In R)---- Click link and accept assignment --- must be enrolled in the class---Due Mar 31 NLT 5:00 PM](https://classroom.github.com/a/EiHDck8k)
+    
+    
+    
+* * * 
+
+* Week 12 (Apr 5, 7)
+
+    +  [LAB 3: Non-linear models with the bodyfat data Lab --- Click link and accept assignment --- must be enrolled in the class---Due Apr 7 NLT 5:00 PM](https://classroom.github.com/a/45gzFn4C)
+    
+    +  Review as needed [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
+    
+    +  Review as needed [Regression Trees](../rmarkdown/RegressionTrees.html)
+    
+    
+    
+* * *
+
+* Week 13 (Apr 12, 14)
+
+    + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
+
+    + Prepare **group** presentation #3 (Apr 14)
+
+    + [Group Presentation #3--- Click link and accept assignment --- must be enrolled in the class---Due Apr 14 NLT 12:30 PM](https://classroom.github.com/a/M2Ow50lT)
+
+    
+* * *
+
+* Week 14 (Apr 19, 21)
+
++ Complete [DataCamp Machine Learning with `caret` in R](https://app.datacamp.com/learn/courses/machine-learning-with-caret-in-r) - Finish by Apr 21 NLT 5:00 PM   
+  
+    
+    
+
+* * * 
+
+* Week 15 (Apr 27)
+  
+  +  [GitHub Bookdown Assignment #4 (Machine Learning with `caret` In R)---- Click link and accept assignment --- must be enrolled in the class---Due May 5 NLT 11:00 am](https://classroom.github.com/a/j3w568NR)
+
+* * *
+
+
+* Final Exam Period (May 5---11 am -1:30 pm)
+
+
+* * *
+
+* Other topics as time permits might include:
+
+    + [DataCamp: Working with Geospatial Data in R](https://www.datacamp.com/courses/working-with-geospatial-data-in-r)
+
+    + [DataCamp: Spatial Statics in R](https://www.datacamp.com/courses/spatial-statistics-in-r)
+    
+* * *    
+
+### Final Exam {-}
+
+```{block, FINAL, type='rmdnote'}
+*  [University Exam Schedule](https://registrar.appstate.edu/sites/default/files/asu_spring_2022_exam_schedule_final_cns.pdf)
+```
+
+________________
+
+<center> Last Updated on: `r format(Sys.time(), "%b %d, %Y at %X")` </center>
+
+________________
