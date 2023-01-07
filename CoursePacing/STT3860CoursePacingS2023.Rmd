@@ -64,9 +64,9 @@ Optional Resources:
 
   + Read Chapter 2 of [Correlation and Regression](https://mathr.math.appstate.edu/connect/content/8a7e937f-f367-4ed4-8289-90f8e8086065)
   
-  + [Complete Chapter 1 in Dealing with Missing Data in R on DataCamp - Why care about missing data? ](https://app.datacamp.com/learn/courses/dealing-with-missing-data-in-r)
+  + [Complete Chapter 1 in Dealing with Missing Data in R on DataCamp - Why care about missing data? ](https://app.datacamp.com/groups/stt3860-sp23/assignments)---Due Jan 24 NLT 5:00 PM 
   
-  + Complete and turn in a hard copy of your summary of "Why care about missing data?" using RMarkdown.  Due Jan 24 NLT 5:00 PM.    
+  + Complete and turn in a hard copy of your summary of "Why care about missing data?" using RMarkdown---Due Jan 26 NLT 5:00 PM    
 
 * * * 
 
@@ -74,9 +74,9 @@ Optional Resources:
    
    + Read Chapter 3 of [Correlation and Regression](https://mathr.math.appstate.edu/connect/content/8a7e937f-f367-4ed4-8289-90f8e8086065)
   
-  + [Complete Chapter 2 in Dealing with Missing Data in R on DataCamp - Wrangling and tidying up missing values](https://app.datacamp.com/learn/courses/dealing-with-missing-data-in-r)
+  + [Complete Chapter 2 in Dealing with Missing Data in R on DataCamp - Wrangling and tidying up missing values](https://app.datacamp.com/groups/stt3860-sp23/assignments)---Due Jan 31 NLT 5:00 PM
   
-  + Complete and turn in a hard copy of your summary of "Wrangling and tidying up missing values" using RMarkdown.  Due Feb 2 NLT 5:00 PM.       
+  + Complete and turn in a hard copy of your summary of "Wrangling and tidying up missing values" using RMarkdown---Due Feb 2 NLT 5:00 PM       
     
 * * *
 
@@ -84,9 +84,9 @@ Optional Resources:
 
      + Read Chapter 4 of [Correlation and Regression](https://mathr.math.appstate.edu/connect/content/8a7e937f-f367-4ed4-8289-90f8e8086065)
     
-    + [Complete Chapter 3 in Dealing with Missing Data in R on DataCamp - Testing missing relationships](https://app.datacamp.com/learn/courses/dealing-with-missing-data-in-r)
+    + [Complete Chapter 3 in Dealing with Missing Data in R on DataCamp - Testing missing relationships](https://app.datacamp.com/groups/stt3860-sp23/assignments)---Due Feb 7 NLT 5:00 PM
   
-  + Complete and turn in a hard copy of your summary of "Testing missing relationships" using RMarkdown.  Due Feb 9 NLT 5:00 PM.   
+  + Complete and turn in a hard copy of your summary of "Testing missing relationships" using RMarkdown---Due Feb 9 NLT 5:00 PM   
     
 * * *
 
@@ -94,11 +94,11 @@ Optional Resources:
     
      + Read Chapter 5 of [Correlation and Regression](https://mathr.math.appstate.edu/connect/content/8a7e937f-f367-4ed4-8289-90f8e8086065)
     
-    + [Complete Chapter 4 in Dealing with Missing Data in R on DataCamp - Connecting the dots imputation](https://app.datacamp.com/learn/courses/dealing-with-missing-data-in-r)
+    + [Complete Chapter 4 in Dealing with Missing Data in R on DataCamp - Connecting the dots imputation](https://app.datacamp.com/groups/stt3860-sp23/assignments)---Due Feb 14 NLT 5:00 PM
   
-  + Complete and turn in a hard copy of your summary of "Connecting the dots imputation" using RMarkdown.  Due Feb 16 NLT 5:00 PM.
+  + Complete and turn in a hard copy of your summary of "Connecting the dots imputation" using RMarkdown---Due Feb 16 NLT 5:00 PM
   
-   + [START LAB1: Questioning and Cleaning the bodyfat data Lab---Due Feb 23 NLT 5:00 PM](https://classroom.github.com/a/v_Du3MYa) 
+   + [START LAB1: Questioning and Cleaning the bodyfat data Lab---Due Feb 23 NLT 5:00 PM](get link here) 
 
 * * *
 
@@ -106,27 +106,29 @@ Optional Resources:
 
     + Read Chapter 6 of [Correlation and Regression](https://mathr.math.appstate.edu/connect/content/8a7e937f-f367-4ed4-8289-90f8e8086065)
    
-   + [LAB1: Questioning and Cleaning the bodyfat data Lab---Due Feb 23 NLT 5:00 PM](https://classroom.github.com/a/v_Du3MYa) 
+   + [LAB1: Questioning and Cleaning the bodyfat data Lab---Due Feb 23 NLT 5:00 PM](get link here) 
 
 * * *
 
 * Week 7 (Feb 28, Mar 2)
 
-    + [Complete Chapters  1 and 2 in Modeling with Data in the Tidyverse on DataCamp - Introduction to Modeling & Modeling with Basic Regression](https://app.datacamp.com/learn/courses/modeling-with-data-in-the-tidyverse)
-  
-    + Complete and turn in a hard copy of your summary of "Introduction to Modeling & Modeling with Basic Regression" using RMarkdown.  Due Mar 2 NLT 5:00 PM. 
-    
     + Read [Appendix E.](https://mdsr-book.github.io/mdsr2e/ch-regression.html#simple-linear-regression)
+    
+    + [Complete Chapters  1 and 2 in Modeling with Data in the Tidyverse on DataCamp - Introduction to Modeling & Modeling with Basic Regression](https://app.datacamp.com/groups/stt3860-sp23/assignments)---Due Feb 28 NLT 5:00 PM
+  
+    + Complete and turn in a hard copy of your summary of "Introduction to Modeling & Modeling with Basic Regression" using RMarkdown---Due Mar 2 NLT 5:00 PM 
+    
+    
 
 * * *
 
 * Week 8 (Mar 7, 9)
 
-    + [Complete Chapters  3 and 4 in Modeling with Data in the Tidyverse on DataCamp - Modeling with Multiple Regression & ModelAssessment and Selection](https://app.datacamp.com/learn/courses/modeling-with-data-in-the-tidyverse)
-  
-    + Complete and turn in a hard copy of your summary of "Introduction to Modeling & Modeling with Basic Regression" using RMarkdown.  Due Mar 2 NLT 5:00 PM. 
+     + Read [Appendix E.](https://mdsr-book.github.io/mdsr2e/ch-regression.html#simple-linear-regression)
     
-    + Read [Appendix E.](https://mdsr-book.github.io/mdsr2e/ch-regression.html#simple-linear-regression)
+    + [Complete Chapters  3 and 4 in Modeling with Data in the Tidyverse on DataCamp - Modeling with Multiple Regression & Model Assessment and Selection](https://app.datacamp.com/groups/stt3860-sp23/assignments)---Due Mar 7 NLT 5:00 PM 
+  
+    + Complete and turn in a hard copy of your summary of "Modeling with Multiple Regression & Model Assessment and Selection" using RMarkdown---Due Mar 9 NLT 5:00 PM 
     
     
 * * *   
@@ -135,13 +137,13 @@ Optional Resources:
 
 * * *
 
-* Week 9 (Mar 21, 13)
+* Week 9 (Mar 21, 23)
 
-    + [Complete Chapters 1-5 in Machine Learning with `caret` in R on DataCamp](https://app.datacamp.com/learn/courses/machine-learning-with-caret-in-r)
+    + [Complete Chapters 1-5 in Machine Learning with `caret` in R on DataCamp](https://app.datacamp.com/groups/stt3860-sp23/assignments)---Due Mar 22 NLT 5:00 PM
   
-    + Complete and turn in a hard copy of your summary of "Machine Learning with `caret` in R" using RMarkdown.  Due Mar 13 NLT 5:00 PM. 
+    + Complete and turn in a hard copy of your summary of "Machine Learning with `caret` in R" using RMarkdown.  Due Mar 23 NLT 5:00 PM 
     
-     + [START LAB2: Linear models with the bodyfat data Lab---Due Mar 30 NLT 5:00 PM](https://classroom.github.com/a/v_Du3MYa) 
+     + [START LAB2: Linear models with the bodyfat data Lab---Due Mar 30 NLT 5:00 PM](put link here) 
 
 * * *
 
@@ -151,13 +153,15 @@ Optional Resources:
     
     + Read [Multiple and Logistic Regression](https://mathr.math.appstate.edu/connect/content/a4c610bf-b3e3-4aed-ab05-65b8a8abac95)
     
-    + [LAB2: Linear models with the bodyfat data Lab---Due Mar 30 NLT 5:00 PM](https://classroom.github.com/a/v_Du3MYa) 
+    + [LAB2: Linear models with the bodyfat data Lab---Due Mar 30 NLT 5:00 PM](put link here) 
 
 * * *
 
 
 * Week 11 (Apr 4, 6)
 
+    + Extra Credit---[Combine previous Rmarkdown assignments into Bookdown document](put classroom github link here)
+    
     + Read [Tree based Models in R](https://mathr.math.appstate.edu/connect/content/4ae25dab-1ef6-4902-b29b-00c82b9c8fff)
     
     + Review as needed [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
@@ -166,7 +170,7 @@ Optional Resources:
     
     + Review as needed [Predictive Model Building](https://stat-ata-asu.github.io/PredictiveModelBuilding/)
     
-     + [START LAB3: Non-linear models with the bodyfat data Lab---Due Apr 13 NLT 5:00 PM](https://classroom.github.com/a/v_Du3MYa) 
+     + [START LAB3: Non-linear models with the bodyfat data Lab---Due Apr 13 NLT 5:00 PM](put link here) 
     
 
 * * * 
@@ -181,7 +185,7 @@ Optional Resources:
     
     + Review as needed [Predictive Model Building](https://stat-ata-asu.github.io/PredictiveModelBuilding/)
     
-    + [LAB3: Non-linear models with the bodyfat data Lab---Due Apr 13 NLT 5:00 PM](https://classroom.github.com/a/v_Du3MYa) 
+    + [LAB3: Non-linear models with the bodyfat data Lab---Due Apr 13 NLT 5:00 PM](put link here) 
     
 * * *
 
@@ -205,7 +209,7 @@ Optional Resources:
 
 * Week 15 (May 2)
 
-    + Prepare **group** presentation 
+    + Prepare **group** presentation.  Accept materials [here](set up github classroom link) 
 
 * * *
 
