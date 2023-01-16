@@ -98,7 +98,7 @@ Optional Resources:
   
   + Complete and turn in a hard copy of your summary of "Connecting the dots imputation" using RMarkdown---Due Feb 16 NLT 5:00 PM
   
-   + [START LAB1: Questioning and Cleaning the bodyfat data Lab---Due Feb 23 NLT 5:00 PM](get link here) 
+   + [START LAB1: Questioning and Cleaning the bodyfat data Lab---Due Feb 23 NLT 5:00 PM](https://classroom.github.com/a/B5A12MYZ) 
 
 * * *
 
@@ -106,7 +106,7 @@ Optional Resources:
 
     + Read Chapter 6 of [Correlation and Regression](https://mathr.math.appstate.edu/connect/content/8a7e937f-f367-4ed4-8289-90f8e8086065)
    
-   + [LAB1: Questioning and Cleaning the bodyfat data Lab---Due Feb 23 NLT 5:00 PM](get link here) 
+   + [LAB1: Questioning and Cleaning the bodyfat data Lab---Due Feb 23 NLT 5:00 PM](https://classroom.github.com/a/B5A12MYZ) 
 
 * * *
 
@@ -143,7 +143,7 @@ Optional Resources:
   
     + Complete and turn in a hard copy of your summary of "Machine Learning with `caret` in R" using RMarkdown.  Due Mar 23 NLT 5:00 PM 
     
-     + [START LAB2: Linear models with the bodyfat data Lab---Due Mar 30 NLT 5:00 PM](put link here) 
+     + [START LAB2: Linear models with the bodyfat data Lab---Due Mar 30 NLT 5:00 PM](https://classroom.github.com/a/ffbLB8cD) 
 
 * * *
 
@@ -153,7 +153,7 @@ Optional Resources:
     
     + Read [Multiple and Logistic Regression](https://mathr.math.appstate.edu/connect/content/a4c610bf-b3e3-4aed-ab05-65b8a8abac95)
     
-    + [LAB2: Linear models with the bodyfat data Lab---Due Mar 30 NLT 5:00 PM](put link here) 
+    + [LAB2: Linear models with the bodyfat data Lab---Due Mar 30 NLT 5:00 PM](https://classroom.github.com/a/ffbLB8cD) 
 
 * * *
 
@@ -170,7 +170,7 @@ Optional Resources:
     
     + Review as needed [Predictive Model Building](https://stat-ata-asu.github.io/PredictiveModelBuilding/)
     
-     + [START LAB3: Non-linear models with the bodyfat data Lab---Due Apr 13 NLT 5:00 PM](put link here) 
+     + [START LAB3: Non-linear models with the bodyfat data Lab---Due Apr 13 NLT 5:00 PM](https://classroom.github.com/a/PZf8LJ_-) 
     
 
 * * * 
@@ -185,7 +185,7 @@ Optional Resources:
     
     + Review as needed [Predictive Model Building](https://stat-ata-asu.github.io/PredictiveModelBuilding/)
     
-    + [LAB3: Non-linear models with the bodyfat data Lab---Due Apr 13 NLT 5:00 PM](put link here) 
+    + [LAB3: Non-linear models with the bodyfat data Lab---Due Apr 13 NLT 5:00 PM](https://classroom.github.com/a/PZf8LJ_-) 
     
 * * *
 
@@ -209,7 +209,7 @@ Optional Resources:
 
 * Week 15 (May 2)
 
-    + Prepare **group** presentation.  Accept materials [here](set up github classroom link) 
+    + Prepare **group** presentation.  Accept materials [here](https://classroom.github.com/a/2mnclwn7) 
 
 * * *
 
