@@ -62,7 +62,7 @@ Optional Resources:
 
 * Week 2 (Jan 24, 26)
 
-  + Read Chapter 2 of [Correlation and Regression](https://mathr.math.appstate.edu/connect/content/8a7e937f-f367-4ed4-8289-90f8e8086065)
+  + Read Chapter 2 of [Correlation and Regression](https://mathr.math.appstate.edu/connect/content/71419336-3676-4c19-9077-f018b948229d)
   
   + [Complete Chapter 1 in Dealing with Missing Data in R on DataCamp - Why care about missing data? ](https://app.datacamp.com/groups/stt3860-sp23/assignments)---Due Jan 24 NLT 5:00 PM 
   
@@ -72,7 +72,7 @@ Optional Resources:
 
 * Week 3 (Jan 31, Feb 2)
    
-   + Read Chapter 3 of [Correlation and Regression](https://mathr.math.appstate.edu/connect/content/8a7e937f-f367-4ed4-8289-90f8e8086065)
+   + Read Chapter 3 of [Correlation and Regression](https://mathr.math.appstate.edu/connect/content/71419336-3676-4c19-9077-f018b948229d)
   
   + [Complete Chapter 2 in Dealing with Missing Data in R on DataCamp - Wrangling and tidying up missing values](https://app.datacamp.com/groups/stt3860-sp23/assignments)---Due Jan 31 NLT 5:00 PM
   
@@ -82,7 +82,7 @@ Optional Resources:
 
 * Week 4 (Feb 7, 9)
 
-     + Read Chapter 4 of [Correlation and Regression](https://mathr.math.appstate.edu/connect/content/8a7e937f-f367-4ed4-8289-90f8e8086065)
+     + Read Chapter 4 of [Correlation and Regression](https://mathr.math.appstate.edu/connect/content/71419336-3676-4c19-9077-f018b948229d)
     
     + [Complete Chapter 3 in Dealing with Missing Data in R on DataCamp - Testing missing relationships](https://app.datacamp.com/groups/stt3860-sp23/assignments)---Due Feb 7 NLT 5:00 PM
   
@@ -92,7 +92,7 @@ Optional Resources:
 
 * Week 5 (Feb 14, 16)
     
-     + Read Chapter 5 of [Correlation and Regression](https://mathr.math.appstate.edu/connect/content/8a7e937f-f367-4ed4-8289-90f8e8086065)
+     + Read Chapter 5 of [Correlation and Regression](https://mathr.math.appstate.edu/connect/content/71419336-3676-4c19-9077-f018b948229d)
     
     + [Complete Chapter 4 in Dealing with Missing Data in R on DataCamp - Connecting the dots imputation](https://app.datacamp.com/groups/stt3860-sp23/assignments)---Due Feb 14 NLT 5:00 PM
   
@@ -104,7 +104,7 @@ Optional Resources:
 
 * Week 6 (Feb 21, 23)
 
-    + Read Chapter 6 of [Correlation and Regression](https://mathr.math.appstate.edu/connect/content/8a7e937f-f367-4ed4-8289-90f8e8086065)
+    + Read Chapter 6 of [Correlation and Regression](https://mathr.math.appstate.edu/connect/content/71419336-3676-4c19-9077-f018b948229d)
    
    + [LAB1: Questioning and Cleaning the bodyfat data Lab---Due Feb 23 NLT 5:00 PM](https://classroom.github.com/a/B5A12MYZ) 
 
@@ -151,7 +151,7 @@ Optional Resources:
 
     + Read [Predictive Model Building](https://stat-ata-asu.github.io/PredictiveModelBuilding/)
     
-    + Read [Multiple and Logistic Regression](https://mathr.math.appstate.edu/connect/content/a4c610bf-b3e3-4aed-ab05-65b8a8abac95)
+    + Read [Multiple and Logistic Regression](https://mathr.math.appstate.edu/connect/content/493bca23-1118-4e56-9e3f-f35585deb611)
     
     + [LAB2: Linear models with the bodyfat data Lab---Due Mar 30 NLT 5:00 PM](https://classroom.github.com/a/ffbLB8cD) 
 
