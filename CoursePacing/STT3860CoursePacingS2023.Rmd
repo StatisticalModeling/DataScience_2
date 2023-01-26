@@ -66,7 +66,9 @@ Optional Resources:
   
   + [Complete Chapter 1 in Dealing with Missing Data in R on DataCamp - Why care about missing data? ](https://app.datacamp.com/groups/stt3860-sp23/assignments)---Due Jan 24 NLT 5:00 PM 
   
-  + Complete and turn in a hard copy of your summary of "Why care about missing data?" using RMarkdown---Due Jan 26 NLT 5:00 PM    
+  + Complete and turn in a hard copy of your summary of "Why care about missing data?" using RMarkdown---Due Jan 26 NLT 5:00 PM  
+  
+  + Misc Regression [topics](https://alanarnholt.github.io/STT3850/Rmarkdown/MiscRegression.html)
 
 * * * 
 
