@@ -102,7 +102,7 @@ Optional Resources:
   
    + [START LAB1: Questioning and Cleaning the bodyfat data Lab---Due Feb 23 NLT 5:00 PM](https://classroom.github.com/a/B5A12MYZ) 
    
-   + [In class review this document](https://alanarnholt.github.io/STT3850/Handouts/RegHandout.html)
+   + In class review [this document.](https://alanarnholt.github.io/STT3850/Handouts/RegHandout.html)
 
 * * *
 
