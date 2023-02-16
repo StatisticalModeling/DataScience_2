@@ -101,6 +101,8 @@ Optional Resources:
   + Complete and turn in a hard copy of your summary of "Connecting the dots imputation" using RMarkdown---Due Feb 16 NLT 5:00 PM
   
    + [START LAB1: Questioning and Cleaning the bodyfat data Lab---Due Feb 23 NLT 5:00 PM](https://classroom.github.com/a/B5A12MYZ) 
+   
+   + [In class review this document](https://alanarnholt.github.io/STT3850/Handouts/RegHandout.html)
 
 * * *
 

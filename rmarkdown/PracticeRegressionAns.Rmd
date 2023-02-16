@@ -1,0 +1,133 @@
+---
+title: "Practice"
+author: "Partial Answers"
+date: 'Last updated: `r format(Sys.time(), "%B %d, %Y at %X")`'
+output: bookdown::html_document2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, comment = NA)
+library(tidyverse)
+```
+
+# Model
+
+Load the `PASWR2` package and use the `VIT2005` data set to create a linear model named `webe` that regresses `totalprice` onto `area` and `age`.
+
+```{r}
+library(PASWR2)
+webe <- lm(totalprice ~ area + age, data = VIT2005)
+summary(webe)
+```
+
+## Model Matrix
+
+Create the model matrix $X$ from the model `webe` and use `dim()` to show the dimmensions of $X$.
+
+```{r}
+X <- model.matrix(webe)
+X <- as.matrix(X)
+head(X)
+dim(X)
+```
+-------------
+
+Multiply the transpose of $X$ by $X$ and store the result in an object named `XTX`.
+
+```{r}
+XTX <- t(X)%*%X
+dim(XTX)
+XTX
+```
+----------------
+
+Store the values of `totalprice` in a $218 \times 1$ matrix named `Y`.
+
+```{r}
+Y <- VIT2005 %>% 
+  select(totalprice) %>% 
+  as.matrix()
+dim(Y)
+```
+---------------
+
+Use the normal equations ($\mathbf{\hat{\beta}} = (\mathbf{X'X})^{-1}\mathbf{X'Y}$) to compute the least squares estimates of $\mathbf{\beta}$.  Store the results in an object named `betahat`.
+
+```{r}
+XTXI <- solve(XTX)
+XTY <- t(X)%*%Y
+betahat <- XTXI %*% XTY
+betahat
+```
+
+----------------
+
+Extract the MSE from the object `webe`.
+
+```{r}
+anova(webe)
+anova(webe)[3, 3] -> MSE
+MSE
+# or
+summary(webe)$sigma^2 -> MSE2
+MSE2
+```
+
+------------
+
+Compute the estimated variance-covariance matrix ($\hat{\sigma}^2_{\hat{\beta}} = MSE(\mathbf{X'X})^{-1}$) and store the results in an object named `VCM`.
+
+```{r}
+VCM <- MSE*XTXI
+VCM
+```
+
+--------------
+
+Construct 98% confidence intervals for $\mathbf{\beta}$.
+
+```{r}
+CT <- qt(.99, 215)
+betahat[1] + c(-1, 1)*CT*sqrt(VCM[1, 1])
+betahat[2] + c(-1, 1)*CT*sqrt(VCM[2, 2])
+betahat[3] + c(-1, 1)*CT*sqrt(VCM[3, 3])
+# Or
+confint(webe, level = 0.98)
+```
+
+------------------
+
+Compute the mean response ($E(Y_h)$) for an apartment that had an area of 100 square meters and was 25 years old in 2005.
+
+```{r}
+Xh <- matrix(c(1, 100, 25), nrow = 1)
+Yhath <- Xh %*% betahat
+Yhath
+# or
+predict(webe, newdata = data.frame(area = 100, age = 25))
+```
+-----------
+
+Find the standard error for the expected response given $X_h = (1, 100, 25)$.
+
+```{r}
+s2yhath <- Xh %*% VCM %*% t(Xh)
+s2yhath
+syhath <- sqrt(s2yhath)
+syhath
+```
+
+---------
+
+Construct a 90% confidence interval for the mean response given $X_h = (1, 100, 25)$.
+
+```{r}
+CT <- qt(.95, 215)
+CT
+Yhath + c(-1, 1)*CT*syhath
+# Or 
+predict(webe, newdata = data.frame(area = 100, age = 25), interval = "conf", level = 0.90)
+```
+
+----------
+

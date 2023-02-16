@@ -1,0 +1,111 @@
+---
+title: "Practice"
+author: "Your Name"
+date: 'Last updated: `r format(Sys.time(), "%B %d, %Y at %X")`'
+output: bookdown::html_document2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, comment = NA)
+library(tidyverse)
+```
+
+# Model
+
+Load the `PASWR2` package and use the `VIT2005` data set to create a linear model named `webe` that regresses `totalprice` onto `area` and `age`.
+
+```{r}
+# Your Code here
+```
+
+## Model Matrix
+
+Create the model matrix $X$ from the model `webe` and use `dim()` to show the dimmensions of $X$.
+
+```{r}
+# Your Code here
+
+```
+
+-------------
+
+Multiply the transpose of $X$ by $X$ and store the result in an object named `XTX`.
+
+```{r}
+# Your Code here
+
+```
+
+----------------
+
+Store the values of `totalprice` in a $218 \times 1$ matrix named `Y`.
+
+```{r}
+# Your Code here
+
+```
+
+---------------
+
+Use the normal equations ($\mathbf{\hat{\beta}} = (\mathbf{X'X})^{-1}\mathbf{X'Y}$) to compute the least squares estimates of $\mathbf{\beta}$.  Store the results in an object named `betahat`.
+
+```{r}
+# Your Code here
+
+```
+
+----------------
+
+Extract the MSE from the object `webe`.
+
+```{r}
+# Your Code here
+
+```
+
+------------
+
+Compute the estimated variance-covariance matrix ($\hat{\sigma}^2_{\hat{\beta}} = MSE(\mathbf{X'X})^{-1}$) and store the results in an object named `VCM`.
+
+```{r}
+# Your Code here
+
+```
+
+--------------
+
+Construct 98% confidence intervals for $\mathbf{\beta}$.
+
+```{r}
+# Your Code here
+
+```
+
+------------------
+
+Compute the mean response ($E(Y_h)$) for an apartment that had an area of 100 square meters and was 25 years old in 2005.
+
+```{r}
+# Your Code here
+
+```
+-----------
+
+Find the standard error for the expected response given $X_h = (1, 100, 25)$.
+
+```{r}
+# Your Code here
+
+```
+
+---------
+
+Construct a 90% confidence interval for the mean response given $X_h = (1, 100, 25)$.
+
+```{r}
+# Your Code here
+
+```
+
+----------
+
