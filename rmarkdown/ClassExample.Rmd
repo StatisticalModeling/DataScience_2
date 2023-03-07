@@ -1,0 +1,70 @@
+---
+title: "Class Example"
+author: "Alan T. Arnholt"
+date: 'Last compiled: `r format(Sys.time(), "%B %d, %Y at %X")`'
+output: bookdown::pdf_document2
+toc: FALSE
+---
+
+```{r label = "setup", include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, warning = FALSE, message = FALSE, fig.align = "center")
+library(tidyverse)
+library(moderndive)
+```
+
+# Code chunks (hidden)
+
+```{r label = "g1", echo = FALSE, fig.cap = "Scatterplot of Log10 of Price versus Number of Bedrooms", fig.width = 2.5, fig.height = 2.5}
+p1 <- ggplot(data = house_prices, aes(x = bedrooms, y = log10(price))) + 
+  geom_point(alpha = 0.05) + 
+  geom_smooth(method = "lm", se = FALSE) +
+  theme_bw() + 
+  labs(x = "Number of Bedrooms")
+p1
+```
+
+## Data munging
+
+```{r, label = "f1"}
+# removing outlier
+house_prices %>% 
+  filter(bedrooms < 33) -> house_prices
+```
+
+## Scatterplot without and with outlier removed
+
+```{r, label = "b1", fig.cap = "Scatterplots with and without outlier for Log10 Price versus Number of Bedrooms", fig.width = 10, fig.height = 5}
+p2 <- ggplot(data = house_prices, aes(x = bedrooms, y = log10(price))) + 
+  geom_point(alpha = 0.05) + 
+  geom_smooth(method = "lm", se = FALSE) +
+  theme_bw() + 
+  labs(x = "Number of Bedrooms")
+library(patchwork)
+p1 + p2
+```
+
+The left graph in Figure \@ref(fig:b1) contains all of the data in `house_prices` while the right graph in Figure \@ref(fig:b1) removes the outlier in Figure \@ref(fig:g1) and creates a scatterplot without the "outlier".
+
+# Creating models and showing regression output
+
+```{r, label = "m1"}
+mod1 <- lm(log10(price) ~ log10(sqft_living) + bedrooms, data = house_prices)
+get_regression_table(mod1) -> T1
+T1
+```
+Note: the output from `T1` could be made to look better.  Consider the `kable()` function from `knitr`:
+
+```{r}
+knitr::kable(T1, caption = "A different formatting of T1")
+```
+
+
+
+## Writing the regression equation with \LaTeX and inline R code
+
+The least squares regression equation from regressing `log10` of `price` onto `log10` of `sqft\_living` and `bedrooms` is written in Equation \@ref(eq:lre). 
+
+\begin{equation}
+\widehat{\text{log10(price)}} = `r T1$estimate[1]` + `r T1$estimate[2]` \cdot \text{log10(sqft\_living)}  `r T1$estimate[3]` \cdot \text{bedrooms}
+(\#eq:lre)
+\end{equation}
