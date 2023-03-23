@@ -149,6 +149,8 @@ Optional Resources:
     
     + [Cross Validation Handout](https://stat-ata-asu.github.io/STT3851ClassRepo/Rmarkdown/Cross-ValidationInClassHO.html)
     
+    + [Cross Validation starter code](https://classroom.github.com/a/lHJo6L7k)
+    
      + [START LAB2: Linear models with the bodyfat data Lab---Due Mar 30 NLT 5:00 PM](https://classroom.github.com/a/ffbLB8cD) 
 
 * * *
