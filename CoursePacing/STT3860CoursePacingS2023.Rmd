@@ -178,7 +178,7 @@ Optional Resources:
 
     + Extra Credit---[Combine previous Rmarkdown assignments into Bookdown document](put classroom github link here)
     
-    + Read [Tree based Models in R](https://mathr.math.appstate.edu/connect/content/4ae25dab-1ef6-4902-b29b-00c82b9c8fff)
+    + Read [Tree based Models in R](https://mathr.math.appstate.edu/connect/content/21550326-dbfe-4e32-9287-891af83e3a9e)
     
     + Review as needed [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
     
