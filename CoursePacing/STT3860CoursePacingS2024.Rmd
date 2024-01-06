@@ -17,7 +17,7 @@ MathJax.Hub.Config({
 
 * * *
 
-### General Notes: {-}
+## General Notes: {-}
 
 ```{block, note-text, type='rmdnote'}
 + Please bring a notebook and pencil to every class.
@@ -27,35 +27,37 @@ MathJax.Hub.Config({
 
 * * *
 
-* Week 1 (Jan 16, 18): Review concepts and ideas from `rmarkdown`, `knitr`, `bookdown`, Git, and GitHub
+## Week 1: (Jan 16 -- 18) {-}
     
-    + Before the first class meeting, read Chapter 1 [Why Git? Why GitHub?](https://happygitwithr.com/big-picture) of Happy Git With `R`.
++ Before the first class meeting, read Chapter 1 [Why Git? Why GitHub?](https://happygitwithr.com/big-picture) of Happy Git With `R`.
 
-    + [R Markdown](http://rmarkdown.rstudio.com/)
++ [R Markdown](http://rmarkdown.rstudio.com/)
     
-    + [knitr](https://yihui.name/knitr/)
++ [knitr](https://yihui.name/knitr/)
     
-    + [bookdown: Authoring Books and Technical Documents with R Markdown](https://bookdown.org/yihui/bookdown/)
++ [bookdown: Authoring Books and Technical Documents with R Markdown](https://bookdown.org/yihui/bookdown/)
     
-    + [Happy Git and GitHub for the useR](http://happygitwithr.com/)
++ [Happy Git and GitHub for the useR](http://happygitwithr.com/)
     
-    + Sign-up for a free account on [GitHub](https://github.com).  When you register for a free individual GitHub account, request a [student discount](https://education.github.com) to obtain a few private repositories as well as unlimited public repositories.  Please use something similar to **FirstNameLastName** as your username when you register with GitHub.  For example, my username on GitHub is *alanarnholt*. If you have a popular name such as John Smith, you may need to provide some other distinguishing characteristic in your username.  
++ Sign-up for a free account on [GitHub](https://github.com).  When you register for a free individual GitHub account, request a [student discount](https://education.github.com) to obtain a few private repositories as well as unlimited public repositories.  Please use something similar to **FirstNameLastName** as your username when you register with GitHub.  For example, my username on GitHub is *alanarnholt*. If you have a popular name such as John Smith, you may need to provide some other distinguishing characteristic in your username.  
 
-    + Send an email to arnholtat@appstate.edu with a Subject line of **STT3860 - GitHub Username**, and tell me in the body of your email your first name, last name, and your GitHub username.  
++ Send an email to arnholtat@appstate.edu with a Subject line of **STT3860 - GitHub Username**, and tell me in the body of your email your first name, last name, and your GitHub username.  
     
-    + Make sure RStudio is set up to communicate with Git by following the directions in [HappyGitWithR](https://happygitwithr.com/hello-git.html) for introducing yourself to Git.
++ Make sure RStudio is set up to communicate with Git by following the directions in [HappyGitWithR](https://happygitwithr.com/hello-git.html) for introducing yourself to Git.
     
-  + Set cache your credentials and set up a personal access token (PAT) by following the directions in [HappyGitWithR](https://happygitwithr.com/credential-caching.html).
++ Set cache your credentials and set up a personal access token (PAT) by following the directions in [HappyGitWithR](https://happygitwithr.com/credential-caching.html).
   
-  + [VIDEO of the setup process](https://drive.google.com/file/d/1L-v9qAVHWtvXOTYjY8wvedH5VyzmeQeL/view)
++ TL;DR the chapters in Happy Git With R — follow this document to [Set up Git and GitHub](../handouts/setup.html)
   
-  + [Video of how to accept and clone assignments (video is for my STT 3850 class; but, the process will be the same for this class)](https://drive.google.com/file/d/1JUag-0U-reD_JcKHvez50I_4R-CCMUMt/view)
++ [VIDEO of the setup process](https://drive.google.com/file/d/1L-v9qAVHWtvXOTYjY8wvedH5VyzmeQeL/view)
+  
++ [Video of how to accept and clone assignments (video is for my STT 3850 class; but, the process will be the same for this class)](https://drive.google.com/file/d/1JUag-0U-reD_JcKHvez50I_4R-CCMUMt/view)
 
-  + [Set Global Options](https://stat-ata-asu.github.io/STT5812CourseRepo/Rmarkdown/GlobalOptions.html)
++ [Set Global Options](https://stat-ata-asu.github.io/STT5812CourseRepo/Rmarkdown/GlobalOptions.html)
     
-  + [Miscellaneous Tips](https://alanarnholt.github.io/GeneralStatistics/rmarkdown/MiscRmarkdown.html)
++ [Miscellaneous Tips](https://alanarnholt.github.io/GeneralStatistics/rmarkdown/MiscRmarkdown.html)
 
-  + [Complete Chapters 1 and 2 in Inference for Numerical Data in R on DataCamp](https://app.datacamp.com/groups/stt3860-sp24/assignments)---Due Jan 23 NLT 5:00 PM 
++ [Start Chapters 1 and 2 in Inference for Numerical Data in R on DataCamp](https://app.datacamp.com/groups/stt3860-sp24/assignments)---Due Jan 23 NLT 5:00 PM 
     
 ```{block, week1optional, type='rmdoptional'}   
 Optional Resources:
@@ -72,179 +74,158 @@ Optional Resources:
 
 * * *
 
-* Week 2 (Jan 24, 26)
+## Week 2: (Jan 23 -- 25) {-}
 
-  + Read Chapter 2 of [Correlation and Regression](https://mathr.math.appstate.edu/connect/content/71419336-3676-4c19-9077-f018b948229d)
-  
-  + [Complete Chapter 1 in Dealing with Missing Data in R on DataCamp - Why care about missing data? ](https://app.datacamp.com/groups/stt3860-sp23/assignments)---Due Jan 24 NLT 5:00 PM 
-  
-  + Complete and turn in a hard copy of your summary of "Why care about missing data?" using RMarkdown---Due Jan 26 NLT 5:00 PM  
-  
-  + Misc Regression [topics](https://alanarnholt.github.io/STT3850/Rmarkdown/MiscRegression.html)
++ [Complete Chapters 1 and 2 in Inference for Numerical Data in R on DataCamp](https://app.datacamp.com/groups/stt3860-sp24/assignments)---Due Jan 23 NLT 5:00 PM 
 
++ [Complete Chapters 3 and 4 in Inference for Numerical Data in R on DataCamp](https://app.datacamp.com/groups/stt3860-sp24/assignments)---Due Jan 24 NLT 5:00 PM 
+  
++ Complete and turn in a hard copy of your summary of "Inference for Numerical Data in R" using Quarto---Due Jan 25 NLT 5:00 PM 
+  
++ [START LAB1: Questioning and Cleaning the bodyfat data Lab---Due Feb 1 NLT 5:00 PM]() 
+  
+ 
 * * * 
 
-* Week 3 (Jan 31, Feb 2)
+## Week 3: (Jan 30 -- Feb 1) {-}
    
-   + Read Chapter 3 of [Correlation and Regression](https://mathr.math.appstate.edu/connect/content/71419336-3676-4c19-9077-f018b948229d)
-  
-  + [Complete Chapter 2 in Dealing with Missing Data in R on DataCamp - Wrangling and tidying up missing values](https://app.datacamp.com/groups/stt3860-sp23/assignments)---Due Jan 31 NLT 5:00 PM
-  
-  + Complete and turn in a hard copy of your summary of "Wrangling and tidying up missing values" using RMarkdown---Due Feb 2 NLT 5:00 PM       
++ [Complete LAB1: Questioning and Cleaning the bodyfat data Lab---Due Feb 1 NLT 5:00 PM]()        
     
 * * *
 
-* Week 4 (Feb 7, 9)
+## Week 4: (Feb 6 -- 8) {-}
 
-     + Read Chapter 4 of [Correlation and Regression](https://mathr.math.appstate.edu/connect/content/71419336-3676-4c19-9077-f018b948229d)
++ Read Chapters 1-5 of [Correlation and Regression](https://mathr.appstate.edu/connect/content/d219d887-2f38-428f-baed-16575e6770c5)
     
-    + [Complete Chapter 3 in Dealing with Missing Data in R on DataCamp - Testing missing relationships](https://app.datacamp.com/groups/stt3860-sp23/assignments)---Due Feb 7 NLT 5:00 PM
++ Misc Regression [topics](https://alanarnholt.github.io/STT3850/Rmarkdown/MiscRegression.html)
   
-  + Complete and turn in a hard copy of your summary of "Testing missing relationships" using RMarkdown---Due Feb 9 NLT 5:00 PM   
++ Complete and turn in a hard copy of your summary of "Correlation and Regression" using Quarto---Due Feb 8 NLT 5:00 PM   
     
 * * *
 
-* Week 5 (Feb 14, 16)
+## Week 5: (Feb 13 -- 15) {-}
+
++ [Complete Chapters 1-4 in Modeling with Data in the Tidyverse on DataCamp](https://app.datacamp.com/groups/stt3860-sp24/assignments)---Due Feb 14 NLT 5:00 PM
+
++ Misc Regression [topics](https://alanarnholt.github.io/STT3850/Rmarkdown/MiscRegression.html)
     
-     + Read Chapter 5 of [Correlation and Regression](https://mathr.math.appstate.edu/connect/content/71419336-3676-4c19-9077-f018b948229d)
-    
-    + [Complete Chapter 4 in Dealing with Missing Data in R on DataCamp - Connecting the dots imputation](https://app.datacamp.com/groups/stt3860-sp23/assignments)---Due Feb 14 NLT 5:00 PM
+ + Complete and turn in a hard copy of your summary of "Modeling with Data in the Tidyverse" using Quarto---Due Feb 15 NLT 5:00 PM
   
-  + Complete and turn in a hard copy of your summary of "Connecting the dots imputation" using RMarkdown---Due Feb 16 NLT 5:00 PM
-  
-   + [START LAB1: Questioning and Cleaning the bodyfat data Lab---Due Feb 23 NLT 5:00 PM](https://classroom.github.com/a/B5A12MYZ) 
+* * *
+
+## Week 6: (Feb 20 -- 22) {-}
+
++ In class review [this document.](https://alanarnholt.github.io/STT3850/Handouts/RegHandout.html)
    
-   + In class review [this document.](https://alanarnholt.github.io/STT3850/Handouts/RegHandout.html)
++ Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php) where you can use linear regression to create a model after cleaning the data as appropriate.
+
++ Data set clean up due NLT 5:00 PM Feb 22 for Group Presentation # 1
+
 
 * * *
 
-* Week 6 (Feb 21, 23)
+## Week 7: (Feb 27 -- 29) {-}
 
-    + Read Chapter 6 of [Correlation and Regression](https://mathr.math.appstate.edu/connect/content/71419336-3676-4c19-9077-f018b948229d)
-   
-   + [LAB1: Questioning and Cleaning the bodyfat data Lab---Due Feb 23 NLT 5:00 PM](https://classroom.github.com/a/B5A12MYZ) 
-
-* * *
-
-* Week 7 (Feb 28, Mar 2)
-
-    + Read [Appendix E.](https://mdsr-book.github.io/mdsr2e/ch-regression.html#simple-linear-regression)
++ First group presentations Feb 29    
     
-    + [Complete Chapters  1 and 2 in Modeling with Data in the Tidyverse on DataCamp - Introduction to Modeling & Modeling with Basic Regression](https://app.datacamp.com/groups/stt3860-sp23/assignments)---Due Feb 28 NLT 5:00 PM
+* * *
+
+## Week 8: (Mar 5 -- 7) {-}
+
++ Read [Appendix E.](https://mdsr-book.github.io/mdsr2e/ch-regression.html#simple-linear-regression)
+
++ Read [Predictive Model Building](https://stat-ata-asu.github.io/PredictiveModelBuilding/)
+    
++ Read [Multiple and Logistic Regression](https://mathr.math.appstate.edu/connect/content/493bca23-1118-4e56-9e3f-f35585deb611)
+
++ [Cross Validation Handout](https://stat-ata-asu.github.io/STT3851ClassRepo/Rmarkdown/Cross-ValidationInClassHO.html)
+    
++ [Cross Validation starter code]()
+
++ [Complete Chapters  1-5 in Machine Learning with `caret` in R on DataCamp](https://app.datacamp.com/groups/stt3860-sp24/assignments)---Due Mar 6 NLT 5:00 PM 
   
-    + Complete and turn in a hard copy of your summary of "Introduction to Modeling & Modeling with Basic Regression" using RMarkdown---Due Mar 2 NLT 5:00 PM 
-    
-    
-
-* * *
-
-* Week 8 (Mar 7, 9)
-
-     + Read [Appendix E.](https://mdsr-book.github.io/mdsr2e/ch-regression.html#simple-linear-regression)
-    
-    + [Complete Chapters  3 and 4 in Modeling with Data in the Tidyverse on DataCamp - Modeling with Multiple Regression & Model Assessment and Selection](https://app.datacamp.com/groups/stt3860-sp23/assignments)---Due Mar 7 NLT 5:00 PM 
-  
-    + Complete and turn in a hard copy of your summary of "Modeling with Multiple Regression & Model Assessment and Selection" using RMarkdown---Due Mar 9 NLT 5:00 PM 
++ Complete and turn in a hard copy of your summary of "Machine Learning with `caret` in R" using Quarto---Due Mar 7 NLT 5:00 PM 
     
     
 * * *   
 
-* March 13-17 __Spring Break__
+## Spring Break: Mar 11 -- 15 {-}
 
 * * *
 
-* Week 9 (Mar 21, 23)
+## Week 9: (Mar 19 -- 21) {-}
 
-    + [Complete Chapter 1 in Machine Learning with `caret` in R on DataCamp](https://app.datacamp.com/groups/stt3860-sp23/assignments)---Due Mar 22 NLT 5:00 PM
-  
-    + Complete and turn in a hard copy of your summary of "Machine Learning with `caret` in R" (Chapter 1) using RMarkdown.  Due Mar 23 NLT 5:00 PM 
++ Read [Predictive Model Building](https://stat-ata-asu.github.io/PredictiveModelBuilding/)
     
-    + [Cross Validation Handout](https://stat-ata-asu.github.io/STT3851ClassRepo/Rmarkdown/Cross-ValidationInClassHO.html)
-    
-    + [Cross Validation starter code](https://classroom.github.com/a/lHJo6L7k)
-    
-     + [START LAB2: Linear models with the bodyfat data Lab---Due Mar 30 NLT 5:00 PM](https://classroom.github.com/a/ffbLB8cD) 
++ Read [Multiple and Logistic Regression](https://mathr.math.appstate.edu/connect/content/493bca23-1118-4e56-9e3f-f35585deb611)
 
++ [START LAB2: Linear models with the bodyfat data Lab---Due Mar 28 NLT 5:00 PM]() 
+    
+    
 * * *
 
-* Week 10 (Mar 28, 30)
+## Week 10: (Mar 26 -- 28) {-}
 
-    + [Complete Chapters 2 & 3 in Machine Learning with `caret` in R on DataCamp](https://app.datacamp.com/groups/stt3860-sp23/assignments)---Due Mar 28 NLT 5:00 PM
-  
-    + Complete and turn in a hard copy of your summary of "Machine Learning with `caret` in R" (Chapters  2 & 3) using RMarkdown.  Due Mar 30 NLT 5:00 PM 
 
-    + Read [Predictive Model Building](https://stat-ata-asu.github.io/PredictiveModelBuilding/)
-    
-    + Read [Multiple and Logistic Regression](https://mathr.math.appstate.edu/connect/content/493bca23-1118-4e56-9e3f-f35585deb611)
-    
-    + [LAB2: Linear models with the bodyfat data Lab---Due Mar 30 NLT 5:00 PM](https://classroom.github.com/a/ffbLB8cD) 
++ [Complete LAB2: Linear models with the bodyfat data Lab---Due Mar 28 NLT 5:00 PM]() 
+
++ Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php) where you can use logistic linear regression to create a model after cleaning the data as appropriate.
+
++ Data set clean up due NLT 5:00 PM Mar 28 for Group Presentation # 2
 
 * * *
 
 
-* Week 11 (Apr 4, 6)
+## Week 11: (Apr 2 -- 4) {-}
 
-    + [Complete Chapters 4 & 5 in Machine Learning with `caret` in R on DataCamp](https://app.datacamp.com/groups/stt3860-sp23/assignments)---Due Apr 4 NLT 5:00 PM
++ Second group presentations Apr 4
   
-    + Complete and turn in a hard copy of your summary of "Machine Learning with `caret` in R" (Chapters  4 & 5) using RMarkdown.  Due Apr 6 NLT 5:00 PM 
-
-    + Extra Credit---[Combine previous Rmarkdown assignments into Bookdown document](put classroom github link here)
-    
-    + Read [Tree based Models in R](https://mathr.math.appstate.edu/connect/content/21550326-dbfe-4e32-9287-891af83e3a9e)
-    
-    + Review as needed [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
-    
-    + Review as needed [Regression Trees](../rmarkdown/RegressionTrees.html)
-    
-    + Review as needed [Predictive Model Building](https://stat-ata-asu.github.io/PredictiveModelBuilding/)
-    
-     + [START LAB3: Non-linear models with the bodyfat data Lab---Due Apr 13 NLT 5:00 PM](https://classroom.github.com/a/PZf8LJ_-) 
-    
-
 * * * 
 
-* Week 12 (Apr 11, 13)
+## Week 12: (Apr 9 -- 11) {-}
 
-    + Read [Tree based Models in R](https://mathr.math.appstate.edu/connect/content/21550326-dbfe-4e32-9287-891af83e3a9e)
++ Read [Tree based Models in R](https://mathr.appstate.edu/connect/content/417890f7-c144-44ec-86b5-6437891c8c2d)
     
-    + Review as needed [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
++ Review as needed [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
     
-    + Review as needed [Regression Trees](../rmarkdown/RegressionTrees.html)
++ Review as needed [Regression Trees](../rmarkdown/RegressionTrees.html)
     
-    + Review as needed [Predictive Model Building](https://stat-ata-asu.github.io/PredictiveModelBuilding/)
++ Review as needed [Predictive Model Building](https://stat-ata-asu.github.io/PredictiveModelBuilding/)
     
-    + [LAB3: Non-linear models with the bodyfat data Lab---Due Apr 13 NLT 5:00 PM](https://classroom.github.com/a/PZf8LJ_-) 
-    
-* * *
-
-* Week 13 (Apr 18, 20)
-
-    + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
-
-    + Clean chosen data and make models
++ [START LAB3: Non-linear models with the bodyfat data Lab---Due Apr 18 NLT 5:00 PM]() 
     
 * * *
 
-* Week 14 (Apr 25, 27)
+## Week 13: (Apr 16 -- 18) {-}
 
-    + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php)
++ [Complete LAB3: Non-linear models with the bodyfat data Lab---Due Apr 18 NLT 5:00 PM]() 
 
-    + Clean chosen data and make models
++ Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php) where you can create a model using trees
+
++ Clean chosen data and make models
+    
+* * *
+
+## Week 14: (Apr 23 -- 25) {-}
+
++ Clean chosen data and make models
   
     
   
 * * * 
 
-* Week 15 (May 2)
+## Week 15: (Apr 30 -- May 1) {-}
 
-    + Prepare **group** presentation.  Accept materials [here](https://classroom.github.com/a/2mnclwn7) 
++ Clean chosen data and make models
+
++ Prepare **group** presentation.  Accept materials [here]() 
 
 * * *
 
 
-* Final Exam Period (May 11---11 am -1:30 pm)
+## Final Exam Period (May 11---11 am -1:30 pm) {-}
 
-  + Group Presentations
++ Final Group Presentations
   
 * * *
 
@@ -252,7 +233,7 @@ Optional Resources:
 ### Final Exam {-}
 
 ```{block, FINAL, type='rmdnote'}
-*  [University Exam Schedule](https://registrar.appstate.edu/sites/default/files/app_state_spring_2023_exam_schedule_final.pdf)
+*  [University Exam Schedule](https://registrar.appstate.edu/sites/default/files/app_state_spring_2024_exam_schedule_final.pdf)
 ```
 
 ________________
