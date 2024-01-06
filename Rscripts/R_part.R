@@ -7,6 +7,17 @@ if(!file.exists("./Data/grade.csv")){ download.file(url, destfile = "./Data/grad
 grade <- read.csv("./Data/grade.csv")
 
 str(grade)
+ggplot(data = grade, aes(x = final_grade)) +
+  geom_histogram(binwidth = 1) + 
+  theme_bw()
+
+hist(grade$final_grade)
+summary(grade$final_grade)
+
+grade %>%
+  summarize(Mean = mean(final_grade), Median = median(final_grade),
+            S = sd(final_grade), iqr = IQR(final_grade))
+
 
 # Randomly assign rows to ids (1/2/3 represents train/valid/test)
 # This will generate a vector of ids of length equal to the number of rows
@@ -63,7 +74,7 @@ mod_TRB <- train(final_grade ~ .,
                  data = grade_train,
                  trControl = myControlB,
                  method = "rpart",
-                 tuneLength = 6)
+                 tuneLength = 10)
 
 mod_TRB
 
@@ -74,7 +85,7 @@ rpart.plot(mod_TRBG, yesno = 2)
 
 #### Evaluate
 predict(mod_TRBG, newdata = grade_test) -> pred
-RMSE(pred, grade_test$final_grade) # 2.319211
+RMSE(pred, grade_test$final_grade) # 2.307
 ################
 ## Can we do better with Random Forest?
 set.seed(31)
