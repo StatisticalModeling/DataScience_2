@@ -8,7 +8,7 @@ title: "Welcome!"
 
 * [Course pacing and assignments](./CoursePacing/STT3860CoursePacingS2024.html) are stored in the `CoursePacing` directory of the `DataScience_2` repository.
 
-* [Class RStudio Server](https://mathr.math.appstate.edu) (you must be registered in the course to access the server)
+* [Class RStudio Server](https://mathr.appstate.edu) (you must be registered in the course to access the server)
 
 * [Flow Control](https://stat-ata-asu.github.io/STT3851ClassRepo/Rmarkdown/FlowControl.html)
 
