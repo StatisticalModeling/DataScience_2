@@ -80,7 +80,7 @@ Tentative course assignments and due dates are maintained [here](https://Statist
 
 * 10% of the course grade will come from 13 [DataCamp](https://www.datacamp.com/home) modules.
 
-* 20% of the course grade will come from five Quarto summaries of five different [DataCamp](https://www.datacamp.com/home) courses.
+* 20% of the course grade will come from five Quarto quick sheets of five different [DataCamp](https://www.datacamp.com/home) courses.
 
 * 30% of the course grade will come from 3 individual Quarto LAB assignments.
 
