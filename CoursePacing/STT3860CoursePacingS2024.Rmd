@@ -80,16 +80,16 @@ Optional Resources:
 
 + [Complete Chapters 3 and 4 in Inference for Numerical Data in R on DataCamp](https://app.datacamp.com/groups/stt3860-sp24/assignments)---Due Jan 24 NLT 5:00 PM 
   
-+ Complete and turn in a hard copy of your summary of "Inference for Numerical Data in R" using Quarto---Due Jan 25 NLT 5:00 PM 
++ Complete and turn in a hard copy of your [quick sheet of "Inference for Numerical Data in R"](https://classroom.github.com/a/XCfpFLV8) using Quarto---Due Jan 25 NLT 5:00 PM 
   
-+ [START LAB1: Questioning and Cleaning the bodyfat data Lab---Due Feb 1 NLT 5:00 PM]() 
++ [START LAB1: Questioning and Cleaning the bodyfat data Lab---Due Feb 1 NLT 5:00 PM](https://classroom.github.com/a/MNDYBrLm) 
   
  
 * * * 
 
 ## Week 3: (Jan 30 -- Feb 1) {-}
    
-+ [Complete LAB1: Questioning and Cleaning the bodyfat data Lab---Due Feb 1 NLT 5:00 PM]()        
++ [Complete LAB1: Questioning and Cleaning the bodyfat data Lab---Due Feb 1 NLT 5:00 PM](https://classroom.github.com/a/MNDYBrLm)        
     
 * * *
 
@@ -99,7 +99,7 @@ Optional Resources:
     
 + Misc Regression [topics](https://alanarnholt.github.io/STT3850/Rmarkdown/MiscRegression.html)
   
-+ Complete and turn in a hard copy of your summary of "Correlation and Regression" using Quarto---Due Feb 8 NLT 5:00 PM   
++ Complete and turn in a hard copy of your [quick sheet of "Correlation and Regression"](https://classroom.github.com/a/WeJznz-_) using Quarto---Due Feb 8 NLT 5:00 PM   
     
 * * *
 
@@ -109,7 +109,7 @@ Optional Resources:
 
 + Misc Regression [topics](https://alanarnholt.github.io/STT3850/Rmarkdown/MiscRegression.html)
     
- + Complete and turn in a hard copy of your summary of "Modeling with Data in the Tidyverse" using Quarto---Due Feb 15 NLT 5:00 PM
+ + Complete and turn in a hard copy of your [quick sheet of "Modeling with Data in the Tidyverse"](https://classroom.github.com/a/QVsh7huA) using Quarto---Due Feb 15 NLT 5:00 PM
   
 * * *
 
@@ -119,7 +119,7 @@ Optional Resources:
    
 + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php) where you can use linear regression to create a model after cleaning the data as appropriate.
 
-+ Data set clean up due NLT 5:00 PM Feb 22 for Group Presentation # 1
++ Data set clean up due NLT 5:00 PM Feb 22 for [Group Presentation # 1](https://classroom.github.com/a/q_Xx6jBT)
 
 
 * * *
@@ -140,11 +140,11 @@ Optional Resources:
 
 + [Cross Validation Handout](https://stat-ata-asu.github.io/STT3851ClassRepo/Rmarkdown/Cross-ValidationInClassHO.html)
     
-+ [Cross Validation starter code]()
++ [Cross Validation starter code](https://classroom.github.com/a/-yy9rCLk)
 
 + [Complete Chapters  1-5 in Machine Learning with `caret` in R on DataCamp](https://app.datacamp.com/groups/stt3860-sp24/assignments)---Due Mar 6 NLT 5:00 PM 
   
-+ Complete and turn in a hard copy of your summary of "Machine Learning with `caret` in R" using Quarto---Due Mar 7 NLT 5:00 PM 
++ Complete and turn in a hard copy of your [quick sheet of "Machine Learning with `caret` in R"](https://classroom.github.com/a/vf-ZhJz_) using Quarto---Due Mar 7 NLT 5:00 PM 
     
     
 * * *   
@@ -159,7 +159,7 @@ Optional Resources:
     
 + Read [Multiple and Logistic Regression](https://mathr.math.appstate.edu/connect/content/493bca23-1118-4e56-9e3f-f35585deb611)
 
-+ [START LAB2: Linear models with the bodyfat data Lab---Due Mar 28 NLT 5:00 PM]() 
++ [START LAB2: Linear models with the bodyfat data Lab---Due Mar 28 NLT 5:00 PM](https://classroom.github.com/a/9FVQcAzL) 
     
     
 * * *
@@ -167,11 +167,11 @@ Optional Resources:
 ## Week 10: (Mar 26 -- 28) {-}
 
 
-+ [Complete LAB2: Linear models with the bodyfat data Lab---Due Mar 28 NLT 5:00 PM]() 
++ [Complete LAB2: Linear models with the bodyfat data Lab---Due Mar 28 NLT 5:00 PM](https://classroom.github.com/a/9FVQcAzL) 
 
 + Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php) where you can use logistic linear regression to create a model after cleaning the data as appropriate.
 
-+ Data set clean up due NLT 5:00 PM Mar 28 for Group Presentation # 2
++ Data set clean up due NLT 5:00 PM Mar 28 for [Group Presentation # 2](https://classroom.github.com/a/1cTwwkC2)
 
 * * *
 
@@ -191,16 +191,18 @@ Optional Resources:
 + Review as needed [Regression Trees](../rmarkdown/RegressionTrees.html)
     
 + Review as needed [Predictive Model Building](https://stat-ata-asu.github.io/PredictiveModelBuilding/)
+
++ Complete and turn in a hard copy of your [quick sheet of "Tree based Models in R"](https://classroom.github.com/a/giHyXM04) using Quarto---Due Apr 11 NLT 5:00 PM 
     
-+ [START LAB3: Non-linear models with the bodyfat data Lab---Due Apr 18 NLT 5:00 PM]() 
++ [START LAB3: Non-linear models with the bodyfat data Lab---Due Apr 18 NLT 5:00 PM](https://classroom.github.com/a/tou-HMiV) 
     
 * * *
 
 ## Week 13: (Apr 16 -- 18) {-}
 
-+ [Complete LAB3: Non-linear models with the bodyfat data Lab---Due Apr 18 NLT 5:00 PM]() 
++ [Complete LAB3: Non-linear models with the bodyfat data Lab---Due Apr 18 NLT 5:00 PM](https://classroom.github.com/a/tou-HMiV) 
 
-+ Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php) where you can create a model using trees
++ Pick a data set from the [UCI machine learning repository](https://archive.ics.uci.edu/ml/index.php) where you can create a model using trees.  
 
 + Clean chosen data and make models
     
@@ -218,7 +220,7 @@ Optional Resources:
 
 + Clean chosen data and make models
 
-+ Prepare **group** presentation.  Accept materials [here]() 
++ Prepare **group** presentation.  Accept materials [here](https://classroom.github.com/a/1Tsgp4Nz) 
 
 * * *
 
