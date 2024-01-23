@@ -83,6 +83,8 @@ Optional Resources:
 + Complete and turn in a hard copy of your [quick sheet of "Inference for Numerical Data in R"](https://classroom.github.com/a/XCfpFLV8) using Quarto---Due Jan 25 NLT 5:00 PM 
   
 + [START LAB1: Questioning and Cleaning the bodyfat data Lab---Due Feb 1 NLT 5:00 PM](https://classroom.github.com/a/MNDYBrLm) 
+
++ [Some Rough Slides](https://alanarnholt.github.io/STT3850/Rmarkdown/Week10/Week10_Lect.pdf)
   
  
 * * * 
