@@ -112,3 +112,12 @@ Xh <- as.matrix(Xh)
 yhath <- Xh %*% betahat
 yhath
 
+s2yhath <- Xh%*%varcov%*%t(Xh)
+s2yhath
+
+syhath <- sqrt(s2yhath)
+syhath
+
+
+ct <- qt(.975, df.residual(mod_five))
+(CI <- c(yhath) + c(-1, 1)*ct*syhath)
