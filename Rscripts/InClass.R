@@ -54,9 +54,13 @@ drop1(mod_be, test = "F")
 
 mod_null <- lm(Rating ~ 1, data = Credit)
 mod_full <- lm(Rating ~ ., data = Credit)
-mod_for <- stepAIC(mod_null, scope = list(lower = mod_null, upper = mod_full), direction = "forward")
+mod_for <- stepAIC(mod_null, scope = list(lower = mod_null, 
+                                          upper = mod_full), 
+                   direction = "forward")
 summary(mod_for)
-mod_bac <- stepAIC(mod_full, scope = list(lower = mod_null, upper = mod_full), direction = "backward")
+mod_bac <- stepAIC(mod_full, scope = list(lower = mod_null, 
+                                          upper = mod_full), 
+                   direction = "backward")
 summary(mod_bac)
 ####
 mod_five <- lm(Rating ~ Limit + Cards + Married + Student + Education, data = Credit)
@@ -64,14 +68,14 @@ summary(mod_five)
 ####
 # Credit Rating
 predict(mod_five, newdata = data.frame(Limit = c(6000, 12000), 
-                                       Cards = c(4, 4), 
+                                       Cards = c(4, 2), 
                                        Married = c("Yes", "Yes"),
                                        Student = c("No", "No"), 
                                        Education = c(16, 8)),
         interval = "conf", level = .99)
 
 predict(mod_five, newdata = data.frame(Limit = c(6000, 12000), 
-                                       Cards = c(4, 4), 
+                                       Cards = c(4, 2), 
                                        Married = c("Yes", "Yes"),
                                        Student = c("No", "No"), 
                                        Education = c(16, 8)),
