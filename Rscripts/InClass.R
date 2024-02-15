@@ -111,3 +111,4 @@ Xh <- data.frame(Int = c(1, 1),
 Xh <- as.matrix(Xh)
 yhath <- Xh %*% betahat
 yhath
+
