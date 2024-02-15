@@ -101,3 +101,13 @@ anova(mod_five)[6,3] -> MSE
 varcov <- MSE*XTXI
 varcov
 
+Xh <- data.frame(Int = c(1, 1),
+                 Limit = c(6000, 12000), 
+                 Cards = c(4, 4), 
+                 Married = c(1, 1),
+                 Student = c(0, 0), 
+                 Education = c(16, 8))
+
+Xh <- as.matrix(Xh)
+yhath <- Xh %*% betahat
+yhath
