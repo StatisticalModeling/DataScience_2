@@ -138,7 +138,7 @@ Optional Resources:
 
 + Read [Predictive Model Building](https://stat-ata-asu.github.io/PredictiveModelBuilding/)
     
-+ Read [Multiple and Logistic Regression](https://mathr.appstate.edu/connect/connect/#/apps/3dc43ae6-a775-4128-9974-603f059f4fb4/access)
++ Read [Multiple and Logistic Regression](https://mathr.appstate.edu/connect/content/808fcaf7-161a-481d-acec-20f5114e1537)
 
 + [Cross Validation Handout](https://stat-ata-asu.github.io/STT3851ClassRepo/Rmarkdown/Cross-ValidationInClassHO.html)
     
@@ -159,7 +159,7 @@ Optional Resources:
 
 + Read [Predictive Model Building](https://stat-ata-asu.github.io/PredictiveModelBuilding/)
     
-+ Read [Multiple and Logistic Regression](https://mathr.appstate.edu/connect/connect/#/apps/3dc43ae6-a775-4128-9974-603f059f4fb4/access)
++ Read [Multiple and Logistic Regression](https://mathr.appstate.edu/connect/content/808fcaf7-161a-481d-acec-20f5114e1537)
 
 + [START LAB2: Linear models with the bodyfat data Lab---Due Mar 28 NLT 5:00 PM](https://classroom.github.com/a/9FVQcAzL) 
     
