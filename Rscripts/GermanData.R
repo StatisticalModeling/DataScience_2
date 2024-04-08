@@ -1,10 +1,14 @@
 ## German Credit
+# Parallel Processing
+library(doMC)
+registerDoMC(cores = 20)
+## READ IN DATA
 library(readr)
 credit <- read_csv("./Data/credit.csv")
 View(credit)
 ## partition the data
 library(caret)
-set.seed(8467) # set seed for reproducibility
+set.seed(867) # set seed for reproducibility
 trainID <- createDataPartition(y = credit$default,
                              p = 0.80,
                              list = FALSE)
@@ -52,14 +56,14 @@ rpart.plot(x = credit_model_opt, yesno = 2)
 
 class_pred_opt <- predict(object = credit_model_opt,
                       newdata = test,
-                      type = "class"
+                      type = "raw"
 )
 ## Confusion matrix
 
 confusionMatrix(data = class_pred_opt,
                 reference = as.factor(test$default))
 
-#### Note Accuracy and no Information Rate are the same!!!!
+#### Note Accuracy < no Information Rate !!!!
 
 ########### Do everything with train() now
 ## set up trainControl() first
@@ -83,7 +87,7 @@ model_TR_opt <- rpart(default ~ .,
                       data = train,
                       cp = model_TR$bestTune)
 ###
-rpart.plot(model_TR_opt)
+rpart.plot(model_TR_opt, yesno = 2)
 ###
 ### How good is this Tree?
 
@@ -129,6 +133,7 @@ model_RF <- train(default ~ .,
                   data = train,
                   trControl = myControl,
                   tuneLength = 10,
+                  metric = "ROC",
                   method = "ranger")
 model_RF
 
@@ -136,6 +141,7 @@ model_RF2 <- train(default ~ .,
                   data = train,
                   trControl = myControl,
                   tuneLength = 10,
+                  metric = "ROC",
                   method = "rf")
 model_RF2
 
@@ -144,7 +150,7 @@ model_RF2
 
 class_RF <- predict(object = model_RF,
                           newdata = test,
-                          type = "class")
+                          type = "raw")
 ## Confusion matrix
 
 confusionMatrix(data = class_RF,
@@ -152,10 +158,36 @@ confusionMatrix(data = class_RF,
 
 class_RF2 <- predict(object = model_RF2,
                     newdata = test,
-                    type = "class")
+                    type = "raw")
 ## Confusion matrix
 
 confusionMatrix(data = class_RF2,
                 reference = as.factor(test$default))
 
 ###############################################################################
+## GBMs next
+model_GBM <- train(default ~ .,
+                  data = train,
+                  trControl = myControl,
+                  tuneLength = 10,
+                  metric = "ROC",
+                  method = "gbm")
+model_GBM
+summary(model_GBM)
+## Evaluate Performance of GBM now
+
+class_GBM <- predict(object = model_GBM,
+                     newdata = test,
+                     type = "raw")
+## Confusion matrix
+
+confusionMatrix(data = class_GBM,
+                reference = as.factor(test$default))
+
+#############################################################
+## Comparing the models now
+
+ANS <- resamples(list(TREE = model_TR, BAG = model_BAG, RF = model_RF, GBM = model_GBM))
+summary(ANS)
+bwplot(ANS)
+dotplot(ANS)
