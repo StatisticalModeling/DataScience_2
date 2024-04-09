@@ -10,8 +10,8 @@ View(credit)
 library(caret)
 set.seed(867) # set seed for reproducibility
 trainID <- createDataPartition(y = credit$default,
-                             p = 0.80,
-                             list = FALSE)
+                               p = 0.80,
+                               list = FALSE)
 train <- credit[trainID, ]
 test  <- credit[-trainID, ]
 dim(train)
@@ -25,7 +25,8 @@ credit_model <- rpart(formula = default ~ .,
 library(rpart.plot)
 rpart.plot(x = credit_model, yesno = 2)
 ## Each node shows: 1) predicted class, 
-## 2) predicted probability of default, 3) % observations in that node
+## 2) predicted probability of default, 
+# 3) % observations in that node
 
 ## Generate predictions for the test set and evaluate performance
 
@@ -56,7 +57,7 @@ rpart.plot(x = credit_model_opt, yesno = 2)
 
 class_pred_opt <- predict(object = credit_model_opt,
                       newdata = test,
-                      type = "raw"
+                      type = "class"
 )
 ## Confusion matrix
 
