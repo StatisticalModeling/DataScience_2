@@ -86,13 +86,13 @@ Optional Resources:
    
 + Read the chapter [A Review of R Modeling Fundamentals](https://www.tmwr.org/base-r). 
 
-+ Start reproduction of [_Introduction to Statistics in R_]() - Due Feb 3 NLT 5:00 PM
++ Start reproduction of [_Introduction to Statistics in R_](https://classroom.github.com/a/jm6UNAaf) - Due Feb 3 NLT 5:00 PM
     
 * * *
 
 ## Week 4: (Feb 4 & 6) {-}
 
-+ Finish reproduction of [_Introduction to Statistics in R_]() - Due Feb 3 NLT 5:00 PM
++ Finish reproduction of [_Introduction to Statistics in R_](https://classroom.github.com/a/jm6UNAaf) - Due Feb 3 NLT 5:00 PM
 
 + Read the chapter [The Ames Housing Data](https://www.tmwr.org/ames). 
 
@@ -120,7 +120,7 @@ Optional Resources:
 
 + Read [Appendix E.](https://mdsr-book.github.io/mdsr2e/ch-regression.html#simple-linear-regression)
 
-+ Start reproduction of [_Modeling with Data in the Tidyverse_]() - Due Feb 24 NLT 5:00 PM
++ Start reproduction of [_Modeling with Data in the Tidyverse_](https://classroom.github.com/a/iF-wbdB9) - Due Feb 24 NLT 5:00 PM
 
 + In class review [this document.](https://alanarnholt.github.io/STT3850/Handouts/RegHandout.html)
   
@@ -130,7 +130,7 @@ Optional Resources:
 
 ## Week 7: (Feb 25 & 27) {-}
 
-+ Finish reproduction of [_Modeling with Data in the Tidyverse_]() - Due Feb 24 NLT 5:00 PM
++ Finish reproduction of [_Modeling with Data in the Tidyverse_](https://classroom.github.com/a/iF-wbdB9) - Due Feb 24 NLT 5:00 PM
 
 + Read the chapter [A Model Workflow](https://www.tmwr.org/workflows) 
 
@@ -148,7 +148,7 @@ Optional Resources:
     
 + [Start Chapters 3 and 4 in _Modeling with Tidymodels in R_ on DataCamp](https://app.datacamp.com/groups/stt3850-s2025/assignments)---Due Mar 7 NLT 5:00 PM 
 
-+ Start reproduction of [_Modeling with Tidymodels in R_]() - Due Mar 24 NLT 5:00 PM
++ Start reproduction of [_Modeling with Tidymodels in R_](https://classroom.github.com/a/4i3ONvjK) - Due Mar 24 NLT 5:00 PM
     
     
 * * *   
@@ -161,7 +161,7 @@ Optional Resources:
 
 + Read the chapter [Judging Model Effectiveness](https://www.tmwr.org/performance)
 
-+ Work on reproduction of [_Modeling with Tidymodels in R_]() - Due Mar 24 NLT 5:00 PM
++ Work on reproduction of [_Modeling with Tidymodels in R_](https://classroom.github.com/a/4i3ONvjK) - Due Mar 24 NLT 5:00 PM
 
 
     
@@ -170,7 +170,7 @@ Optional Resources:
 
 ## Week 10: (Mar 25 & 27) {-}
 
-+ Finish reproduction of [_Modeling with Tidymodels in R_]() - Due Mar 24 NLT 5:00 PM
++ Finish reproduction of [_Modeling with Tidymodels in R_](https://classroom.github.com/a/4i3ONvjK) - Due Mar 24 NLT 5:00 PM
 
 + Read the chapter [Resampling for Evaluating Performance](https://www.tmwr.org/resampling)
 
@@ -225,13 +225,13 @@ Optional Resources:
 
 + Read the chapter [Grid Search](https://www.tmwr.org/grid-search)
 
-+ Work on reproduction of [_Machine Learning with Tree Based Models in R_]() - Due Apr 21 NLT 5:00 PM
++ Work on reproduction of [_Machine Learning with Tree Based Models in R_](https://classroom.github.com/a/n-LskGWs) - Due Apr 21 NLT 5:00 PM
     
 * * *
 
 ## Week 14: (Apr 22 & 24) {-}
 
-+ Finish reproduction of [_Machine Learning with Tree Based Models in R_]() - Due Apr 21 NLT 5:00 PM
++ Finish reproduction of [_Machine Learning with Tree Based Models in R_](https://classroom.github.com/a/n-LskGWs) - Due Apr 21 NLT 5:00 PM
   
 + Pick data for group project #2 from `modeldata` package.  Data must have at least 8 variables and 1,000 or more rows.  Accept group project [here]().  Group presentations will be May 6 during the final exam period.    
   
