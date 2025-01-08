@@ -35,7 +35,7 @@ MathJax.Hub.Config({
     
 + Read as needed [Happy Git and GitHub for the useR](http://happygitwithr.com/)
 
-+ [Start Chapters 1 and 2 in _Introduction to Statistics in R_ on DataCamp](https://app.datacamp.com/groups/stt3860-sp24/assignments)---Due Jan 20 NLT 5:00 PM 
++ [Start Chapters 1 and 2 in _Introduction to Statistics in R_ on DataCamp](https://app.datacamp.com/groups/stt3850-s2025/assignments)---Due Jan 20 NLT 5:00 PM 
     
 + Sign-up for a free account on [GitHub](https://github.com).  When you register for a free individual GitHub account, request a [student discount](https://education.github.com) to obtain a few private repositories as well as unlimited public repositories.  Please use something similar to **FirstNameLastName** as your username when you register with GitHub.  For example, my username on GitHub is *alanarnholt*. If you have a popular name such as John Smith, you may need to provide some other distinguishing characteristic in your username.  
 
@@ -77,7 +77,7 @@ Optional Resources:
 
 + Read the chapter [A Tidyverse Primer](https://www.tmwr.org/tidyverse).
 
-+ [Start Chapters 3 and 4 in _Introduction to Statistics in R_ on DataCamp](https://app.datacamp.com/groups/stt3860-sp24/assignments)---Due Jan 24 NLT 5:00 PM 
++ [Start Chapters 3 and 4 in _Introduction to Statistics in R_ on DataCamp](https://app.datacamp.com/groups/stt3850-s2025/assignments)---Due Jan 24 NLT 5:00 PM 
   
  
 * * * 
@@ -92,11 +92,13 @@ Optional Resources:
 
 ## Week 4: (Feb 4 & 6) {-}
 
++ Finish reproduction of [_Introduction to Statistics in R_]() - Due Feb 3 NLT 5:00 PM
+
 + Read the chapter [The Ames Housing Data](https://www.tmwr.org/ames). 
 
 + Read Chapters 1-5 of [Correlation and Regression](https://mathr.appstate.edu/connect/content/d219d887-2f38-428f-baed-16575e6770c5)
 
-+ [Start Chapters 1 and 2 in _Modeling with Data in the Tidyverse_ on DataCamp](https://app.datacamp.com/groups/stt3860-sp24/assignments)---Due Feb 7 NLT 5:00 PM 
++ [Start Chapters 1 and 2 in _Modeling with Data in the Tidyverse_ on DataCamp](https://app.datacamp.com/groups/stt3850-s2025/assignments)---Due Feb 7 NLT 5:00 PM 
     
 
 * * *
@@ -105,7 +107,7 @@ Optional Resources:
 
 + Read the chapter [Spending our Data](https://www.tmwr.org/splitting). 
 
-+ [Start Chapters 3 and 4 in _Modeling with Data in the Tidyverse_ on DataCamp](https://app.datacamp.com/groups/stt3860-sp24/assignments)---Due Feb 14 NLT 5:00 PM 
++ [Start Chapters 3 and 4 in _Modeling with Data in the Tidyverse_ on DataCamp](https://app.datacamp.com/groups/stt3850-s2025/assignments)---Due Feb 14 NLT 5:00 PM 
 
 + Misc Regression [topics](https://alanarnholt.github.io/STT3850/Rmarkdown/MiscRegression.html)
     
@@ -128,11 +130,13 @@ Optional Resources:
 
 ## Week 7: (Feb 25 & 27) {-}
 
++ Finish reproduction of [_Modeling with Data in the Tidyverse_]() - Due Feb 24 NLT 5:00 PM
+
 + Read the chapter [A Model Workflow](https://www.tmwr.org/workflows) 
 
 + Read [Multiple and Logistic Regression](https://mathr.appstate.edu/connect/content/808fcaf7-161a-481d-acec-20f5114e1537)
 
-+ [Start Chapters 1 and 2 in _Modeling with Tidymodels in R_ on DataCamp](https://app.datacamp.com/groups/stt3860-sp24/assignments)---Due Feb 28 NLT 5:00 PM 
++ [Start Chapters 1 and 2 in _Modeling with Tidymodels in R_ on DataCamp](https://app.datacamp.com/groups/stt3850-s2025/assignments)---Due Feb 28 NLT 5:00 PM 
     
 * * *
 
@@ -142,8 +146,7 @@ Optional Resources:
 
 + Read [Predictive Model Building](https://stat-ata-asu.github.io/PredictiveModelBuilding/)
     
-+ [Start Chapters 3 and 4 in _Modeling with Tidymodels in R_ on DataCamp](https://app.datacamp.com/groups/stt3860-sp24/assignments)---Due Mar 7 NLT 5:00 PM 
-
++ [Start Chapters 3 and 4 in _Modeling with Tidymodels in R_ on DataCamp](https://app.datacamp.com/groups/stt3850-s2025/assignments)---Due Mar 7 NLT 5:00 PM 
 
 + Start reproduction of [_Modeling with Tidymodels in R_]() - Due Mar 24 NLT 5:00 PM
     
@@ -167,7 +170,7 @@ Optional Resources:
 
 ## Week 10: (Mar 25 & 27) {-}
 
-+ Complete reproduction of [_Modeling with Tidymodels in R_]() - Due Mar 24 NLT 5:00 PM
++ Finish reproduction of [_Modeling with Tidymodels in R_]() - Due Mar 24 NLT 5:00 PM
 
 + Read the chapter [Resampling for Evaluating Performance](https://www.tmwr.org/resampling)
 
@@ -188,7 +191,7 @@ Optional Resources:
 
 + Read Chapters 2-4 in [Tree based Models in R](https://mathr.appstate.edu/connect/content/417890f7-c144-44ec-86b5-6437891c8c2d)
     
-+ [Start Chapters 1 and 2 in _Machine Learning with Tree Based Models in R_ on DataCamp](https://app.datacamp.com/groups/stt3860-sp24/assignments)---Due Apr 7 NLT 5:00 PM 
++ [Start Chapters 1 and 2 in _Machine Learning with Tree Based Models in R_ on DataCamp](https://app.datacamp.com/groups/stt3850-s2025/assignments)---Due Apr 7 NLT 5:00 PM 
 
 + Review as needed [Train and Test](../rmarkdown/TrainAndTestPartitions.html)
     
@@ -204,7 +207,7 @@ Optional Resources:
     
 + Read Chapters 5-6 in [Tree based Models in R](https://mathr.appstate.edu/connect/content/417890f7-c144-44ec-86b5-6437891c8c2d)
 
-+ [Start Chapters 3 and 4 in _Machine Learning with Tree Based Models in R_ on DataCamp](https://app.datacamp.com/groups/stt3860-sp24/assignments)---Due Apr 14 NLT 5:00 PM 
++ [Start Chapters 3 and 4 in _Machine Learning with Tree Based Models in R_ on DataCamp](https://app.datacamp.com/groups/stt3850-s2025/assignments)---Due Apr 14 NLT 5:00 PM 
 
 + Start reproduction of [_Machine Learning with Tree Based Models in R_]() - Due Apr 21 NLT 5:00 PM
 
@@ -228,7 +231,7 @@ Optional Resources:
 
 ## Week 14: (Apr 22 & 24) {-}
 
-+ Complete reproduction of [_Machine Learning with Tree Based Models in R_]() - Due Apr 21 NLT 5:00 PM
++ Finish reproduction of [_Machine Learning with Tree Based Models in R_]() - Due Apr 21 NLT 5:00 PM
   
 + Pick data for group project #2 from `modeldata` package.  Data must have at least 8 variables and 1,000 or more rows.  Accept group project [here]().  Group presentations will be May 6 during the final exam period.    
   
