@@ -24,13 +24,32 @@ ggplot(data = ames, aes(x = Sale_Price)) +
   geom_histogram(bins = 50, color = "white") + 
   scale_x_log10() +
   theme_bw()
+###
+ggplot(data = ames, aes(x = Gr_Liv_Area, 
+                        y = Sale_Price,
+                        color = Sale_Condition)) + 
+  geom_point() +
+  theme_bw()
+
 ####
 ames <- ames |> 
+  filter(Gr_Liv_Area < 4000) |> 
   mutate(Sale_Price = log10(Sale_Price))
 #####
+ggplot(data = ames, aes(x = Gr_Liv_Area, 
+                        y = Sale_Price,
+                        color = Sale_Condition)) + 
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE) +
+  theme_bw() 
+
 ggplot(data = ames, aes(x = Sale_Price)) + 
   geom_histogram(bins = 50, color = "white") + 
   theme_bw()
+
+
+
+
 #### Splitting Data
 set.seed(38)
 ames_split <- initial_split(ames,
@@ -84,6 +103,16 @@ ames_recipe <- recipe(Sale_Price ~ .,
     step_normalize(all_numeric_predictors()) |> 
     step_other(Neighborhood, threshold = 0.02) |> 
     step_dummy(all_nominal(), - all_outcomes()) 
+
+ames_recipe2 <- recipe(Sale_Price ~ Lot_Area + Total_Bsmt_SF +
+                       Gr_Liv_Area + Garage_Cars + Fireplaces,
+                      data = ames_train) |> 
+  step_corr(all_numeric_predictors(), threshold = 0.8) |> 
+  step_nzv(all_nominal_predictors()) |> 
+  step_nzv(all_numeric_predictors()) |> 
+  step_normalize(all_numeric_predictors()) |> 
+  # step_other(Neighborhood, threshold = 0.02) |> 
+  step_dummy(all_nominal(), - all_outcomes()) 
       
 
 #### Workflows and metrics
@@ -99,6 +128,27 @@ ames_wkfl_lm_fit <- ames_wkfl_lm |>
 
 ames_wkfl_lm_fit |> 
   collect_metrics()
+
+ames_lm_fit <- lm_model |> 
+      fit(Sale_Price ~ ., data = ames_train)
+tidy(ames_lm_fit)
+####################################
+
+
+ames_wkfl2_lm <- workflow() |> 
+  add_model(lm_model) |> 
+  add_recipe(ames_recipe2)
+
+ames_wkfl2_lm_fit <- ames_wkfl2_lm |> 
+  last_fit(split = ames_split)
+
+ames_wkfl2_lm_fit |> 
+  collect_metrics()
+
+ames_lm_fit2 <- lm_model |> 
+  fit(Sale_Price ~ Lot_Area + Total_Bsmt_SF +
+        Gr_Liv_Area + Garage_Cars + Fireplaces, data = ames_train)
+tidy(ames_lm_fit2)
 
 ## lasso_model
 ## This has issues.....work with later.
