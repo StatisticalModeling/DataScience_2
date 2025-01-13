@@ -225,3 +225,27 @@ ames_wkfl_boost_fit <- ames_wkfl_boost |>
 
 ames_wkfl_boost_fit |> 
   collect_metrics()
+
+
+
+
+1/2.5
+fx <- function(x){0.4*exp(-0.4*x)}
+integrate(fx, 3, 4)
+# PDFs for Poisson(lambda)
+x <- 0:16
+DF <- stack(list('lambda=1' = dpois(x, 1), 'lambda=4' = dpois(x, 4), 'lambda=8' = dpois(x, 8) ))
+names(DF) <- c("px", "lambda")
+DF$x <- x
+DF$lambda <- factor(DF$lambda, levels =c('lambda=1','lambda=4', 'lambda=8'))
+ggplot(data = DF, aes(x = x, y = px)) + facet_grid(rows = vars(lambda)) + 
+  geom_linerange(aes(x = x, ymin = 0, ymax = px), size = 0.5, lty = "dotted") + 
+  geom_point(color = "skyblue3", size = 1) + 
+  labs(y = "P(X=x)", x = "x", title = "X ~ Pois(lambda)") + 
+  theme_bw()
+
+
+
+
+
+

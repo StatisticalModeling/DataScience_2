@@ -1,23 +1,15 @@
 ---
 title: "STT 3860 - Introduction to Statistical Modeling - Spring 2025"
-author: ""
-#date: 'Last compiled: `r format(Sys.time(), "%A, %B %d, %Y - %X.")`'
-output: 
-  bookdown::html_document2: 
-    highlight: textmate
-    theme: yeti
-    css: "../css/style.css"
+format: pdf
 ---
 
---------------
-
+:::{.callout-important title="Instructor Information"}
 **Instructor:**  Dr. Alan T. Arnholt  
 **Office:** Walker Hall 237      
 **Student Help Hours:** 12:30-2:00 pm T & R, 2:00-3:00 pm W, and by appointment.
 
 * Make an appointment to see me by clicking [here]( https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ28eqvF16W8IOcBxYKxXymw--a6FO5q6P31carVkzQXWt3n6lBeZ-dc7pgdGtw7kMPCvsyk3D3m).
-
---------------
+:::
 
 ```{r, label = "SETUP", echo = FALSE, message = FALSE, warning = FALSE}
 knitr::opts_chunk$set(comment = NA, message = FALSE, warning = FALSE, fig.align = "center")
@@ -26,19 +18,11 @@ library(dplyr)
 library(ggplot2)
 ```
 
-
-### Course Description: {-}
-
+:::{.callout-note title="Course Description"}
 **Introduction to Statistical Modeling**: Introduction to Statistical Modeling is a continuation of Introduction to Data Management and Visualization with an emphasis on statistical modeling and reproducible reporting using professional tools.  Hypothesis testing is introduced via resampling, and bootstrapping is used to introduce estimation.  Cross-validation is used to evaluate and select models that take into account the bias-variance trade-off.  Supervised learning techniques discussed will include but are not limited to linear regression, regression trees, classification trees, and random forests.
+:::
 
-```{block, note-text, type='rmdnote'}
-Please bring a notebook and pencil to every class.  
-```
-
-* * * 
-
-### Course Objectives: {-}
-
+:::{.callout-tip title="Course Objectives"}
 * Students will learn to use a reproducible work flow for all assignments.
 
 * Students will improve their technology expertise.
@@ -48,15 +32,11 @@ Please bring a notebook and pencil to every class.
 * Students will learn to assess models via cross-validation.
 
 * Students will learn the fundamental ideas of tidy modeling including recipes and workflows.
+:::
 
-* * *
 
-### Course Text: {-}
-
+:::{.callout-important title="Course Texts"}
 * [_Tidy Modeling with `R`: A Framework for Modeling in the Tidyverse_](https://www.tmwr.org/) by Max Kuhn and Julia Silge
-
-
-#### Additional References:{-}
 
 * [_Feature Engineering and Selection: A Practical Approach for Predictive Models_](https://bookdown.org/max/FES/) by Max Kuhn and Kjell Johnson
 
@@ -67,34 +47,27 @@ Please bring a notebook and pencil to every class.
 * [`R` for Data Science (2e)](https://bookdown.org/max/FES/) by Hadley Wickam, Mine Centinkaya-Rundel, and Garrett Grolemund
 
 * [_`R` Graphics Cookbook_](http://www.amazon.com/R-Graphics-Cookbook-Winston-Chang/dp/1449316956) by Winston Chang - Available via `SafariBooksOnline` through the Appalachian State University [library](http://library.appstate.edu/). 
+:::
 
-* * *
 
-
-### Tentative Schedule and Course Pacing: {-}
-
+:::{.callout-important title="Tentative Schedule and Course Pacing Guide"}
 Tentative course assignments and due dates are maintained [here](https://StatisticalModeling.github.io/DataScience_2/CoursePacing/STT3860CoursePacingS2025.html).
+:::
 
-* * *
 
-### Course Grading: {-}
-
+:::{.callout-note title="Course Grading & Assessment"}
 * 20% of the course grade will come from sixteen [DataCamp](https://www.datacamp.com/home) chapters.
 
 * 40% of the course grade will come from four Quarto reproductions of Data Camp courses.
 
 * 40% of the course grade will come from two **group** presentations.  
+:::
 
-* * *
-
-**University Policies**
-
+:::{.callout-note title="University Policies"}
 This course conforms with all Appalachian State University policies with respect to face coverings, academic integrity, disability services, class attendance, and student engagement.  The details of the policies may be found at <https://academicaffairs.appstate.edu/resources/syllabi-policy-and-statement-information>.  Please pay particular attention to the [student engagement statement](https://academicaffairs.appstate.edu/sites/academicaffairs.appstate.edu/files/gerber_resolution_student_workload_removed_approved_statement_per_mmccoughy_and_sedwards.pdf).
+:::
 
-________
-
-**Computers and Software**
-
+:::{.callout-tip title="Computers and Software"}
 This course will use the RStudio/POSIT workbench server  (https://mathr.appstate.edu/) that has the programs listed below and more installed.
 
 * [R](https://cran.r-project.org) 
@@ -106,55 +79,50 @@ You must have an active internet connection and be registered in the course to a
 
 
 ```{r, echo = FALSE, fig.align="center"}
-knitr::include_graphics("POSITlogin.png", dpi = 128)
+knitr::include_graphics("POSITlogin.png", dpi = 400)
 ```
 
 If you have problems with your Appstate Username or Password visit [IT Support Services](http://support.appstate.edu/) or call 262-6266.
+:::
 
-__________
 
-**Required Technology**
+:::{.callout-warning title="Required Technology"}
 
 * [RStudio Server](https://mathr.math.appstate.edu/)
+
 * [DataCamp](https://www.datacamp.com/)
+
 * [GitHub](https://github.com/)
+
 * [Github Classroom Repository](https://github.com/STT3860-S2025)
 
-
+:::{.callout-note title="Technology used in this class is free"}
 Note: All technology used in the class is either open source (free) or will be accessible to students enrolled in the course for no cost.
+:::
 
-___________
+:::
 
-**Assignments**
 
-The [Course Pacing Guide](../CoursePacing/STT3860CoursePacingS2025.html) has all course assignments and due dates.
 
-____________
+:::{.callout-warning title="Course Pacing Guide/Assignments"}
+The [Course Pacing Guide](https://statisticalmodeling.github.io/DataScience_2/CoursePacing/STT3860CoursePacingS2025.html) has all course assignments and due dates.
+:::
 
-```{block, type='rmdnote'}
-**Faculty student responsibilities**
 
+:::{.callout-tip title="Faculty and Student Responsibilities"}
 * It is my (faculty) responsibility to explain and present the material you need to master for this course.  A detailed description of everything you need to do starting with day one to the Final Exam is provided in the course pacing guide which is available on day one of the course.
 
 * It is your (student) responsibility to learn the material and to seek help if you do not understand the material.  
-```
-
-Appalachian students are expected to make intensive engagement with courses their first priority. Practically speaking, students should spend approximately 2-3 hours on coursework outside of class for every hour they spend in class. For this three-hour course, you you should anticipate 6-9 hours per week of outside work.
-
-________________
-
-**How To Do Well In This Course**
-
-The only way to learn statistics is to **DO** statistics, which includes using statistical software. Reading the textbook, learning the language, and practicing exercises using real data are critical to your learning and success. Class activities and assessments have been structured with these principles in mind.
 
 
-You should read assigned textbook content and read/watch supplemental materials prior to coming to class.  When you read the assigned material, you should complete the problems (not just read about them) on your paper and computer. It will be easier to participate if you acquire some familiarity with the vocabulary and methods before we start to discuss and use them. You must “speak the language” (both statistics and R) to demonstrate your knowledge effectively.  If you come to class and have difficulty following the discussion, you should make sure you have read all of the assigned material and then go back and re-read the assigned material a second time.  Reading a technical book is not the same as a novel.  Most people, your instructor included, must read a technical section at least twice before understanding a topic.  If you are still having challenges after reading the assigned material twice and working the out the material on paper and the computer, it is your responsibility to seek help.  I am here to help and will be glad to assist you in your learning process.  Please make an appointment to visit with me on my [calendar](https://calendar.google.com/calendar/u/0/selfsched?sstoken=UUtZb3I1Z1pFczdjfGRlZmF1bHR8MTZjOTU5MGY0ZTFlOTA2MmExNzhlYWQ5MGIzZWQ0OGM). 
+Appalachian students are expected to make intensive engagement with courses their first priority. Practically speaking, students should spend approximately 2-3 hours on coursework outside of class for every hour they spend in class. **_For this three-hour course, you you should anticipate 6-9 hours per week of outside work._**
+:::
 
 
-_____________________________________________
+:::{.callout-warning title="How To Do Well In This Course"}
+The only way to learn statistics is to **DO** statistics, which includes using statistical software. Reading the textbook, learning the language, and practicing exercises using real data are critical to your learning and success. Class activities and assessments have been structured with these principles in mind.  You should read assigned textbook content and read/watch supplemental materials prior to coming to class.  When you read the assigned material, you should complete the problems (not just read about them) on your paper and computer. It will be easier to participate if you acquire some familiarity with the vocabulary and methods before we start to discuss and use them. You must “speak the language” (both statistics and R) to demonstrate your knowledge effectively.  If you come to class and have difficulty following the discussion, you should make sure you have read all of the assigned material and then go back and re-read the assigned material a second time.  Reading a technical book is not the same as a novel.  Most people, your instructor included, must read a technical section at least twice before understanding a topic.  If you are still having challenges after reading the assigned material twice and working the out the material on paper and the computer, it is your responsibility to seek help.  I am here to help and will be glad to assist you in your learning process.  Please make an appointment to visit with me on my [calendar](https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ28eqvF16W8IOcBxYKxXymw--a6FO5q6P31carVkzQXWt3n6lBeZ-dc7pgdGtw7kMPCvsyk3D3m). 
+:::
 
-**How To Get Unstuck**
-
+:::{.callout-warning title="How To Get Unstuck"}
 Well constructed questions will elicit answers more rapidly than poorly constructed questions.  This [video](https://www.youtube.com/watch?v=ZFaWxxzouCY&list=PLjTlxb-wKvXNSDfcKPFH2gzHGyjpeCZmJ&index=3) provides some background on asking questions.  This stackoverflow thread details how to create a [minimal R reproducible example](http://stackoverflow.com/questions/5963269/how-to-make-a-great-r-reproducible-example/5963610#5963610). Please read [How To Ask Questions The Smart Way](http://www.catb.org/~esr/faqs/smart-questions.html) by Eric Raymond and Rick Moen and heed their advice.
-
-____________
+:::
