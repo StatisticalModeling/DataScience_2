@@ -162,9 +162,75 @@ ggplot(data = crickets,
   theme(legend.position = "top")
 ```
 
+Or using the coefficients from `mod_lm`:
 
+```{r}
+mod_lm
+ggplot(data = crickets, 
+       aes(x = temp, 
+           y = rate, 
+           color = species,
+           pch = species,
+           lty = species)) + 
+  geom_point(size = 2) + 
+  geom_abline(intercept = -7.211, slope = 3.603, lty = "dotted", color = "red") + 
+  geom_abline(intercept = -17.276, slope = 3.603, lty = "dashed", color = "lightblue") + 
+  theme_bw() + 
+  xlim(0, 30) + 
+  ylim(-20, 100)
+```
 
+```{r}
+mtcars |> select(-mpg)
+purrr::map(mtcars |> select(-mpg), cor.test, y = mtcars$mpg)
+corr_res <- purrr::map(mtcars |> select(-mpg), cor.test, y = mtcars$mpg)
+corr_res[[10]]
+corr_res[[10]] |> 
+broom::tidy()
+```
 
+```{r}
+corr_res |> 
+  map_dfr(tidy, .id = "predictor") -> output 
+output |> 
+  knitr::kable()
+```
+
+Create a graph with `output`.
+
+```{r}
+#| label: "fig-coefCI"
+#| fig-cap: "Correlations (and 95% confidence intervals) between predictors and the outcome in the mtcars data set."
+ggplot(data = output, aes(x = fct_reorder(predictor, estimate))) + 
+  geom_point(aes(y = estimate)) + 
+  geom_errorbar(aes(ymin = conf.low, ymax = conf.high), width = 0.2) + 
+  labs(x = "", y = "Correlation with mpg") + 
+  theme_bw()
+```
+
+## Combing Base `R` Models and Tidyverse
+
+```{r}
+crickets |> 
+  group_nest(species) |> 
+  knitr::kable()
+
+crickets |> 
+  group_nest(species) |> 
+  mutate(model = map(data, ~lm(rate ~ temp, data = .x)))
+#
+crickets |> 
+  group_nest(species) |> 
+  mutate(model = map(data, ~lm(rate ~ temp, data = .x))) |> 
+  mutate(coef = map(model, tidy))
+#
+crickets |> 
+  group_nest(species) |> 
+  mutate(model = map(data, ~lm(rate ~ temp, data = .x))) |> 
+  mutate(coef = map(model, tidy)) |> 
+  select(species, coef) |> 
+  unnest(cols = c(coef))
+```
 
 
 
