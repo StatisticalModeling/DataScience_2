@@ -77,6 +77,8 @@ Optional Resources:
 
 + Read the chapter [A Tidyverse Primer](https://www.tmwr.org/tidyverse).
 
++ [Tidyverse Primer Notes](../QuartoStuff/tidyverse_primer.html)
+
 + [Start Chapters 3 and 4 in _Introduction to Statistics in R_ on DataCamp](https://app.datacamp.com/groups/stt3850-s2025/assignments)---Due Jan 24 NLT 5:00 PM 
   
  
@@ -85,6 +87,8 @@ Optional Resources:
 ## Week 3: (Jan 28 & 30) {-}
    
 + Read the chapter [A Review of R Modeling Fundamentals](https://www.tmwr.org/base-r). 
+
++ [Review of R Modeling Notes](../QuartoStuff/TMWRCHAP3.html)
 
 + Start reproduction of [_Introduction to Statistics in R_](https://classroom.github.com/a/jm6UNAaf) - Due Feb 3 NLT 5:00 PM
     
