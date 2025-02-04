@@ -62,15 +62,12 @@ dim(ames_test)
 ####
 # Set up different models
 ## List of all parsnip models: https://www.tidymodels.org/find/parsnip/
+
 ## Linear Regression
 lm_model <- linear_reg() |> 
   set_engine("lm") |> 
   set_mode("regression")
-## Lasso - penalty = 1; Ridge Regression - penalty = 0...penalty = lambda
-# SEE: ?`glmnet-details`
-lasso_model <- linear_reg(penalty = 1) |> 
-  set_engine("glmnet") |> 
-  set_mode("regression")
+
 ## Decision Tree
 dt_model <- decision_tree() |> 
   set_engine("rpart") |> 
@@ -95,21 +92,18 @@ boost_model <- boost_tree() |>
 #################################
 ### RECIPES
   
-ames_recipe <- recipe(Sale_Price ~ .,
-                      data = ames_train) |> 
-    step_corr(all_numeric_predictors(), threshold = 0.8) |> 
-    step_nzv(all_nominal_predictors()) |> 
-    step_nzv(all_numeric_predictors()) |> 
-    step_normalize(all_numeric_predictors()) |> 
-    step_other(Neighborhood, threshold = 0.02) |> 
-    step_dummy(all_nominal(), - all_outcomes()) 
+ames_recipe <- recipe(Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + 
+                      Bldg_Type + Latitude + Longitude, data = ames_train) |> 
+    step_log(Gr_Liv_Area, base = 10) |> 
+    step_other(Neighborhood, threshold = 0.01) |> 
+    step_dummy(all_nominal_predictors()) 
 
 ames_recipe2 <- recipe(Sale_Price ~ Lot_Area + Total_Bsmt_SF +
                        Gr_Liv_Area + Garage_Cars + Fireplaces,
-                      data = ames_train) |> 
+                       data = ames_train) |> 
   step_corr(all_numeric_predictors(), threshold = 0.8) |> 
   step_nzv(all_nominal_predictors()) |> 
-  step_nzv(all_numeric_predictors()) |> 
+  step_nzv(all_nominal_predictors()) |> 
   step_normalize(all_numeric_predictors()) |> 
   # step_other(Neighborhood, threshold = 0.02) |> 
   step_dummy(all_nominal(), - all_outcomes()) 
@@ -123,6 +117,20 @@ ames_wkfl_lm <- workflow() |>
   add_model(lm_model) |> 
   add_recipe(ames_recipe)
 
+######
+
+# Repeated Cross Validation
+set.seed(33)
+folds <- vfold_cv(ames_train, v = 10, repeats = 5)
+folds
+
+ames_wkfl_lm |> 
+  fit_resamples(resamples = folds) -> lm_res
+collect_metrics(lm_res)
+
+
+######
+
 ames_wkfl_lm_fit <- ames_wkfl_lm |> 
   last_fit(split = ames_split)
 
@@ -132,12 +140,17 @@ ames_wkfl_lm_fit |>
 ames_lm_fit <- lm_model |> 
       fit(Sale_Price ~ ., data = ames_train)
 tidy(ames_lm_fit)
+glance(ames_lm_fit)
 ####################################
 
 
 ames_wkfl2_lm <- workflow() |> 
   add_model(lm_model) |> 
   add_recipe(ames_recipe2)
+
+ames_wkfl2_lm |> 
+  fit_resamples(resamples = folds) -> lm_res2
+collect_metrics(lm_res2)
 
 ames_wkfl2_lm_fit <- ames_wkfl2_lm |> 
   last_fit(split = ames_split)
@@ -150,17 +163,6 @@ ames_lm_fit2 <- lm_model |>
         Gr_Liv_Area + Garage_Cars + Fireplaces, data = ames_train)
 tidy(ames_lm_fit2)
 
-## lasso_model
-## This has issues.....work with later.
-ames_wkfl_lasso <- workflow() |> 
-  add_model(lasso_model) |> 
-  add_recipe(ames_recipe)
-
-ames_wkfl_lasso_fit <- ames_wkfl_lasso |> 
-  last_fit(split = ames_split)
-
-ames_wkfl_lasso_fit |> 
-  collect_metrics()
 
 ## dt_model
 
@@ -187,6 +189,52 @@ fit(dt_model,
     Sale_Price ~., 
     data = ames_train_prep) -> ames_dt_fit 
 rpart.plot::rpart.plot(ames_dt_fit$fit)
+############################################
+## Lets tune the decision tree
+dt_tune_model <- decision_tree(cost_complexity = tune(),
+                               tree_depth = tune(),
+                               min_n = tune()) |> 
+  set_engine("rpart") |> 
+  set_mode("regression")
+dt_tune_model
+ames_tune_wkfl <- ames_wkfl_dt |> 
+  update_model(dt_tune_model)
+ames_tune_wkfl
+# Grid
+dt_grid <- grid_random(parameters(dt_tune_model),
+                       size = 21)
+dt_grid
+# Hyperparameter tuning
+# This will take a minute or two
+dt_tuning <- ames_tune_wkfl |> 
+  tune_grid(resamples = folds,
+            grid = dt_grid)
+dt_tuning
+dt_tuning |> 
+  collect_metrics()
+dt_tuning |> 
+  show_best(metric = "rmse")
+
+best_dt_model <- dt_tuning |> 
+  select_best(metric = "rmse")
+best_dt_model
+
+# Finalize the workflow
+
+final_ames_dt_wkfl <- ames_tune_wkfl |> 
+  finalize_workflow(best_dt_model)
+final_ames_dt_wkfl
+
+# Train finalized workflow
+
+ames_final_dt_fit <- final_ames_dt_wkfl |> 
+  last_fit(split = ames_split)
+ames_final_dt_fit
+
+ames_final_dt_fit |> 
+  collect_metrics()
+
+
 ############################################
 
 ## bag_model
@@ -225,26 +273,6 @@ ames_wkfl_boost_fit <- ames_wkfl_boost |>
 
 ames_wkfl_boost_fit |> 
   collect_metrics()
-
-
-
-
-1/2.5
-fx <- function(x){0.4*exp(-0.4*x)}
-integrate(fx, 3, 4)
-# PDFs for Poisson(lambda)
-x <- 0:16
-DF <- stack(list('lambda=1' = dpois(x, 1), 'lambda=4' = dpois(x, 4), 'lambda=8' = dpois(x, 8) ))
-names(DF) <- c("px", "lambda")
-DF$x <- x
-DF$lambda <- factor(DF$lambda, levels =c('lambda=1','lambda=4', 'lambda=8'))
-ggplot(data = DF, aes(x = x, y = px)) + facet_grid(rows = vars(lambda)) + 
-  geom_linerange(aes(x = x, ymin = 0, ymax = px), size = 0.5, lty = "dotted") + 
-  geom_point(color = "skyblue3", size = 1) + 
-  labs(y = "P(X=x)", x = "x", title = "X ~ Pois(lambda)") + 
-  theme_bw()
-
-
 
 
 
