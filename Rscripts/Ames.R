@@ -6,44 +6,46 @@ library(tidyverse)
 library(tidymodels)
 dim(ames)
 str(ames)
+library(janitor)
+ames <- ames |> clean_names()
 # Description of variables is given at:
 # http://jse.amstat.org/v19n3/decock/DataDocumentation.txt
 # tidymodels_prefer() uses the `conflicted` package to handle 
 # common conflicts with `tidymodels` and other packages.
 tidymodels_prefer()
 # NOTE: we want to predict `Sale_Price`
-ggplot(data = ames, aes(x = Sale_Price)) + 
+ggplot(data = ames, aes(x = sale_price)) + 
   geom_histogram() + 
   theme_bw()
 # First histogram with defaults not optimal
-ggplot(data = ames, aes(x = Sale_Price)) + 
+ggplot(data = ames, aes(x = sale_price)) + 
   geom_histogram(bins = 50, color = "white") + 
   theme_bw()
 # Skew right - use a log transformation
-ggplot(data = ames, aes(x = Sale_Price)) + 
+ggplot(data = ames, aes(x = sale_price)) + 
   geom_histogram(bins = 50, color = "white") + 
   scale_x_log10() +
   theme_bw()
 ###
-ggplot(data = ames, aes(x = Gr_Liv_Area, 
-                        y = Sale_Price,
-                        color = Sale_Condition)) + 
+ggplot(data = ames, aes(x = gr_liv_area, 
+                        y = sale_price,
+                        color = sale_condition)) + 
   geom_point() +
   theme_bw()
 
 ####
 ames <- ames |> 
-  filter(Gr_Liv_Area < 4000) |> 
-  mutate(Sale_Price = log10(Sale_Price))
+  filter(gr_liv_area < 4000) |> 
+  mutate(sale_price = log10(sale_price))
 #####
-ggplot(data = ames, aes(x = Gr_Liv_Area, 
-                        y = Sale_Price,
-                        color = Sale_Condition)) + 
+ggplot(data = ames, aes(x = gr_liv_area, 
+                        y = sale_price,
+                        color = sale_condition)) + 
   geom_point() +
   geom_smooth(method = "lm", se = FALSE) +
   theme_bw() 
 
-ggplot(data = ames, aes(x = Sale_Price)) + 
+ggplot(data = ames, aes(x = sale_price)) + 
   geom_histogram(bins = 50, color = "white") + 
   theme_bw()
 
@@ -54,7 +56,7 @@ ggplot(data = ames, aes(x = Sale_Price)) +
 set.seed(38)
 ames_split <- initial_split(ames,
                             prop = 3/4,
-                            strata = Sale_Price)
+                            strata = sale_price)
 ames_train <- training(ames_split)
 ames_test <- testing(ames_split)
 dim(ames_train)
@@ -92,20 +94,20 @@ boost_model <- boost_tree() |>
 #################################
 ### RECIPES
   
-ames_recipe <- recipe(Sale_Price ~ Neighborhood + Gr_Liv_Area + Year_Built + 
-                      Bldg_Type + Latitude + Longitude, data = ames_train) |> 
-    step_log(Gr_Liv_Area, base = 10) |> 
-    step_other(Neighborhood, threshold = 0.01) |> 
+ames_recipe <- recipe(sale_price ~ neighborhood + gr_liv_area + year_built + 
+                      bldg_type + latitude + longitude, data = ames_train) |> 
+    step_log(gr_liv_area, base = 10) |> 
+    step_other(neighborhood, threshold = 0.01) |> 
     step_dummy(all_nominal_predictors()) 
 
-ames_recipe2 <- recipe(Sale_Price ~ Lot_Area + Total_Bsmt_SF +
-                       Gr_Liv_Area + Garage_Cars + Fireplaces,
+ames_recipe2 <- recipe(sale_price ~ lot_area + total_bsmt_sf +
+                       gr_liv_area + garage_cars + fireplaces,
                        data = ames_train) |> 
   step_corr(all_numeric_predictors(), threshold = 0.8) |> 
   step_nzv(all_nominal_predictors()) |> 
   step_nzv(all_nominal_predictors()) |> 
   step_normalize(all_numeric_predictors()) |> 
-  # step_other(Neighborhood, threshold = 0.02) |> 
+  # step_other(neighborhood, threshold = 0.02) |> 
   step_dummy(all_nominal(), - all_outcomes()) 
       
 
@@ -138,7 +140,7 @@ ames_wkfl_lm_fit |>
   collect_metrics()
 
 ames_lm_fit <- lm_model |> 
-      fit(Sale_Price ~ ., data = ames_train)
+      fit(sale_price ~ ., data = ames_train)
 tidy(ames_lm_fit)
 glance(ames_lm_fit)
 ####################################
@@ -159,8 +161,8 @@ ames_wkfl2_lm_fit |>
   collect_metrics()
 
 ames_lm_fit2 <- lm_model |> 
-  fit(Sale_Price ~ Lot_Area + Total_Bsmt_SF +
-        Gr_Liv_Area + Garage_Cars + Fireplaces, data = ames_train)
+  fit(sale_price ~ lot_area + total_bsmt_sf +
+        gr_liv_area + garage_cars + fireplaces, data = ames_train)
 tidy(ames_lm_fit2)
 
 
@@ -186,7 +188,7 @@ ames_test_prep <- ames_recipe_prep |>
   bake(new_data = ames_test)
 
 fit(dt_model, 
-    Sale_Price ~., 
+    sale_price ~., 
     data = ames_train_prep) -> ames_dt_fit 
 rpart.plot::rpart.plot(ames_dt_fit$fit)
 ############################################
@@ -201,7 +203,7 @@ ames_tune_wkfl <- ames_wkfl_dt |>
   update_model(dt_tune_model)
 ames_tune_wkfl
 # Grid
-dt_grid <- grid_random(parameters(dt_tune_model),
+dt_grid <- grid_random(hardhat::extract_parameter_set_dials(dt_tune_model),
                        size = 21)
 dt_grid
 # Hyperparameter tuning
@@ -212,6 +214,7 @@ dt_tuning <- ames_tune_wkfl |>
 dt_tuning
 dt_tuning |> 
   collect_metrics()
+
 dt_tuning |> 
   show_best(metric = "rmse")
 
@@ -234,7 +237,12 @@ ames_final_dt_fit
 ames_final_dt_fit |> 
   collect_metrics()
 
+############################################
 
+ best_spec <- finalize_model(dt_tune_model, best_dt_model)
+ final_model <- fit(best_spec, sale_price ~ ., ames_train)
+ # Graph the final_model
+ rpart.plot::rpart.plot(final_model$fit)
 ############################################
 
 ## bag_model
