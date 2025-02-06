@@ -22,6 +22,7 @@ hitters_split <- initial_split(Hitters, prop = .80)
 hitters_train <- training(hitters_split)
 hitters_test <- testing(hitters_split)
 
+
 lm_recipe <- 
   recipe(formula = Salary ~ ., data = hitters_train)  |>  
   step_zv(all_predictors()) |> 
@@ -48,8 +49,10 @@ final_lm_fit <- lm_workflow |>
 
 hitters_test |> 
   bind_cols(predict(final_lm_fit, hitters_test)) -> stuff
-stuff
+stuff 
 
+stuff |>
+  select(Salary, .pred)
 # Test RMSE - 357
 rmse(stuff, Salary, .pred)
 
@@ -108,6 +111,8 @@ final_glmnet_fit <- final_glmnet_wkfl |>
 
 hitters_test |> 
   bind_cols(predict(final_glmnet_fit, hitters_test)) -> stuff
+stuff <- stuff |> 
+  relocate(.pred, .after = Salary)
 stuff
 
 
@@ -117,3 +122,32 @@ rmse(stuff, Salary, .pred)
 
 
 #######################################################################
+
+use_ranger(Salary ~. , data = hitters_train, verbose = TRUE)
+
+ranger_recipe <- recipe(formula = Salary ~ ., data = hitters_train) 
+
+ranger_spec <- rand_forest(mtry = tune(), 
+                           min_n = tune(), 
+                           trees = 500) |>  
+  set_mode("regression")  |>  
+  set_engine("ranger") 
+
+ranger_workflow <- 
+  workflow()  |>  
+  add_recipe(ranger_recipe)  |>  
+  add_model(ranger_spec) 
+
+ranger_grid <- tidyr::crossing(mtry = 4:19, 
+                               min_n = seq(5, 100, 20)) 
+
+# This will take a few minutes
+set.seed(48700)
+ranger_tune <-
+  tune_grid(ranger_workflow, resamples = folds, grid = ranger_grid)
+
+
+######
+ranger_tune
+autoplot(ranger_tune)
+show_best(ranger_tune, metric = "rmse")
