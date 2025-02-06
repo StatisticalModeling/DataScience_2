@@ -146,7 +146,7 @@ folds <- vfold_cv(Hitters, v = 10, repeats = 5)
 # This will take a few minutes
 set.seed(48700)
 ranger_tune <-
-  tune_grid(ranger_workflow, resamples = folds, grid = ranger_grid)
+  tune_grid(ranger_workflow, resamples = folds, grid = 10)
 
 
 ######
@@ -154,7 +154,7 @@ ranger_tune
 autoplot(ranger_tune)
 show_best(ranger_tune, metric = "rmse")
 
-ranger_param <- tibble(mtry = 3, min_n = 3)
+ranger_param <- tibble(mtry = 5, min_n = 11)
 final_ranger_wkfl <- ranger_workflow |> 
   finalize_workflow(ranger_param)
 final_ranger_wkfl 
@@ -169,5 +169,5 @@ stuff <- stuff |>
   relocate(.pred, .after = Salary)
 stuff
 
-# Test RMSE - 302
+# Test RMSE - 301
 rmse(stuff, Salary, .pred)
