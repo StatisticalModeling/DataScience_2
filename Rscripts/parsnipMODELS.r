@@ -154,7 +154,7 @@ ranger_tune
 autoplot(ranger_tune)
 show_best(ranger_tune, metric = "rmse")
 
-ranger_param <- tibble(mtry = 3, min_n = 5)
+ranger_param <- tibble(mtry = 3, min_n = 3)
 final_ranger_wkfl <- ranger_workflow |> 
   finalize_workflow(ranger_param)
 final_ranger_wkfl 
@@ -169,5 +169,5 @@ stuff <- stuff |>
   relocate(.pred, .after = Salary)
 stuff
 
-# Test RMSE - 297
+# Test RMSE - 302
 rmse(stuff, Salary, .pred)
