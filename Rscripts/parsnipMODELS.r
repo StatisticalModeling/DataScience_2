@@ -12,7 +12,10 @@ lm_spec <- linear_reg() |>
 lm_spec
 
 #
+summary(Hitters)
 Hitters <- na.omit(Hitters)
+summary(Hitters)
+dim(Hitters)
 
 set.seed(444)
 hitters_split <- initial_split(Hitters, prop = .80)
@@ -29,6 +32,9 @@ lm_workflow <-
   workflow()  |>  
   add_recipe(lm_recipe)  |>  
   add_model(lm_spec) 
+
+set.seed(44)
+folds <- vfold_cv(Hitters, v = 10, repeats = 5)
 
 lm_tune <- 
   tune_grid(lm_workflow, resamples = folds) 
@@ -82,7 +88,7 @@ glmnet_grid <- tidyr::crossing(penalty = 10^seq(-6, -1, length.out = 20),
                                mixture = c(0.05, 0.2, 0.4, 0.6, 0.8, 1)) 
 ## Cross validation
 
-folds <- vfold_cv(Hitters, v = 10, repeats = 5)
+# folds <- vfold_cv(Hitters, v = 10, repeats = 5)
 
 glmnet_tune <- 
   tune_grid(glmnet_workflow, resamples = folds, grid = glmnet_grid) 
