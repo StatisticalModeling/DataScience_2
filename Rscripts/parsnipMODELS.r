@@ -141,7 +141,7 @@ ranger_workflow <-
 ranger_grid <- tidyr::crossing(mtry = c(3, 6, 9, 12), 
                                min_n = c(5, 20, 35, 50)) 
 
-folds <- vfold_cv(Hitters, v = 10)
+folds <- vfold_cv(Hitters, v = 10, repeats = 5)
 
 # This will take a few minutes
 set.seed(48700)
