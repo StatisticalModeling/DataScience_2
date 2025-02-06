@@ -138,8 +138,10 @@ ranger_workflow <-
   add_recipe(ranger_recipe)  |>  
   add_model(ranger_spec) 
 
-ranger_grid <- tidyr::crossing(mtry = 4:19, 
-                               min_n = seq(5, 100, 20)) 
+ranger_grid <- tidyr::crossing(mtry = c(3, 6, 9, 12), 
+                               min_n = c(5, 20, 35, 50)) 
+
+folds <- vfold_cv(Hitters, v = 10)
 
 # This will take a few minutes
 set.seed(48700)
@@ -151,3 +153,21 @@ ranger_tune <-
 ranger_tune
 autoplot(ranger_tune)
 show_best(ranger_tune, metric = "rmse")
+
+ranger_param <- tibble(mtry = 3, min_n = 5)
+final_ranger_wkfl <- ranger_workflow |> 
+  finalize_workflow(ranger_param)
+final_ranger_wkfl 
+
+final_ranger_fit <- final_ranger_wkfl |> 
+  fit(hitters_train)
+
+
+hitters_test |> 
+  bind_cols(predict(final_ranger_fit, hitters_test)) -> stuff
+stuff <- stuff |> 
+  relocate(.pred, .after = Salary)
+stuff
+
+# Test RMSE - 297
+rmse(stuff, Salary, .pred)
