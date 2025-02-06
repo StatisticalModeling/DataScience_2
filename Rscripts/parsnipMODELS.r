@@ -138,7 +138,7 @@ ranger_workflow <-
   add_recipe(ranger_recipe)  |>  
   add_model(ranger_spec) 
 
-ranger_grid <- tidyr::crossing(mtry = c(3, 5, 7, 9), 
+### ranger_grid <- tidyr::crossing(mtry = c(3, 5, 7, 9), 
                                min_n = c(3, 8, 13, 18)) 
 
 folds <- vfold_cv(Hitters, v = 10, repeats = 5)
