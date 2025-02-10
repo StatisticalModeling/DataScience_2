@@ -193,7 +193,8 @@ rsq(stuff, Salary, .pred)
 
 
 library(vip)
-vip(final_ranger_fit)
+vip(final_ranger_fit) -> g1
+g1
 ####################################################################
 ### xgboost now
 
@@ -266,3 +267,10 @@ ggplot(data = stuff, aes(x = Salary, y = .pred)) +
        title = "R-square plot for xgboost model")
 stuff |> 
   summarize(R2 = cor(Salary, .pred)^2)
+
+####
+vip(final_xgboost_fit) -> g2
+g2
+####
+library(patchwork)
+g1/g2
