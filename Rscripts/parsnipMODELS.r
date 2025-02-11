@@ -3,7 +3,7 @@
 library(tidyverse)
 library(tidymodels)
 library(ISLR2)
-
+tidymodels_prefer()
 
 
 
