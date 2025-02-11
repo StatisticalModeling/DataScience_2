@@ -214,8 +214,9 @@ xgboost_recipe <-
 xgboost_recipe
 
 xgboost_spec <- 
-  boost_tree(trees = 500, min_n = tune(), tree_depth = tune(), learn_rate = tune(), 
-             loss_reduction = tune(), sample_size = tune()) |>  
+  boost_tree(trees = 500, min_n = tune(), tree_depth = tune(), 
+             learn_rate = tune(), loss_reduction = tune(), 
+             sample_size = tune()) |>  
   set_mode("regression") |>  
   set_engine("xgboost") 
 xgboost_spec
@@ -226,7 +227,7 @@ xgboost_workflow <-
   add_model(xgboost_spec) 
 xgboost_workflow
 
-# This will take a hot minute (Say 14 + minutes)
+# This will take a hot minute (Say 20 + minutes)
 set.seed(28004)
 xgboost_tune <-
   tune_grid(xgboost_workflow, resamples = folds, grid = 64)
@@ -235,8 +236,10 @@ autoplot(xgboost_tune)
 show_best(xgboost_tune, metric = "rmse")
 
 #####
+##### tibble(min_n = 3, tree_depth = 4, learn_rate = 0.0203, loss_reduction = 0.00000000817, sample_size = 0.262)
 
 xgboost_param <- tibble(min_n = 3, tree_depth = 4, learn_rate = 0.0203, loss_reduction = 0.00000000817, sample_size = 0.262)
+
 final_xgboost_wkfl <- xgboost_workflow |> 
   finalize_workflow(xgboost_param)
 final_xgboost_wkfl 
