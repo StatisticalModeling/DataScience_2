@@ -66,6 +66,20 @@ rmse(hitters_aug, Salary, .pred)
 # R^2 = 0.385
 rsq(hitters_aug, Salary, .pred)
 
+final_lm_fit |> 
+  extract_fit_engine() |> 
+  summary() |> 
+  coef() 
+
+# Note could also use last_fit as follows:
+# Note last_fit takes a data split as an input --- hitters_split
+# This uses the split to generate the training and test sets for the final 
+# fitting and evaluation!  Note that this agrees with the values above.
+final_lm_another <- last_fit(lm_workflow, hitters_split)
+final_lm_another |> 
+  collect_metrics()
+
+
 
 ###############################################################
 glmnet_spec <- linear_reg() |> 
@@ -132,6 +146,13 @@ rmse(stuff, Salary, .pred)
 # R^2 = 0.393
 rsq(stuff, Salary, .pred)
 
+# Note could also use last_fit as follows:
+# Note last_fit takes a data split as an input --- hitters_split
+# This uses the split to generate the training and test sets for the final 
+# fitting and evaluation!  Note that this agrees with the values above.
+final_glmnet_another <- last_fit(final_glmnet_wkfl, hitters_split)
+final_glmnet_another |> 
+  collect_metrics()
 
 
 #######################################################################
@@ -195,6 +216,17 @@ rsq(stuff, Salary, .pred)
 library(vip)
 vip(final_ranger_fit) -> g1
 g1
+
+# Note could also use last_fit as follows:
+# Note last_fit takes a data split as an input --- hitters_split
+# This uses the split to generate the training and test sets for the final 
+# fitting and evaluation!  Note that this agrees with the values above.
+final_ranger_another <- last_fit(final_ranger_wkfl, hitters_split)
+final_ranger_another |> 
+  collect_metrics()
+
+
+
 ####################################################################
 ### xgboost now
 
@@ -277,3 +309,11 @@ g2
 ####
 library(patchwork)
 g1/g2
+
+# Note could also use last_fit as follows:
+# Note last_fit takes a data split as an input --- hitters_split
+# This uses the split to generate the training and test sets for the final 
+# fitting and evaluation!  Note that this agrees with the values above.
+final_xgboost_another <- last_fit(final_xgboost_wkfl, hitters_split)
+final_xgboost_another |> 
+  collect_metrics()
