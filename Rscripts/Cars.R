@@ -20,12 +20,20 @@ car_vars <- cars2018 |>
   select(-model, -model_index) |> 
   mutate(log_mpg = log(mpg)) |> 
   select(-mpg)
+# Plot the histogram
+ggplot(car_vars, aes(x = log_mpg)) +
+  geom_histogram(bins = 15, color = "black", fill = "red") +
+  labs(x = "Fuel efficiency (mpg)",
+       y = "Number of cars") + 
+  theme_bw()
 
 # Fit a linear model
 fit_all <- lm(log_mpg ~ ., data = car_vars)
 
 # Print the summary of the model
 summary(fit_all)
+
+plot(fit_all, which = 1:6)
 
 
 # Split the data into training and test sets
