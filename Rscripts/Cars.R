@@ -170,26 +170,27 @@ ranger_tune
 autoplot(ranger_tune)
 show_best(ranger_tune, metric = "rmse")
 
-ranger_param <- tibble(mtry = 6, min_n = 5)
+ranger_param <- tibble(mtry = 6, min_n = 3)
 final_ranger_wkfl <- ranger_workflow |> 
   finalize_workflow(ranger_param)
 final_ranger_wkfl 
 
 final_ranger_fit <- final_ranger_wkfl |> 
-  fit(hitters_train)
+  fit(car_train)
 
 
-hitters_test |> 
-  bind_cols(predict(final_ranger_fit, hitters_test)) -> stuff
+car_test |> 
+  bind_cols(predict(final_ranger_fit, car_test)) -> stuff
 stuff <- stuff |> 
-  relocate(.pred, .after = Salary)
+  relocate(.pred, .after = log_mpg)
 stuff
 
-# Test RMSE - 247
-rmse(stuff, Salary, .pred)
-# R^2 = 0.676
-rsq(stuff, Salary, .pred)
-
+# Test RMSE - 0.0725
+rmse(stuff, log_mpg, .pred)
+# R^2 = 0.889
+rsq(stuff, log_mpg, .pred)
+# 
+metrics(stuff, log_mpg, .pred)
 
 library(vip)
 vip(final_ranger_fit) -> g1
