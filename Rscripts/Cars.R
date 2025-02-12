@@ -155,3 +155,42 @@ ranger_workflow <-
   workflow()  |>  
   add_recipe(ranger_recipe)  |>  
   add_model(ranger_spec) 
+
+
+folds <- vfold_cv(car_train, v = 10, repeats = 5)
+
+
+set.seed(8675309)
+ranger_tune <-
+  tune_grid(ranger_workflow, resamples = folds, grid = 32)
+
+
+######
+ranger_tune
+autoplot(ranger_tune)
+show_best(ranger_tune, metric = "rmse")
+
+ranger_param <- tibble(mtry = 6, min_n = 5)
+final_ranger_wkfl <- ranger_workflow |> 
+  finalize_workflow(ranger_param)
+final_ranger_wkfl 
+
+final_ranger_fit <- final_ranger_wkfl |> 
+  fit(hitters_train)
+
+
+hitters_test |> 
+  bind_cols(predict(final_ranger_fit, hitters_test)) -> stuff
+stuff <- stuff |> 
+  relocate(.pred, .after = Salary)
+stuff
+
+# Test RMSE - 247
+rmse(stuff, Salary, .pred)
+# R^2 = 0.676
+rsq(stuff, Salary, .pred)
+
+
+library(vip)
+vip(final_ranger_fit) -> g1
+g1

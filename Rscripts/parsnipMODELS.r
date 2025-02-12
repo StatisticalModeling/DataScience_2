@@ -36,7 +36,7 @@ lm_workflow <-
   add_model(lm_spec) 
 
 set.seed(44)
-folds <- vfold_cv(Hitters, v = 10, repeats = 5)
+folds <- vfold_cv(hitters_train, v = 10, repeats = 5)
 
 lm_tune <- 
   tune_grid(lm_workflow, resamples = folds) 
@@ -192,7 +192,7 @@ ranger_tune
 autoplot(ranger_tune)
 show_best(ranger_tune, metric = "rmse")
 
-ranger_param <- tibble(mtry = 6, min_n = 5)
+ranger_param <- tibble(mtry = 9, min_n = 3)
 final_ranger_wkfl <- ranger_workflow |> 
   finalize_workflow(ranger_param)
 final_ranger_wkfl 
@@ -207,9 +207,9 @@ stuff <- stuff |>
   relocate(.pred, .after = Salary)
 stuff
 
-# Test RMSE - 247
+# Test RMSE - 253
 rmse(stuff, Salary, .pred)
-# R^2 = 0.676
+# R^2 = 0.667
 rsq(stuff, Salary, .pred)
 
 
@@ -270,7 +270,7 @@ show_best(xgboost_tune, metric = "rmse")
 #####
 ##### tibble(min_n = 3, tree_depth = 4, learn_rate = 0.0203, loss_reduction = 0.00000000817, sample_size = 0.262)
 
-xgboost_param <- tibble(min_n = 3, tree_depth = 4, learn_rate = 0.0203, loss_reduction = 0.00000000817, sample_size = 0.262)
+xgboost_param <- tibble(min_n = 34, tree_depth = 4, learn_rate = 0.0171, loss_reduction = 0.000000000451, sample_size = 0.829)
 
 final_xgboost_wkfl <- xgboost_workflow |> 
   finalize_workflow(xgboost_param)
@@ -286,9 +286,9 @@ stuff <- stuff |>
   relocate(.pred, .after = Salary)
 stuff
 
-# Test RMSE - 224
+# Test RMSE - 286
 rmse(stuff, Salary, .pred)
-# Test R^2 = 0.736
+# Test R^2 = 0.578
 rsq(stuff, Salary, .pred)
 
 #### Graph the R^2
