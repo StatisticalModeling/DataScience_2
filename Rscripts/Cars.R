@@ -156,13 +156,13 @@ ranger_workflow <-
   add_recipe(ranger_recipe)  |>  
   add_model(ranger_spec) 
 
-
-folds <- vfold_cv(car_train, v = 10, repeats = 5)
+set.seed(333)
+car_folds <- vfold_cv(car_train, v = 10, repeats = 5)
 
 
 set.seed(8675309)
 ranger_tune <-
-  tune_grid(ranger_workflow, resamples = folds, grid = 32)
+  tune_grid(ranger_workflow, resamples = car_folds, grid = 32)
 
 
 ######
