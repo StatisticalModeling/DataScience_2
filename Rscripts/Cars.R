@@ -195,3 +195,12 @@ metrics(stuff, log_mpg, .pred)
 library(vip)
 vip(final_ranger_fit) -> g1
 g1
+
+# Plot Results
+stuff |> 
+  ggplot(aes(log_mpg, .pred)) +
+  geom_abline(lty = 2, color = "gray50") +
+  coord_obs_pred() + 
+  geom_point(size = 1.5, alpha = 0.3, show.legend = FALSE) +
+  geom_smooth(method = "lm") +
+  theme_bw()
