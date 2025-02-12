@@ -17,10 +17,12 @@ ggplot(cars2018, aes(x = mpg)) +
 
 # Deselect the 2 columns to create cars_vars
 car_vars <- cars2018 |> 
-  select(-model, -model_index)
+  select(-model, -model_index) |> 
+  mutate(log_mpg = log(mpg)) |> 
+  select(-mpg)
 
 # Fit a linear model
-fit_all <- lm(mpg ~ ., data = car_vars)
+fit_all <- lm(log_mpg ~ ., data = car_vars)
 
 # Print the summary of the model
 summary(fit_all)
@@ -43,7 +45,7 @@ lm_mod <- linear_reg() |>
 
 # Train a linear regression model
 fit_lm <- lm_mod |> 
-  fit(log(mpg) ~ ., data = car_train)
+  fit(log_mpg ~ ., data = car_train)
 
 # Print the model object
 fit_lm |> 
@@ -56,7 +58,7 @@ rf_mod <- rand_forest()  |>
 
 # Train a random forest model
 fit_rf <- rf_mod  |> 
-  fit(log(mpg) ~ ., data = car_train)
+  fit(log_mpg ~ ., data = car_train)
 
 # Print the model object
 fit_rf 
@@ -65,15 +67,14 @@ fit_rf
 
 # Create the new columns
 results <- car_train  |> 
-  mutate(mpg = log(mpg))  |> 
   bind_cols(predict(fit_lm, car_train)  |> 
               rename(.pred_lm = .pred))  |> 
   bind_cols(predict(fit_rf, car_train)  |> 
               rename(.pred_rf = .pred))
 
 # Evaluate the performance
-metrics(results, truth = mpg, estimate = .pred_lm)
-metrics(results, truth = mpg, estimate = .pred_rf)
+metrics(results, truth = log_mpg, estimate = .pred_lm)
+metrics(results, truth = log_mpg, estimate = .pred_rf)
 
 
 # We are really not interested in the performance on Training Data
@@ -81,12 +82,76 @@ metrics(results, truth = mpg, estimate = .pred_rf)
 
 # Create the new columns
 results <- car_test  |> 
-  mutate(mpg = log(mpg))  |> 
   bind_cols(predict(fit_lm, car_test)  |> 
               rename(.pred_lm = .pred))  |> 
   bind_cols(predict(fit_rf, car_test)  |> 
               rename(.pred_rf = .pred))
 
 # Evaluate the performance
-metrics(results, truth = mpg, estimate = .pred_lm)
-metrics(results, truth = mpg, estimate = .pred_rf)
+metrics(results, truth = log_mpg, estimate = .pred_lm)
+metrics(results, truth = log_mpg, estimate = .pred_rf)
+
+### Bootstrap using rsample package
+
+## Create bootstrap resamples
+set.seed(32)
+car_boot <- bootstraps(car_train)
+
+# Evaluate the models with bootstrap resampling
+lm_res <- lm_mod |> 
+  fit_resamples(log_mpg ~ .,
+    resamples = car_boot,
+    control = control_resamples(save_pred = TRUE)
+  )
+lm_res |> 
+  collect_metrics()
+
+rf_res <- rf_mod |> 
+  fit_resamples(
+    log_mpg ~ .,
+    resamples = car_boot,
+    control = control_resamples(save_pred = TRUE)
+  )
+
+glimpse(rf_res)
+rf_res |> 
+  collect_metrics()
+# Modeling Results
+
+results <-  bind_rows(
+                      lm_res |> 
+                        collect_predictions() |> 
+                        mutate(model = "lm"),
+                      rf_res |> 
+                        collect_predictions() |> 
+                        mutate(model = "rf")
+                      )
+
+glimpse(results)
+
+# Plot Results
+results |> 
+  ggplot(aes(log_mpg, .pred)) +
+  geom_abline(lty = 2, color = "gray50") +
+  coord_obs_pred() + 
+  geom_point(aes(color = id), size = 1.5, alpha = 0.3, show.legend = FALSE) +
+  geom_smooth(method = "lm") +
+  facet_wrap(vars(model)) + 
+  theme_bw()
+
+
+#####################################################################
+ranger_recipe <- recipe(formula = log_mpg ~ ., data = car_train) 
+
+ranger_spec <- rand_forest(mtry = tune(), 
+                           min_n = tune(), 
+                           trees = 500) |>  
+  set_mode("regression")  |>  
+  set_engine("ranger",
+             importance = "impurity")
+ranger_spec
+
+ranger_workflow <- 
+  workflow()  |>  
+  add_recipe(ranger_recipe)  |>  
+  add_model(ranger_spec) 
