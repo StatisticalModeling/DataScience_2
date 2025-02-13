@@ -1,0 +1,248 @@
+---
+title: "Tree-Based Methods"
+date: last-modified
+date-format: "[Last modified on] MMMM DD, YYYY HH:mm:ss zzz"
+format: 
+  html: default
+  pdf: default
+editor: source
+---
+
+```{r include = FALSE}
+library(knitr) # packages
+library(tidyverse)
+library(scales)
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", comment = NA, message = FALSE,  warning = FALSE)
+```
+
+:::{.callout-note title="Crediting the materials" icon=false}
+The descriptions of tree-based methods in this document are taken primarily from [_An Introduction to Statistical Learning with Applications in R_](https://www.statlearning.com/) while most of the coding ideas for `tidymodels` are gleaned from [_Tidy  Modeling with R: A framework for Modeling in the Tidyverse_](https://www.tmwr.org/).
+:::
+
+# Advantages and Disadvantages of Trees
+
+## Pros
+
+* Trees are very easy to explain to people.  In fact, they are even easier to explain than linear regression!
+
+* Some people believe that decision trees more closely mirror human decision-making than do regression and classification approaches.
+
+* Trees can be displayed graphically, and are easily interpreted even by a non-expert (especially if they are small).
+
+* Trees can easily handle qualitative predictors without the need to create dummy variables (`model.matrix()`).
+
+## Cons
+
+* Trees generally do not have the same level of predictive accuracy as some of the other regression and classification approaches.
+
+* Trees suffer from _high variance_.  This means if we split the training data into two parts at random, and fit a decision tree to both halves, the results that we get could be quite different.  In contrast, a procedure with _low variance_ will yield similar results if applied repeatedly to distinct data sets.
+
+:::{.callout-tip title="How do we improve on a single tree?" icon=false}
+By aggregating many decision trees, using methods like _bagging_, _random forests_, and _boosting_, the predictive performance of trees can be substantially improved!
+:::
+
+# The Basics of Decision Trees
+
+Decision trees can be applied to both **regression** and **classifcation** problems. We first consider regression problems, and then move on to classification problems.
+
+## Predicting Baseball Players’ Salaries Using Regression Trees
+We use the `Hitters` data set to predict a baseball player’s `Salary` based on `Years` (the number of years that he has played in the major leagues) and `Hits` (the number of hits that he made in the previous year). We first remove observations that are missing `Salary` values, and log-transform `Salary` so that its distribution has more of a typical bell-shape. (Recall that Salary is measured in thousands of dollars.)
+
+```{r}
+library(tidymodels)
+library(tidyverse)
+library(ISLR2)
+library(janitor) # standardize variable names
+tidymodels_prefer()
+Hitters <- na.omit(Hitters) |> 
+  clean_names() |> 
+  as_tibble()
+names(Hitters)
+```
+```{r}
+ggplot(data = Hitters, aes(x = salary)) + 
+  geom_histogram(bins = 10) + 
+  theme_bw() -> p1
+ggplot(data = Hitters, aes(x = log10(salary))) + 
+  geom_histogram(bins = 10) + 
+  theme_bw() -> p2
+library(patchwork)
+p1/p2
+# Put salary on log10 scale
+Hitters <- Hitters |> 
+  mutate(salary = log10(salary))
+```
+
+We start by creating a tree "specification" using the `parsnip` package which was loaded with the `tidymodels` bundle.
+
+```{r}
+tree_spec <- decision_tree() |> 
+  set_engine("rpart") |> 
+  set_mode("regression")
+tree_spec
+```
+
+With a model specification and data we are ready to fit a model.  The first model we will consider uses both `year` and `hits` as predictors.  
+
+```{r}
+tree_fit <- tree_spec |> 
+  fit(salary ~ years + hits, data = Hitters)
+```
+
+When we look at the model output, we see an informative summary of the model.
+
+```{r}
+tree_fit
+```
+
+Once the tree gets more than a couple of nodes, it can become hard to read the printed diagram. The `rpart.plot` package provides functions to let us easily visualize the decision tree. The function `rpart.plot` only works with `rpart` trees so we will use the `extract_fit_engine()` from the `parsnip` package.
+
+```{r}
+#| label: "fig-tree"
+#| fig-cap: "Tree Model for predicting `salary` based on `years` and `hits`"
+tree_fit |> 
+  extract_fit_engine() |> 
+  rpart.plot::rpart.plot()
+```
+Each node in @fig-tree shows:
+
+- the predicted value,
+- the percentage of observations in the node.
+
+For example, all observations (100%) are in the first node and the top number (2.6) is the average salary (in log10) of all players in `Hitters`.  That is $10^{2.574160}=375.1112$ and remembering that `salary` is in thousands of dollars, the average `salary` for all 263 players is `r scales::dollar(10^mean(Hitters$salary)*1000)`. Moving to the left for players with fewer than 4.5 years in the league we see that note contains 34% of the players and their predicted salary is $10^{2.217851}\times 1000$ = `r scales::dollar(10^(2.217851)*1000)`.
+
+
+Next we consider a model that uses all of the variables in `Hitters`.
+
+```{r}
+tree_fit2 <- tree_spec |> 
+  fit(salary ~ ., data = Hitters)
+```
+
+
+```{r}
+#| label: "fig-tree2"
+#| fig-cap: "Tree Model for predicting `salary` based on all predictors in `Hitters`"
+tree_fit2 |> 
+  extract_fit_engine() |> 
+  rpart.plot::rpart.plot()
+```
+
+## Evaluating the Performance of your Model
+
+To evaluate model performance, we will use the `metrics()` function from the `yardstick` package which was loaded with the `tidyverse` bundle.
+
+```{r}
+augment(tree_fit2, new_data = Hitters) |> 
+  metrics(truth = salary, estimate = .pred) -> R1
+R1 |> 
+  knitr::kable()
+```
+The mean absolute error (`mae`) is $10^{0.1339507}\cdot 1000$ = `r scales::dollar(10^(0.1339507)*1000)` and the model's $R^2$ value is `r round(R1$.estimate[2]*100,2)`% which is not bad.  However, this model was fit on the entire data set and the model is likely **overfitting** the data.  Next we refit the model using a **training** set and **tune** the model's complexity parameter (`cost_complexity`).  After tuning the `cost_complexity`, we evaluate the model's performance on the **test** set to get an idea of how the model will perform on data it has not seen.
+
+### Splitting the Data
+
+```{r}
+set.seed(314)
+hitters_split <- initial_split(Hitters)
+hitters_train <- training(hitters_split)
+hitters_test <- testing(hitters_split)
+dim(hitters_train)
+dim(hitters_test)
+hitters_folds <- vfold_cv(hitters_train, v = 10, repeats = 5)
+```
+
+```{r}
+tree_spec <- decision_tree(cost_complexity = tune()) |> 
+  set_engine("rpart") |> 
+  set_mode("regression")
+tree_spec
+tree_recipe <- recipe(formula = salary ~ ., data = hitters_train) 
+tree_wkfl <- workflow() |> 
+  add_recipe(tree_recipe) |> 
+  add_model(tree_spec) 
+```
+
+```{r}
+#| cache: true
+set.seed(8675)
+tree_tune <-
+  tune_grid(tree_wkfl, resamples = hitters_folds, grid = 10)
+tree_tune
+autoplot(tree_tune)
+show_best(tree_tune, metric = "rmse")
+tree_param <- tibble(cost_complexity = 0.00340)
+final_tree_wkfl <- tree_wkfl |> 
+  finalize_workflow(tree_param)
+final_tree_wkfl 
+final_tree_fit <- final_tree_wkfl |> 
+  fit(hitters_train)
+```
+We used 10 fold cross validation repeated 5 times to determine the best value of $\alpha = 0.0034$ (`cost_complexity`) based on the model with the smallest RMSE (0.210). Then we created the final model (`final_tree_fit`) using cost complexity pruning and show the model in @fig-tree3. 
+
+```{r}
+#| label: "fig-tree3"
+#| fig-cap: "Final tree model after tuning the cost complexity parameter"
+final_tree_fit |> 
+  extract_fit_engine() |> 
+  rpart.plot::rpart.plot()
+```
+
+## Evaluating the Perfomance of your Final Tuned Model on the Test set
+
+```{r}
+augment(final_tree_fit, new_data = hitters_test) |> 
+  metrics(truth = salary, estimate = .pred) -> R2
+R2 |> 
+  knitr::kable()
+```
+
+Unfortunately, the model does not perform that well on the test set.  The final tuned model has an $R^2$ value of `r round(R2$.estimate[2]*100,2)`% and a mean absolute error of `r scales::dollar(10^R2$.estimate[3]*1000)`.
+
+
+## Bagging
+
+Decision trees suffer from high variance. This means that if we split the training data into two parts at random,
+and fit a decision tree to both halves, the results that we get could be quite different. In contrast, a procedure with low variance will yield similar results if applied repeatedly to distinct data sets; linear regression tends to have low variance, if the ratio of $n$ to $p$ is moderately large. Bootstrap aggregation, or **bagging**, is a general-purpose procedure for reducing the variance of a statistical learning method; we introduce it here because it is particularly useful and frequently used in the context of decision trees.
+
+
+```{r}
+library(baguette)
+bag_spec <-
+  bag_tree(cost_complexity = tune(), min_n = tune())  |> 
+  set_engine('rpart')  |> 
+  set_mode('regression')
+bag_recipe <- recipe(formula = salary ~ ., data = hitters_train) 
+bag_wkfl <- workflow() |> 
+  add_recipe(bag_recipe) |> 
+  add_model(bag_spec)
+bag_wkfl
+```
+
+```{r}
+#| label: "bagging"
+#| cache: true
+set.seed(8675)
+bag_tune <-
+  tune_grid(bag_wkfl, resamples = hitters_folds, grid = 32)
+bag_tune
+autoplot(bag_tune)
+show_best(bag_tune, metric = "rmse")
+bag_param <- tibble(cost_complexity = 0.002470553, min_n = 28)
+final_bag_wkfl <- bag_wkfl |> 
+  finalize_workflow(bag_param)
+final_bag_wkfl 
+final_bag_fit <- final_bag_wkfl |> 
+  fit(hitters_train)
+```
+
+```{r}
+augment(final_bag_fit, new_data = hitters_test) |> 
+  metrics(truth = salary, estimate = .pred) -> R3
+R3 |> 
+  knitr::kable()
+```
+The bagged model is an improvement over the decision tree model since the $R^2$ value increased to `r round(R3$.estimate[2]*100,2)`% and a mean absolute error decreased to `r scales::dollar(10^R3$.estimate[3]*1000)`.  While bagging can improve predictions for many regression methods, it is particularly useful for decision trees. To apply bagging to regression trees, we simply construct $B$ regression trees using $B$ bootstrapped training sets, and average the resulting predictions.  Each individual tree has high variance, but low bias. Averaging these $B$ trees reduces the variance. Bagging has been demonstrated to give impressive improvements in accuracy by combining together hundreds or even thousands of trees into a single procedure.
+
+
+
