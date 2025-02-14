@@ -15,6 +15,7 @@ library(scales)
 knitr::opts_chunk$set(echo = TRUE, fig.align = "center", comment = NA, message = FALSE,  warning = FALSE)
 ```
 
+
 :::{.callout-note title="Crediting the materials" icon=false}
 The descriptions of tree-based methods in this document are taken primarily from [_An Introduction to Statistical Learning with Applications in R_](https://www.statlearning.com/) while most of the coding ideas for `tidymodels` are gleaned from [_Tidy  Modeling with R: A framework for Modeling in the Tidyverse_](https://www.tmwr.org/).
 :::
@@ -48,6 +49,7 @@ Decision trees can be applied to both **regression** and **classifcation** probl
 ## Predicting Baseball Players’ Salaries Using Regression Trees
 We use the `Hitters` data set to predict a baseball player’s `Salary` based on `Years` (the number of years that he has played in the major leagues) and `Hits` (the number of hits that he made in the previous year). We first remove observations that are missing `Salary` values, and log-transform `Salary` so that its distribution has more of a typical bell-shape. (Recall that Salary is measured in thousands of dollars.)
 
+
 ```{r}
 library(tidymodels)
 library(tidyverse)
@@ -59,6 +61,7 @@ Hitters <- na.omit(Hitters) |>
   as_tibble()
 names(Hitters)
 ```
+
 ```{r}
 ggplot(data = Hitters, aes(x = salary)) + 
   geom_histogram(bins = 10) + 
@@ -73,7 +76,9 @@ Hitters <- Hitters |>
   mutate(salary = log10(salary))
 ```
 
+
 We start by creating a tree "specification" using the `parsnip` package which was loaded with the `tidymodels` bundle.
+
 
 ```{r}
 tree_spec <- decision_tree() |> 
@@ -82,20 +87,26 @@ tree_spec <- decision_tree() |>
 tree_spec
 ```
 
+
 With a model specification and data we are ready to fit a model.  The first model we will consider uses both `year` and `hits` as predictors.  
+
 
 ```{r}
 tree_fit <- tree_spec |> 
   fit(salary ~ years + hits, data = Hitters)
 ```
 
+
 When we look at the model output, we see an informative summary of the model.
+
 
 ```{r}
 tree_fit
 ```
 
+
 Once the tree gets more than a couple of nodes, it can become hard to read the printed diagram. The `rpart.plot` package provides functions to let us easily visualize the decision tree. The function `rpart.plot` only works with `rpart` trees so we will use the `extract_fit_engine()` from the `parsnip` package.
+
 
 ```{r}
 #| label: "fig-tree"
@@ -104,6 +115,7 @@ tree_fit |>
   extract_fit_engine() |> 
   rpart.plot::rpart.plot()
 ```
+
 Each node in @fig-tree shows:
 
 - the predicted value,
@@ -114,11 +126,11 @@ For example, all observations (100%) are in the first node and the top number (2
 
 Next we consider a model that uses all of the variables in `Hitters`.
 
+
 ```{r}
 tree_fit2 <- tree_spec |> 
   fit(salary ~ ., data = Hitters)
 ```
-
 
 ```{r}
 #| label: "fig-tree2"
@@ -128,9 +140,11 @@ tree_fit2 |>
   rpart.plot::rpart.plot()
 ```
 
+
 ## Evaluating the Performance of your Model
 
 To evaluate model performance, we will use the `metrics()` function from the `yardstick` package which was loaded with the `tidyverse` bundle.
+
 
 ```{r}
 augment(tree_fit2, new_data = Hitters) |> 
@@ -138,9 +152,11 @@ augment(tree_fit2, new_data = Hitters) |>
 R1 |> 
   knitr::kable()
 ```
+
 The mean absolute error (`mae`) is $10^{0.1339507}\cdot 1000$ = `r scales::dollar(10^(0.1339507)*1000)` and the model's $R^2$ value is `r round(R1$.estimate[2]*100,2)`% which is not bad.  However, this model was fit on the entire data set and the model is likely **overfitting** the data.  Next we refit the model using a **training** set and **tune** the model's complexity parameter (`cost_complexity`).  After tuning the `cost_complexity`, we evaluate the model's performance on the **test** set to get an idea of how the model will perform on data it has not seen.
 
 ### Splitting the Data
+
 
 ```{r}
 set.seed(314)
@@ -178,7 +194,9 @@ final_tree_wkfl
 final_tree_fit <- final_tree_wkfl |> 
   fit(hitters_train)
 ```
+
 We used 10 fold cross validation repeated 5 times to determine the best value of $\alpha = 0.0034$ (`cost_complexity`) based on the model with the smallest RMSE (0.210). Then we created the final model (`final_tree_fit`) using cost complexity pruning and show the model in @fig-tree3. 
+
 
 ```{r}
 #| label: "fig-tree3"
@@ -188,7 +206,9 @@ final_tree_fit |>
   rpart.plot::rpart.plot()
 ```
 
+
 ## Evaluating the Perfomance of your Final Tuned Model on the Test set
+
 
 ```{r}
 augment(final_tree_fit, new_data = hitters_test) |> 
@@ -197,6 +217,7 @@ R2 |>
   knitr::kable()
 ```
 
+
 Unfortunately, the model does not perform that well on the test set.  The final tuned model has an $R^2$ value of `r round(R2$.estimate[2]*100,2)`% and a mean absolute error of `r scales::dollar(10^R2$.estimate[3]*1000)`.
 
 
@@ -204,6 +225,7 @@ Unfortunately, the model does not perform that well on the test set.  The final 
 
 Decision trees suffer from high variance. This means that if we split the training data into two parts at random,
 and fit a decision tree to both halves, the results that we get could be quite different. In contrast, a procedure with low variance will yield similar results if applied repeatedly to distinct data sets; linear regression tends to have low variance, if the ratio of $n$ to $p$ is moderately large. Bootstrap aggregation, or **bagging**, is a general-purpose procedure for reducing the variance of a statistical learning method; we introduce it here because it is particularly useful and frequently used in the context of decision trees.
+
 
 
 ```{r}
@@ -242,6 +264,7 @@ augment(final_bag_fit, new_data = hitters_test) |>
 R3 |> 
   knitr::kable()
 ```
+
 The bagged model is an improvement over the decision tree model since the $R^2$ value increased to `r round(R3$.estimate[2]*100,2)`% and the mean absolute error decreased to `r scales::dollar(10^R3$.estimate[3]*1000)`.  While bagging can improve predictions for many regression methods, it is particularly useful for decision trees. To apply bagging to regression trees, we simply construct $B$ regression trees using $B$ bootstrapped training sets, and average the resulting predictions.  Each individual tree has high variance, but low bias. Averaging these $B$ trees reduces the variance. Bagging has been demonstrated to give impressive improvements in accuracy by combining together hundreds or even thousands of trees into a single procedure.
 
 
@@ -252,6 +275,7 @@ Random forests provide an improvement over bagged trees by way of a small tweak 
 In other words, in building a. random forest, at each split in the tree, the algorithm is not even allowed to consider a majority of the available predictors.  This may sound crazy, but it has a clever rationale.  Suppose that there is one very strong predictor in the data set, along with a number of other moderately stromg predictors.  Then in the collection of bagged trees, most or all of the trees will use this strong predictor in the top split.  Consequently, all of the bagged trees will look quite similar to each other.  Hence the predictions from the bagged trees will be highly correlated.  Unfortunately, averaging many highly correlated trees does not lead to as large of a reduction in variance as averaging many uncorrelated quantities.  In particular, this means that bagging will not lead to a substantial reduction in variance over a single tree in this setting.
 
 Random forest overcome this problem by forcing each split to consider only a subset of the rpedictors.  There fore, on average $(p-m)/p$ of the splits will not even consider the strong predictor, and so other predictors will have more of a chance.  We can think of this process as **decorrelating** the trees, thereby making the average of the resulting trees less variable and hence more reliable.
+
 
 ```{r}
 ranger_spec <- rand_forest(mtry = tune(), 
@@ -269,6 +293,7 @@ ranger_workflow <-
   add_recipe(ranger_recipe)  |>  
   add_model(ranger_spec) 
 ```
+
 ```{r}
 #| cache: true
 set.seed(8675309)
@@ -295,11 +320,14 @@ R4 |>
   knitr::kable()
 ```
 
+
 The random forest model is an improvement over the bagged tree model since the $R^2$ value increased to `r round(R4$.estimate[2]*100,2)`% and the mean absolute error decreased to `r scales::dollar(10^R4$.estimate[3]*1000)`. 
+
 
 ```{r}
 vip::vip(final_ranger_fit)
 ```
+
 
 ## Boosting
 
@@ -331,6 +359,7 @@ What is the idea behind this procedure?  Unlike fitting a single large decision 
 
 3.  The number $d$ of splits in each tree, which controls the complexity of the boosted ensemble.  Often $d = 1$ works well, in which case each tree is a stump, consisting of a single split.  In this case, the boosted ensembel is fitting and additive model, since each term involves only a single variable.  More generally $d$ is the **interaction depth**, and controls the interaction order of the boosted model, since $d$ splits can involve at most $d$ variables.
 :::
+
 
 ```{r}
 xgboost_spec <- 
@@ -366,6 +395,4 @@ xgboost_tune <-
   tune_grid(xgboost_workflow, resamples = hitters_folds, grid = 64)
 xgboost_tune
 ```
-
-
 

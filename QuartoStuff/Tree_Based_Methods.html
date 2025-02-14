@@ -93,7 +93,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on February 13, 2025 17:35:50 Eastern Standard Time</p>
+      <p class="date">Last modified on February 14, 2025 14:00:35 Eastern Standard Time</p>
     </div>
   </div>
   
@@ -597,7 +597,233 @@ Computational engine: rpart </code></pre>
 </table>
 </div>
 </div>
-<p>The bagged model is an improvement over the decision tree model since the <span class="math inline">\(R^2\)</span> value increased to 55.37% and a mean absolute error decreased to $1,472.07. While bagging can improve predictions for many regression methods, it is particularly useful for decision trees. To apply bagging to regression trees, we simply construct <span class="math inline">\(B\)</span> regression trees using <span class="math inline">\(B\)</span> bootstrapped training sets, and average the resulting predictions. Each individual tree has high variance, but low bias. Averaging these <span class="math inline">\(B\)</span> trees reduces the variance. Bagging has been demonstrated to give impressive improvements in accuracy by combining together hundreds or even thousands of trees into a single procedure.</p>
+<p>The bagged model is an improvement over the decision tree model since the <span class="math inline">\(R^2\)</span> value increased to 55.37% and the mean absolute error decreased to $1,472.07. While bagging can improve predictions for many regression methods, it is particularly useful for decision trees. To apply bagging to regression trees, we simply construct <span class="math inline">\(B\)</span> regression trees using <span class="math inline">\(B\)</span> bootstrapped training sets, and average the resulting predictions. Each individual tree has high variance, but low bias. Averaging these <span class="math inline">\(B\)</span> trees reduces the variance. Bagging has been demonstrated to give impressive improvements in accuracy by combining together hundreds or even thousands of trees into a single procedure.</p>
+</section>
+<section id="random-forests" class="level2">
+<h2 class="anchored" data-anchor-id="random-forests">Random Forests</h2>
+<p>Random forests provide an improvement over bagged trees by way of a small tweak that decorrelates the trees. As in bagging, we build a number of decision trees on bootstrapped training samples. But when building these decision trees, each time a split in a tree is considered, a random sample of <span class="math inline">\(m\)</span> predictors is chosen as split candidates from the full set of <span class="math inline">\(p\)</span> predictors. The split is allowed to use only one of those <span class="math inline">\(m\)</span> predictors. A fresh sample of <span class="math inline">\(m\)</span> predictors is taken at each split, and typically we choose <span class="math inline">\(m = \sqrt{p}\)</span> for classification problems and <span class="math inline">\(p/3\)</span> for regression problems—that is, the number of predictors considered at each split is approximately equal to the square root of the total number of predictors for classification problems or the number of predictors is roughly <span class="math inline">\(p/3\)</span> at each split for regression problems.</p>
+<p>In other words, in building a. random forest, at each split in the tree, the algorithm is not even allowed to consider a majority of the available predictors. This may sound crazy, but it has a clever rationale. Suppose that there is one very strong predictor in the data set, along with a number of other moderately stromg predictors. Then in the collection of bagged trees, most or all of the trees will use this strong predictor in the top split. Consequently, all of the bagged trees will look quite similar to each other. Hence the predictions from the bagged trees will be highly correlated. Unfortunately, averaging many highly correlated trees does not lead to as large of a reduction in variance as averaging many uncorrelated quantities. In particular, this means that bagging will not lead to a substantial reduction in variance over a single tree in this setting.</p>
+<p>Random forest overcome this problem by forcing each split to consider only a subset of the rpedictors. There fore, on average <span class="math inline">\((p-m)/p\)</span> of the splits will not even consider the strong predictor, and so other predictors will have more of a chance. We can think of this process as <strong>decorrelating</strong> the trees, thereby making the average of the resulting trees less variable and hence more reliable.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>ranger_spec <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>(<span class="at">mtry =</span> <span class="fu">tune</span>(), </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">min_n =</span> <span class="fu">tune</span>(), </span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">trees =</span> <span class="dv">500</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)  <span class="sc">|&gt;</span>  </span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"ranger"</span>,</span>
+<span id="cb43-6"><a href="#cb43-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">importance =</span> <span class="st">"impurity"</span>)</span>
+<span id="cb43-7"><a href="#cb43-7" aria-hidden="true" tabindex="-1"></a>ranger_spec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Random Forest Model Specification (regression)
+
+Main Arguments:
+  mtry = tune()
+  trees = 500
+  min_n = tune()
+
+Engine-Specific Arguments:
+  importance = impurity
+
+Computational engine: ranger </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>ranger_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(<span class="at">formula =</span> salary <span class="sc">~</span> ., <span class="at">data =</span> hitters_train)</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>ranger_workflow <span class="ot">&lt;-</span> </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">workflow</span>()  <span class="sc">|&gt;</span>  </span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(ranger_recipe)  <span class="sc">|&gt;</span>  </span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(ranger_spec) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center" data-hash="Tree_Based_Methods_cache/html/unnamed-chunk-20_58b2717280ed01eed67244b0a6397110">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">8675309</span>)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>ranger_tune <span class="ot">&lt;-</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tune_grid</span>(ranger_workflow, <span class="at">resamples =</span> hitters_folds, <span class="at">grid =</span> <span class="dv">32</span>)</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>ranger_tune</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Tuning results
+# 10-fold cross-validation repeated 5 times 
+# A tibble: 50 × 5
+   splits           id      id2    .metrics          .notes          
+   &lt;list&gt;           &lt;chr&gt;   &lt;chr&gt;  &lt;list&gt;            &lt;list&gt;          
+ 1 &lt;split [177/20]&gt; Repeat1 Fold01 &lt;tibble [62 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 2 &lt;split [177/20]&gt; Repeat1 Fold02 &lt;tibble [62 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 3 &lt;split [177/20]&gt; Repeat1 Fold03 &lt;tibble [62 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 4 &lt;split [177/20]&gt; Repeat1 Fold04 &lt;tibble [62 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 5 &lt;split [177/20]&gt; Repeat1 Fold05 &lt;tibble [62 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 6 &lt;split [177/20]&gt; Repeat1 Fold06 &lt;tibble [62 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 7 &lt;split [177/20]&gt; Repeat1 Fold07 &lt;tibble [62 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 8 &lt;split [178/19]&gt; Repeat1 Fold08 &lt;tibble [62 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 9 &lt;split [178/19]&gt; Repeat1 Fold09 &lt;tibble [62 × 6]&gt; &lt;tibble [0 × 3]&gt;
+10 &lt;split [178/19]&gt; Repeat1 Fold10 &lt;tibble [62 × 6]&gt; &lt;tibble [0 × 3]&gt;
+# ℹ 40 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(ranger_tune)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Tree_Based_Methods_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show_best</span>(ranger_tune, <span class="at">metric =</span> <span class="st">"rmse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 8
+   mtry min_n .metric .estimator  mean     n std_err .config              
+  &lt;int&gt; &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;                
+1     4    15 rmse    standard   0.175    50 0.00729 Preprocessor1_Model21
+2     5     5 rmse    standard   0.175    50 0.00742 Preprocessor1_Model25
+3     2     8 rmse    standard   0.175    50 0.00676 Preprocessor1_Model04
+4     7     3 rmse    standard   0.176    50 0.00754 Preprocessor1_Model16
+5     8     7 rmse    standard   0.176    50 0.00760 Preprocessor1_Model20</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>ranger_param <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">mtry =</span> <span class="dv">4</span>, <span class="at">min_n =</span> <span class="dv">15</span>)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>final_ranger_wkfl <span class="ot">&lt;-</span> ranger_workflow <span class="sc">|&gt;</span> </span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">finalize_workflow</span>(ranger_param)</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>final_ranger_wkfl </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>══ Workflow ════════════════════════════════════════════════════════════════════
+Preprocessor: Recipe
+Model: rand_forest()
+
+── Preprocessor ────────────────────────────────────────────────────────────────
+0 Recipe Steps
+
+── Model ───────────────────────────────────────────────────────────────────────
+Random Forest Model Specification (regression)
+
+Main Arguments:
+  mtry = 4
+  trees = 500
+  min_n = 15
+
+Engine-Specific Arguments:
+  importance = impurity
+
+Computational engine: ranger </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>final_ranger_fit <span class="ot">&lt;-</span> final_ranger_wkfl <span class="sc">|&gt;</span> </span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(hitters_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(final_ranger_fit, <span class="at">new_data =</span> hitters_test) <span class="sc">|&gt;</span> </span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> salary, <span class="at">estimate =</span> .pred) <span class="ot">-&gt;</span> R4</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>R4 <span class="sc">|&gt;</span> </span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">rmse</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.2676943</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rsq</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.5891579</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">mae</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.1542156</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The random forest model is an improvement over the bagged tree model since the <span class="math inline">\(R^2\)</span> value increased to 58.92% and the mean absolute error decreased to $1,426.32.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>vip<span class="sc">::</span><span class="fu">vip</span>(final_ranger_fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Tree_Based_Methods_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="boosting" class="level2">
+<h2 class="anchored" data-anchor-id="boosting">Boosting</h2>
+<p>Recall that baggin involves creating multiple copies of the original training data set using the bootstrap, fittin a separate decision tree to each copy, and then combining all of the trees in order to create a single predictive model.. Notably, each tree is built on a bootstrap data set, independent of the other trees. Boosting works in a similar way, except that the trees are grown <strong>sequentially</strong>: each tree is grown using information from previously grown trees. Boosting does not involve bootstrap sampling; instead each tree is fit on a modified version of the original data set.</p>
+<p>Like bagging, boosting involves combining a large number of decision trees <span class="math inline">\(\hat{f}^1,\ldots, \hat{f}^B\)</span>.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Boosting for Regression Trees Algorithm">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Boosting for Regression Trees Algorithm
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p>Set <span class="math inline">\(\hat{f}(x)=0\)</span> and <span class="math inline">\(r_i = y_i\)</span> for all <span class="math inline">\(i\)</span> in the training set.</p></li>
+<li><p>For <span class="math inline">\(b = 1, 2, \ldots,B\)</span>, repeat:</p>
+<ol type="a">
+<li>Fit a tree <span class="math inline">\(\hat{f}^b\)</span> with <span class="math inline">\(d\)</span> splits (<span class="math inline">\(d + 1\)</span> terminal nodes) to the training data <span class="math inline">\((X, r)\)</span>.</li>
+<li>Update <span class="math inline">\(\hat{f}\)</span> by adding a shrunken version of the new tree: <span class="math display">\[\hat{f}(x) \leftarrow \hat{f}(x) + \lambda \hat{f}^b(x).\]</span></li>
+<li>Update the residuals, <span class="math display">\[r_i \leftarrow r_i - \lambda\hat{f}^b(x).\]</span></li>
+</ol></li>
+<li><p>Output the boosted model, <span class="math display">\[\hat{f}(x) = \sum_{b=1}^{B}\lambda\hat{f}^b(x).\]</span></p></li>
+</ol>
+</div>
+</div>
+<p>What is the idea behind this procedure? Unlike fitting a single large decision tree to the data, which amounts to <strong>fitting the data hard</strong> and potentially overfitting, the boosting approach instead <strong>learns slowly</strong>. Given the current model, we fit a decision tree to the residuals from the model. That is, we fir a tree using the current residuals, rather than the outcome <span class="math inline">\(Y\)</span>, as the response. We then add this new decision tree into the fitted function in order to update the residuals. Each of these trees can be rather small, with just a few terminal nodes, determined by the parameter <span class="math inline">\(d\)</span> in the algorithm. By fitting small trees to the residuals, we slowly improve <span class="math inline">\(\hat{f}\)</span> in areas where it does not perform well. The shrinkage parameter <span class="math inline">\(\lambda\)</span> slows the process down even further, allowing more and different shaped trees to attack the residuals. In general, statistical learning approaches the <strong>learn slowly</strong> tend to perform well. Note that in boosting, unlike in bagging, the construction of each tree depends strongly on the trees that have already been grown.</p>
+<div class="callout callout-style-default callout-tip no-icon callout-titled" title="Boosting Tuning Parameters">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Boosting Tuning Parameters
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><p>The number of trees <span class="math inline">\(B\)</span>. Unlike bagging and random forests, boosting can overfit if <span class="math inline">\(B\)</span> is too large, although this overfitting tends to occur slowly if at all. We use cross-validation to select <span class="math inline">\(B\)</span>.</p></li>
+<li><p>The shrinkage parameter <span class="math inline">\(\lambda\)</span>, a small positive number. This controls the rate at which boosting learns. Typical values are 0.01 or 0.001, and the right choice can depend on the problem. Very small <span class="math inline">\(\lambda\)</span> can require using a very large value of <span class="math inline">\(B\)</span> in order to achieve good performance.</p></li>
+<li><p>The number <span class="math inline">\(d\)</span> of splits in each tree, which controls the complexity of the boosted ensemble. Often <span class="math inline">\(d = 1\)</span> works well, in which case each tree is a stump, consisting of a single split. In this case, the boosted ensembel is fitting and additive model, since each term involves only a single variable. More generally <span class="math inline">\(d\)</span> is the <strong>interaction depth</strong>, and controls the interaction order of the boosted model, since <span class="math inline">\(d\)</span> splits can involve at most <span class="math inline">\(d\)</span> variables.</p></li>
+</ol>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>xgboost_spec <span class="ot">&lt;-</span> </span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">boost_tree</span>(<span class="at">trees =</span> <span class="fu">tune</span>(), <span class="at">min_n =</span> <span class="fu">tune</span>(), <span class="at">tree_depth =</span> <span class="fu">tune</span>(), </span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">learn_rate =</span> <span class="fu">tune</span>(), <span class="at">loss_reduction =</span> <span class="fu">tune</span>(), </span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">sample_size =</span> <span class="fu">tune</span>()) <span class="sc">|&gt;</span>  </span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"xgboost"</span>) </span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>xgboost_spec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Boosted Tree Model Specification (regression)
+
+Main Arguments:
+  trees = tune()
+  min_n = tune()
+  tree_depth = tune()
+  learn_rate = tune()
+  loss_reduction = tune()
+  sample_size = tune()
+
+Computational engine: xgboost </code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>xgboost_recipe <span class="ot">&lt;-</span> </span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(<span class="at">formula =</span> salary <span class="sc">~</span>  . , <span class="at">data =</span> hitters_train) <span class="sc">|&gt;</span>  </span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_numeric_predictors</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>(), <span class="at">one_hot =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_zv</span>(<span class="fu">all_predictors</span>()) </span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>xgboost_recipe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
 </section>
 
