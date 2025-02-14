@@ -197,6 +197,19 @@ R2 |>
   knitr::kable()
 ```
 
+```{r}
+augment(final_tree_fit, new_data = hitters_test) |> 
+  ggplot(aes(x = salary, y = .pred)) + 
+  geom_abline(lty = "dashed") + 
+  coord_obs_pred() + 
+  geom_point(alpha = 0.5) +
+  theme_bw() + 
+  labs(x = "Salary (log10) dollars",
+       y = "Predicted Salary (log10) dollars",
+       title = "R-squared Plot")
+```
+
+
 Unfortunately, the model does not perform that well on the test set.  The final tuned model has an $R^2$ value of `r round(R2$.estimate[2]*100,2)`% and a mean absolute error of `r scales::dollar(10^R2$.estimate[3]*1000)`.
 
 
@@ -242,6 +255,19 @@ augment(final_bag_fit, new_data = hitters_test) |>
 R3 |> 
   knitr::kable()
 ```
+```{r}
+augment(final_bag_fit, new_data = hitters_test) |> 
+  ggplot(aes(x = salary, y = .pred)) + 
+  geom_abline(lty = "dashed") + 
+  coord_obs_pred() + 
+  geom_point(alpha = 0.5) +
+  theme_bw() + 
+  labs(x = "Salary (log10) dollars",
+       y = "Predicted Salary (log10) dollars",
+       title = "R-squared Plot")
+```
+
+
 The bagged model is an improvement over the decision tree model since the $R^2$ value increased to `r round(R3$.estimate[2]*100,2)`% and the mean absolute error decreased to `r scales::dollar(10^R3$.estimate[3]*1000)`.  While bagging can improve predictions for many regression methods, it is particularly useful for decision trees. To apply bagging to regression trees, we simply construct $B$ regression trees using $B$ bootstrapped training sets, and average the resulting predictions.  Each individual tree has high variance, but low bias. Averaging these $B$ trees reduces the variance. Bagging has been demonstrated to give impressive improvements in accuracy by combining together hundreds or even thousands of trees into a single procedure.
 
 
@@ -294,6 +320,19 @@ augment(final_ranger_fit, new_data = hitters_test) |>
 R4 |> 
   knitr::kable()
 ```
+
+```{r}
+augment(final_ranger_fit, new_data = hitters_test) |> 
+  ggplot(aes(x = salary, y = .pred)) + 
+  geom_abline(lty = "dashed") + 
+  coord_obs_pred() + 
+  geom_point(alpha = 0.5) +
+  theme_bw() + 
+  labs(x = "Salary (log10) dollars",
+       y = "Predicted Salary (log10) dollars",
+       title = "R-squared Plot")
+```
+
 
 The random forest model is an improvement over the bagged tree model since the $R^2$ value increased to `r round(R4$.estimate[2]*100,2)`% and the mean absolute error decreased to `r scales::dollar(10^R4$.estimate[3]*1000)`. 
 
@@ -373,9 +412,9 @@ show_best(xgboost_tune, metric = "rmse")
 ```
 
 ```{r}
-xgboost_param <- tibble(trees = , min_n = , tree_depth = , 
-                        learn_rate =  ,loss_reduction = , 
-                        sample_size = )
+xgboost_param <- tibble(trees = 1597, min_n = 12, tree_depth = 6, 
+                        learn_rate = 0.00444 ,loss_reduction = 0.000000282, 
+                        sample_size = 0.651)
 final_xgboost_wkfl <- xgboost_workflow |> 
   finalize_workflow(xgboost_param)
 final_xgboost_wkfl 
@@ -406,5 +445,5 @@ augment(final_xgboost_fit, new_data = hitters_test) |>
 ```
 
 
-
+The boosted model is very similar to the random forest model with an $R^2$ value of `r round(R5$.estimate[2]*100,2)`% and a mean absolute error of `r scales::dollar(10^R5$.estimate[3]*1000)`. 
 
