@@ -367,5 +367,44 @@ xgboost_tune <-
 xgboost_tune
 ```
 
+```{r}
+autoplot(xgboost_tune)
+show_best(xgboost_tune, metric = "rmse")
+```
+
+```{r}
+xgboost_param <- tibble(trees = , min_n = , tree_depth = , 
+                        learn_rate =  ,loss_reduction = , 
+                        sample_size = )
+final_xgboost_wkfl <- xgboost_workflow |> 
+  finalize_workflow(xgboost_param)
+final_xgboost_wkfl 
+```
+
+```{r}
+final_xgboost_fit <- final_xgboost_wkfl |> 
+  fit(hitters_train)
+```
+
+```{r}
+augment(final_xgboost_fit, new_data = hitters_test) |> 
+  metrics(truth = salary, estimate = .pred) -> R5
+R5 |> 
+  knitr::kable()
+```
+
+```{r}
+augment(final_xgboost_fit, new_data = hitters_test) |> 
+  ggplot(aes(x = salary, y = .pred)) + 
+  geom_abline(lty = "dashed") + 
+  coord_obs_pred() + 
+  geom_point(alpha = 0.5) +
+  theme_bw() + 
+  labs(x = "Salary (log10) dollars",
+       y = "Predicted Salary (log10) dollars",
+       title = "R-squared Plot")
+```
+
+
 
 
