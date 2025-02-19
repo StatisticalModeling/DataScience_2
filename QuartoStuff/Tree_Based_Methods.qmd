@@ -104,6 +104,14 @@ tree_fit |>
   extract_fit_engine() |> 
   rpart.plot::rpart.plot()
 ```
+```{r}
+# Print Rules
+tree_fit |> 
+  extract_fit_engine() |> 
+  rpart.plot::rpart.rules()
+```
+
+
 :::{.callout-tip icon=false}
 Each node in @fig-tree shows:
 
