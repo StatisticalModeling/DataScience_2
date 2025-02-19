@@ -104,10 +104,12 @@ tree_fit |>
   extract_fit_engine() |> 
   rpart.plot::rpart.plot()
 ```
+:::{.callout-tip icon=false}
 Each node in @fig-tree shows:
 
 - the predicted value,
 - the percentage of observations in the node.
+:::
 
 For example, all observations (100%) are in the first node and the top number (2.6) is the average salary (in log10) of all players in `Hitters`.  That is $10^{2.574160}=375.1112$ and remembering that `salary` is in thousands of dollars, the average `salary` for all 263 players is `r scales::dollar(10^mean(Hitters$salary)*1000)`. Moving to the left for players with fewer than 4.5 years in the league we see that note contains 34% of the players and their predicted salary is $10^{2.217851}\times 1000$ = `r scales::dollar(10^(2.217851)*1000)`.
 
