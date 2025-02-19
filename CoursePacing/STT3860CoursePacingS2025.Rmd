@@ -128,6 +128,7 @@ Optional Resources:
 
 + In class review [this document.](https://alanarnholt.github.io/STT3850/Handouts/RegHandout.html)
   
++ [Tree Based Methods](../QuartoStuff/Tree_Based_Methods.html)
 
 
 * * *
