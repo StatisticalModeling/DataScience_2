@@ -91,7 +91,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on February 26, 2025 14:06:04 Eastern Standard Time</p>
+      <p class="date">Last modified on February 26, 2025 14:30:42 Eastern Standard Time</p>
     </div>
   </div>
   
@@ -111,13 +111,13 @@ Crediting the materials
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This majority of the material in this document is taken from the free online course at <a href="https://supervised-ml-course.netlify.app/">https://supervised-ml-course.netlify.app/</a> written by Julia Silge.</p>
+<p>This majority of the material in the first part of this document is taken from the free online course at <a href="https://supervised-ml-course.netlify.app/">https://supervised-ml-course.netlify.app/</a> written by Julia Silge.</p>
 </div>
 </div>
 <p>In this first case study, you will predict fuel efficiency from a US Department of Energy data set for real cars of today.</p>
 <p>In this case study, you will predict the fuel efficiency ⛽ of modern cars from characteristics of these cars, like transmission and engine displacement. Fuel efficiency is a numeric value that ranges smoothly from about 15 to 40 miles per gallon. To predict fuel efficiency you will build a <strong>Regression</strong> model.</p>
-<section id="visulaize-the-fuel-efficiency-distribution" class="level2">
-<h2 class="anchored" data-anchor-id="visulaize-the-fuel-efficiency-distribution">Visulaize the fuel efficiency distribution</h2>
+<section id="visualize-the-fuel-efficiency-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="visualize-the-fuel-efficiency-distribution">Visualize the fuel efficiency distribution</h2>
 <p>The first step before you start modeling is to explore your data. In this course we’ll practice using tidyverse functions for exploratory data analysis. Start off this case study by examining your data set and visualizing the distribution of fuel efficiency. The <code>ggplot2</code> package, with functions like <code>ggplot()</code> and <code>geom_histogram()</code>, is included in the <code>tidyverse</code>. The <code>tidyverse</code> metapackage is loaded for you, so you can use <code>readr</code> and <code>ggplot2</code>.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>

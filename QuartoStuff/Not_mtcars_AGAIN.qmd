@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE, fig.align = "center", comment = NA, message =
 ```
 
 :::{.callout-note title="Crediting the materials" icon=false}
-This majority of the material in this document is taken from the free online course at [https://supervised-ml-course.netlify.app/](https://supervised-ml-course.netlify.app/) written by Julia Silge.
+This majority of the material in the first part of this document is taken from the free online course at [https://supervised-ml-course.netlify.app/](https://supervised-ml-course.netlify.app/) written by Julia Silge.
 :::
 
 In this first case study, you will predict fuel efficiency from a US Department of Energy data set for real cars of today.
@@ -24,7 +24,7 @@ In this first case study, you will predict fuel efficiency from a US Department 
 In this case study, you will predict the fuel efficiency ⛽ of modern cars from characteristics of these cars, like transmission and engine displacement. Fuel efficiency is a numeric value that ranges smoothly from about 15 to 40 miles per gallon. To predict fuel efficiency you will build a **Regression** model.
 
 
-## Visulaize the fuel efficiency distribution
+## Visualize the fuel efficiency distribution
 
 The first step before you start modeling is to explore your data. In this course we'll practice using tidyverse functions for exploratory data analysis. Start off this case study by examining your data set and visualizing the distribution of fuel efficiency. The `ggplot2` package, with functions like `ggplot()` and `geom_histogram()`, is included in the `tidyverse`.  The `tidyverse` metapackage is loaded for you, so you can use `readr` and `ggplot2`.
 
