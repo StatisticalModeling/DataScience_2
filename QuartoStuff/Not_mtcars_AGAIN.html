@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Not mtcars AGAIN</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Not_mtcars_AGAIN_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Not_mtcars_AGAIN_files/libs/quarto-html/quarto.js"></script>
+<script src="Not_mtcars_AGAIN_files/libs/quarto-html/popper.min.js"></script>
+<script src="Not_mtcars_AGAIN_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Not_mtcars_AGAIN_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Not_mtcars_AGAIN_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Not_mtcars_AGAIN_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Not_mtcars_AGAIN_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Not_mtcars_AGAIN_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Not_mtcars_AGAIN_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Not_mtcars_AGAIN.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Not <code>mtcars</code> AGAIN</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">Last modified on February 26, 2025 14:06:04 Eastern Standard Time</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Crediting the materials">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Crediting the materials
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This majority of the material in this document is taken from the free online course at <a href="https://supervised-ml-course.netlify.app/">https://supervised-ml-course.netlify.app/</a> written by Julia Silge.</p>
+</div>
+</div>
+<p>In this first case study, you will predict fuel efficiency from a US Department of Energy data set for real cars of today.</p>
+<p>In this case study, you will predict the fuel efficiency ⛽ of modern cars from characteristics of these cars, like transmission and engine displacement. Fuel efficiency is a numeric value that ranges smoothly from about 15 to 40 miles per gallon. To predict fuel efficiency you will build a <strong>Regression</strong> model.</p>
+<section id="visulaize-the-fuel-efficiency-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="visulaize-the-fuel-efficiency-distribution">Visulaize the fuel efficiency distribution</h2>
+<p>The first step before you start modeling is to explore your data. In this course we’ll practice using tidyverse functions for exploratory data analysis. Start off this case study by examining your data set and visualizing the distribution of fuel efficiency. The <code>ggplot2</code> package, with functions like <code>ggplot()</code> and <code>geom_histogram()</code>, is included in the <code>tidyverse</code>. The <code>tidyverse</code> metapackage is loaded for you, so you can use <code>readr</code> and <code>ggplot2</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>cars2018 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../Data/cars2018.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Take a look at the <code>cars2018</code> object using <code>glimpse()</code>.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the cars2018 object</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(cars2018)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 1,144
+Columns: 15
+$ model                   &lt;chr&gt; "Acura NSX", "ALFA ROMEO 4C", "Audi R8 AWD", "…
+$ model_index             &lt;dbl&gt; 57, 410, 65, 71, 66, 72, 46, 488, 38, 278, 223…
+$ displacement            &lt;dbl&gt; 3.5, 1.8, 5.2, 5.2, 5.2, 5.2, 2.0, 3.0, 8.0, 6…
+$ cylinders               &lt;dbl&gt; 6, 4, 10, 10, 10, 10, 4, 6, 16, 8, 8, 8, 8, 8,…
+$ gears                   &lt;dbl&gt; 9, 6, 7, 7, 7, 7, 6, 7, 7, 8, 8, 7, 7, 7, 7, 7…
+$ transmission            &lt;chr&gt; "Manual", "Manual", "Manual", "Manual", "Manua…
+$ mpg                     &lt;dbl&gt; 21, 28, 17, 18, 17, 18, 26, 20, 11, 18, 16, 18…
+$ aspiration              &lt;chr&gt; "Turbocharged/Supercharged", "Turbocharged/Sup…
+$ lockup_torque_converter &lt;chr&gt; "Y", "Y", "Y", "Y", "Y", "Y", "Y", "N", "Y", "…
+$ drive                   &lt;chr&gt; "All Wheel Drive", "2-Wheel Drive, Rear", "All…
+$ max_ethanol             &lt;dbl&gt; 10, 10, 15, 15, 15, 15, 15, 10, 15, 10, 10, 10…
+$ recommended_fuel        &lt;chr&gt; "Premium Unleaded Required", "Premium Unleaded…
+$ intake_valves_per_cyl   &lt;dbl&gt; 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2…
+$ exhaust_valves_per_cyl  &lt;dbl&gt; 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 2, 2, 2…
+$ fuel_injection          &lt;chr&gt; "Direct ignition", "Direct ignition", "Direct …</code></pre>
+</div>
+</div>
+<ul>
+<li>Use the appropriate column from <code>cars2018</code> in the call to <code>aes()</code> so you can plot a histogram of fuel efficiency (miles per gallon, mpg). Set the correct <code>x</code> and <code>y</code> labels.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the histogram</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cars2018, <span class="fu">aes</span>(<span class="at">x =</span> mpg)) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">25</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Fuel efficiency (mpg)"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of cars"</span>) <span class="sc">+</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Not_mtcars_AGAIN_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Consider using log10(mpg) instead of mpg</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>cars2018 <span class="ot">&lt;-</span> cars2018 <span class="sc">|&gt;</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">log_mpg =</span> <span class="fu">log</span>(mpg))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cars2018, <span class="fu">aes</span>(<span class="at">x =</span> log_mpg)) <span class="sc">+</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">15</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Fuel efficiency (log_mpg)"</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Number of cars"</span>) <span class="sc">+</span> </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Not_mtcars_AGAIN_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="build-a-simple-linear-model" class="level2">
+<h2 class="anchored" data-anchor-id="build-a-simple-linear-model">Build a simple linear model</h2>
+<p>Before embarking on more complex machine learning models, it’s a good idea to build the simplest possible model to get an idea of what is going on. In this case, that means fitting a simple linear model using base R’s <code>lm()</code> function.</p>
+<section id="instructions" class="level3 unnumbered">
+<h3 class="unnumbered anchored" data-anchor-id="instructions">Instructions</h3>
+<ul>
+<li>Use <code>select()</code> to deselect the two columns <code>model</code> and <code>model_index</code> from <code>cars2018</code>; these columns tell us the individual identifiers for each car and it would not make sense to include them in modeling. Store the results in <code>car_vars</code>.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Deselect the 2 columns to create cars_vars</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>car_vars <span class="ot">&lt;-</span> cars2018 <span class="sc">|&gt;</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>model, <span class="sc">-</span>model_index)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Fit <code>mpg</code> as the predicted quantity, explained by all the predictors, i.e., <code>.</code> in the R formula input to <code>lm()</code>. Store the linear model object in <code>fit_all</code>. (You may have noticed the log distribution of MPG in the last exercise, but don’t worry about fitting the logarithm of fuel efficiency yet.)</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit a linear model</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>fit_all <span class="ot">&lt;-</span> <span class="fu">lm</span>(mpg <span class="sc">~</span> . <span class="sc">-</span> log_mpg, <span class="at">data =</span> car_vars)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Print the <code>summary()</code> of the <code>model</code>fit_all`.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the summary of the model</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit_all)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = mpg ~ . - log_mpg, data = car_vars)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.5261 -1.6473 -0.1096  1.3572 26.5045 
+
+Coefficients:
+                                              Estimate Std. Error t value
+(Intercept)                                  44.539519   1.176283  37.865
+displacement                                 -3.786147   0.264845 -14.296
+cylinders                                     0.520284   0.161802   3.216
+gears                                         0.157674   0.069984   2.253
+transmissionCVT                               4.877637   0.404051  12.072
+transmissionManual                           -1.074608   0.366075  -2.935
+aspirationTurbocharged/Supercharged          -2.190248   0.267559  -8.186
+lockup_torque_converterY                     -2.624494   0.381252  -6.884
+drive2-Wheel Drive, Rear                     -2.676716   0.291044  -9.197
+drive4-Wheel Drive                           -3.397532   0.335147 -10.137
+driveAll Wheel Drive                         -2.941084   0.257174 -11.436
+max_ethanol                                  -0.007377   0.005898  -1.251
+recommended_fuelPremium Unleaded Required    -0.403935   0.262413  -1.539
+recommended_fuelRegular Unleaded Recommended -0.996343   0.272495  -3.656
+intake_valves_per_cyl                        -1.446107   1.620575  -0.892
+exhaust_valves_per_cyl                       -2.469747   1.547748  -1.596
+fuel_injectionMultipoint/sequential ignition -0.658428   0.243819  -2.700
+                                             Pr(&gt;|t|)    
+(Intercept)                                   &lt; 2e-16 ***
+displacement                                  &lt; 2e-16 ***
+cylinders                                    0.001339 ** 
+gears                                        0.024450 *  
+transmissionCVT                               &lt; 2e-16 ***
+transmissionManual                           0.003398 ** 
+aspirationTurbocharged/Supercharged          7.24e-16 ***
+lockup_torque_converterY                     9.65e-12 ***
+drive2-Wheel Drive, Rear                      &lt; 2e-16 ***
+drive4-Wheel Drive                            &lt; 2e-16 ***
+driveAll Wheel Drive                          &lt; 2e-16 ***
+max_ethanol                                  0.211265    
+recommended_fuelPremium Unleaded Required    0.124010    
+recommended_fuelRegular Unleaded Recommended 0.000268 ***
+intake_valves_per_cyl                        0.372400    
+exhaust_valves_per_cyl                       0.110835    
+fuel_injectionMultipoint/sequential ignition 0.007028 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.916 on 1127 degrees of freedom
+Multiple R-squared:  0.7314,    Adjusted R-squared:  0.7276 
+F-statistic: 191.8 on 16 and 1127 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Better yet</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>broom<span class="sc">::</span><span class="fu">tidy</span>(fit_all) <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 51%">
+<col style="width: 12%">
+<col style="width: 11%">
+<col style="width: 13%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">term</th>
+<th style="text-align: right;">estimate</th>
+<th style="text-align: right;">std.error</th>
+<th style="text-align: right;">statistic</th>
+<th style="text-align: right;">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">44.5395187</td>
+<td style="text-align: right;">1.1762833</td>
+<td style="text-align: right;">37.8646201</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">displacement</td>
+<td style="text-align: right;">-3.7861470</td>
+<td style="text-align: right;">0.2648450</td>
+<td style="text-align: right;">-14.2957074</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cylinders</td>
+<td style="text-align: right;">0.5202836</td>
+<td style="text-align: right;">0.1618015</td>
+<td style="text-align: right;">3.2155668</td>
+<td style="text-align: right;">0.0013389</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">gears</td>
+<td style="text-align: right;">0.1576744</td>
+<td style="text-align: right;">0.0699836</td>
+<td style="text-align: right;">2.2530183</td>
+<td style="text-align: right;">0.0244497</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">transmissionCVT</td>
+<td style="text-align: right;">4.8776374</td>
+<td style="text-align: right;">0.4040514</td>
+<td style="text-align: right;">12.0718250</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">transmissionManual</td>
+<td style="text-align: right;">-1.0746077</td>
+<td style="text-align: right;">0.3660748</td>
+<td style="text-align: right;">-2.9354869</td>
+<td style="text-align: right;">0.0033978</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">aspirationTurbocharged/Supercharged</td>
+<td style="text-align: right;">-2.1902481</td>
+<td style="text-align: right;">0.2675589</td>
+<td style="text-align: right;">-8.1860399</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lockup_torque_converterY</td>
+<td style="text-align: right;">-2.6244942</td>
+<td style="text-align: right;">0.3812516</td>
+<td style="text-align: right;">-6.8838898</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">drive2-Wheel Drive, Rear</td>
+<td style="text-align: right;">-2.6767162</td>
+<td style="text-align: right;">0.2910442</td>
+<td style="text-align: right;">-9.1969408</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">drive4-Wheel Drive</td>
+<td style="text-align: right;">-3.3975319</td>
+<td style="text-align: right;">0.3351470</td>
+<td style="text-align: right;">-10.1374366</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">driveAll Wheel Drive</td>
+<td style="text-align: right;">-2.9410836</td>
+<td style="text-align: right;">0.2571744</td>
+<td style="text-align: right;">-11.4361445</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">max_ethanol</td>
+<td style="text-align: right;">-0.0073774</td>
+<td style="text-align: right;">0.0058981</td>
+<td style="text-align: right;">-1.2508063</td>
+<td style="text-align: right;">0.2112648</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">recommended_fuelPremium Unleaded Required</td>
+<td style="text-align: right;">-0.4039345</td>
+<td style="text-align: right;">0.2624128</td>
+<td style="text-align: right;">-1.5393093</td>
+<td style="text-align: right;">0.1240095</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">recommended_fuelRegular Unleaded Recommended</td>
+<td style="text-align: right;">-0.9963428</td>
+<td style="text-align: right;">0.2724946</td>
+<td style="text-align: right;">-3.6563764</td>
+<td style="text-align: right;">0.0002676</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">intake_valves_per_cyl</td>
+<td style="text-align: right;">-1.4461074</td>
+<td style="text-align: right;">1.6205748</td>
+<td style="text-align: right;">-0.8923423</td>
+<td style="text-align: right;">0.3724000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">exhaust_valves_per_cyl</td>
+<td style="text-align: right;">-2.4697466</td>
+<td style="text-align: right;">1.5477481</td>
+<td style="text-align: right;">-1.5957032</td>
+<td style="text-align: right;">0.1108354</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">fuel_injectionMultipoint/sequential ignition</td>
+<td style="text-align: right;">-0.6584282</td>
+<td style="text-align: right;">0.2438186</td>
+<td style="text-align: right;">-2.7004839</td>
+<td style="text-align: right;">0.0070276</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># and</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>broom<span class="sc">::</span><span class="fu">glance</span>(fit_all) <span class="sc">|&gt;</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 12%">
+<col style="width: 8%">
+<col style="width: 9%">
+<col style="width: 7%">
+<col style="width: 2%">
+<col style="width: 9%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 11%">
+<col style="width: 4%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">r.squared</th>
+<th style="text-align: right;">adj.r.squared</th>
+<th style="text-align: right;">sigma</th>
+<th style="text-align: right;">statistic</th>
+<th style="text-align: right;">p.value</th>
+<th style="text-align: right;">df</th>
+<th style="text-align: right;">logLik</th>
+<th style="text-align: right;">AIC</th>
+<th style="text-align: right;">BIC</th>
+<th style="text-align: right;">deviance</th>
+<th style="text-align: right;">df.residual</th>
+<th style="text-align: right;">nobs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.7313934</td>
+<td style="text-align: right;">0.72758</td>
+<td style="text-align: right;">2.915576</td>
+<td style="text-align: right;">191.7955</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">-2838.859</td>
+<td style="text-align: right;">5713.718</td>
+<td style="text-align: right;">5804.479</td>
+<td style="text-align: right;">9580.16</td>
+<td style="text-align: right;">1127</td>
+<td style="text-align: right;">1144</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>You just performed some exploratory data analysis and built a simple linear model using base R’s <code>lm()</code> function.</p>
+</section>
+</section>
+<section id="getting-started-with-tidymodels" class="level2">
+<h2 class="anchored" data-anchor-id="getting-started-with-tidymodels">Getting started with <code>tidymodels</code></h2>
+<section id="training-and-testing-data" class="level3">
+<h3 class="anchored" data-anchor-id="training-and-testing-data">Training and testing data</h3>
+<p>Training models based on all of your data at once is typically not a good choice. 🚫 Instead, you can create subsets of your data that you use for <strong>different purposes</strong>, such as <strong>training</strong> your model and then <strong>testing</strong> your model.</p>
+<p>Creating training/testing splits reduces <strong>overfitting</strong>. When you evaluate your model on data that it was not trained on, you get a better estimate of how it will perform on new data.</p>
+</section>
+<section id="instructions-1" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-1">Instructions</h3>
+<ul>
+<li>Load the <code>tidymodels</code> metapackage, which also includes <code>dplyr</code> for data manipulation.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load tidymodels</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Create a data split that divides the original data into 80%/20% sections and (roughly) evenly divides the partitions between the different types of <code>transmission</code>. Assign the 80% partition to <code>car_train</code> and the 20% partition to <code>car_test</code>.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split the data into training and test sets</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>car_split <span class="ot">&lt;-</span> car_vars <span class="sc">|&gt;</span> </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>mpg) <span class="sc">|&gt;</span> </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">initial_split</span>(<span class="at">prop =</span> <span class="fl">0.8</span>, <span class="at">strata =</span> transmission)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>car_train <span class="ot">&lt;-</span> <span class="fu">training</span>(car_split)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>car_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(car_split)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(car_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 915
+Columns: 13
+$ displacement            &lt;dbl&gt; 6.2, 6.2, 1.4, 2.0, 2.0, 3.0, 3.0, 3.0, 3.0, 3…
+$ cylinders               &lt;dbl&gt; 8, 8, 4, 4, 4, 6, 6, 6, 6, 6, 4, 8, 6, 8, 6, 6…
+$ gears                   &lt;dbl&gt; 8, 8, 6, 8, 8, 8, 8, 8, 8, 8, 6, 7, 9, 9, 7, 7…
+$ transmission            &lt;chr&gt; "Automatic", "Automatic", "Automatic", "Automa…
+$ aspiration              &lt;chr&gt; "Naturally Aspirated", "Turbocharged/Superchar…
+$ lockup_torque_converter &lt;chr&gt; "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "…
+$ drive                   &lt;chr&gt; "2-Wheel Drive, Rear", "2-Wheel Drive, Rear", …
+$ max_ethanol             &lt;dbl&gt; 10, 10, 10, 15, 15, 15, 15, 15, 15, 15, 10, 10…
+$ recommended_fuel        &lt;chr&gt; "Premium Unleaded Required", "Premium Unleaded…
+$ intake_valves_per_cyl   &lt;dbl&gt; 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2…
+$ exhaust_valves_per_cyl  &lt;dbl&gt; 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2…
+$ fuel_injection          &lt;chr&gt; "Direct ignition", "Direct ignition", "Multipo…
+$ log_mpg                 &lt;dbl&gt; 2.890372, 2.772589, 3.367296, 3.258097, 3.2580…</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(car_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 229
+Columns: 13
+$ displacement            &lt;dbl&gt; 8.0, 6.2, 3.9, 6.5, 3.0, 5.0, 5.0, 2.0, 4.0, 4…
+$ cylinders               &lt;dbl&gt; 16, 8, 8, 12, 6, 8, 8, 4, 8, 8, 12, 6, 4, 4, 6…
+$ gears                   &lt;dbl&gt; 7, 7, 7, 7, 8, 8, 8, 6, 7, 7, 7, 9, 9, 6, 7, 7…
+$ transmission            &lt;chr&gt; "Manual", "Manual", "Manual", "Manual", "Autom…
+$ aspiration              &lt;chr&gt; "Turbocharged/Supercharged", "Naturally Aspira…
+$ lockup_torque_converter &lt;chr&gt; "Y", "N", "N", "N", "Y", "Y", "Y", "N", "Y", "…
+$ drive                   &lt;chr&gt; "All Wheel Drive", "2-Wheel Drive, Rear", "2-W…
+$ max_ethanol             &lt;dbl&gt; 15, 10, 10, 10, 15, 15, 15, 10, 10, 10, 10, 10…
+$ recommended_fuel        &lt;chr&gt; "Premium Unleaded Required", "Premium Unleaded…
+$ intake_valves_per_cyl   &lt;dbl&gt; 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2…
+$ exhaust_valves_per_cyl  &lt;dbl&gt; 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2…
+$ fuel_injection          &lt;chr&gt; "Multipoint/sequential ignition", "Direct igni…
+$ log_mpg                 &lt;dbl&gt; 2.397895, 2.944439, 2.890372, 2.564949, 3.1354…</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="train-models-with-tidymodels" class="level2">
+<h2 class="anchored" data-anchor-id="train-models-with-tidymodels">Train models with <code>tidymodels</code></h2>
+<p>Now that your <code>car_train</code> data is ready, you can fit a set of models with <code>tidymodels</code>. When we model data, we deal with model type (such as linear regression or random forest), mode (regression or classification), and model engine (how the models are actually fit). In <code>tidymodels</code>, we capture that modeling information in a model <strong>specification</strong>, so setting up your model specification can be a good place to start. In these exercises, fit one linear regression model and one random forest model, without any resampling of your data.</p>
+<section id="instructions-2" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-2">Instructions</h3>
+<ul>
+<li>Fit a basic linear regression model to your <code>car_train</code> data. (Notice that we are fitting to <code>log(mpg)</code> since the fuel efficiency had a log normal distribution.)</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a linear regression model specification</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>lm_mod <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_engine</span>(<span class="st">"lm"</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Train a linear regression model</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>fit_lm <span class="ot">&lt;-</span> lm_mod <span class="sc">|&gt;</span> </span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fit</span>(log_mpg <span class="sc">~</span> ., <span class="at">data =</span> car_train)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the model object</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>broom<span class="sc">::</span><span class="fu">tidy</span>(fit_lm) <span class="sc">|&gt;</span> </span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 51%">
+<col style="width: 12%">
+<col style="width: 11%">
+<col style="width: 12%">
+<col style="width: 11%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">term</th>
+<th style="text-align: right;">estimate</th>
+<th style="text-align: right;">std.error</th>
+<th style="text-align: right;">statistic</th>
+<th style="text-align: right;">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">4.0058963</td>
+<td style="text-align: right;">0.0456229</td>
+<td style="text-align: right;">87.804508</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">displacement</td>
+<td style="text-align: right;">-0.1591673</td>
+<td style="text-align: right;">0.0101472</td>
+<td style="text-align: right;">-15.685813</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cylinders</td>
+<td style="text-align: right;">0.0092052</td>
+<td style="text-align: right;">0.0062212</td>
+<td style="text-align: right;">1.479654</td>
+<td style="text-align: right;">0.1393162</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">gears</td>
+<td style="text-align: right;">0.0115071</td>
+<td style="text-align: right;">0.0027283</td>
+<td style="text-align: right;">4.217720</td>
+<td style="text-align: right;">0.0000272</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">transmissionCVT</td>
+<td style="text-align: right;">0.1612901</td>
+<td style="text-align: right;">0.0158513</td>
+<td style="text-align: right;">10.175223</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">transmissionManual</td>
+<td style="text-align: right;">-0.0274861</td>
+<td style="text-align: right;">0.0142674</td>
+<td style="text-align: right;">-1.926491</td>
+<td style="text-align: right;">0.0543584</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">aspirationTurbocharged/Supercharged</td>
+<td style="text-align: right;">-0.0984454</td>
+<td style="text-align: right;">0.0104909</td>
+<td style="text-align: right;">-9.383906</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lockup_torque_converterY</td>
+<td style="text-align: right;">-0.0740208</td>
+<td style="text-align: right;">0.0149250</td>
+<td style="text-align: right;">-4.959510</td>
+<td style="text-align: right;">0.0000008</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">drive2-Wheel Drive, Rear</td>
+<td style="text-align: right;">-0.0855545</td>
+<td style="text-align: right;">0.0113160</td>
+<td style="text-align: right;">-7.560472</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">drive4-Wheel Drive</td>
+<td style="text-align: right;">-0.1273189</td>
+<td style="text-align: right;">0.0130941</td>
+<td style="text-align: right;">-9.723398</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">driveAll Wheel Drive</td>
+<td style="text-align: right;">-0.1058523</td>
+<td style="text-align: right;">0.0102251</td>
+<td style="text-align: right;">-10.352212</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">max_ethanol</td>
+<td style="text-align: right;">-0.0002975</td>
+<td style="text-align: right;">0.0002248</td>
+<td style="text-align: right;">-1.323348</td>
+<td style="text-align: right;">0.1860565</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">recommended_fuelPremium Unleaded Required</td>
+<td style="text-align: right;">-0.0163239</td>
+<td style="text-align: right;">0.0102396</td>
+<td style="text-align: right;">-1.594199</td>
+<td style="text-align: right;">0.1112432</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">recommended_fuelRegular Unleaded Recommended</td>
+<td style="text-align: right;">-0.0434804</td>
+<td style="text-align: right;">0.0107403</td>
+<td style="text-align: right;">-4.048329</td>
+<td style="text-align: right;">0.0000560</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">intake_valves_per_cyl</td>
+<td style="text-align: right;">-0.0788364</td>
+<td style="text-align: right;">0.0647617</td>
+<td style="text-align: right;">-1.217331</td>
+<td style="text-align: right;">0.2237981</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">exhaust_valves_per_cyl</td>
+<td style="text-align: right;">-0.0831906</td>
+<td style="text-align: right;">0.0619699</td>
+<td style="text-align: right;">-1.342435</td>
+<td style="text-align: right;">0.1797942</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">fuel_injectionMultipoint/sequential ignition</td>
+<td style="text-align: right;">-0.0331051</td>
+<td style="text-align: right;">0.0094613</td>
+<td style="text-align: right;">-3.498991</td>
+<td style="text-align: right;">0.0004900</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># and</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>broom<span class="sc">::</span><span class="fu">glance</span>(fit_lm) <span class="sc">|&gt;</span> </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 9%">
+<col style="width: 12%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 7%">
+<col style="width: 2%">
+<col style="width: 8%">
+<col style="width: 9%">
+<col style="width: 9%">
+<col style="width: 8%">
+<col style="width: 10%">
+<col style="width: 4%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">r.squared</th>
+<th style="text-align: right;">adj.r.squared</th>
+<th style="text-align: right;">sigma</th>
+<th style="text-align: right;">statistic</th>
+<th style="text-align: right;">p.value</th>
+<th style="text-align: right;">df</th>
+<th style="text-align: right;">logLik</th>
+<th style="text-align: right;">AIC</th>
+<th style="text-align: right;">BIC</th>
+<th style="text-align: right;">deviance</th>
+<th style="text-align: right;">df.residual</th>
+<th style="text-align: right;">nobs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.8061189</td>
+<td style="text-align: right;">0.8026644</td>
+<td style="text-align: right;">0.1014553</td>
+<td style="text-align: right;">233.3565</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: right;">803.8961</td>
+<td style="text-align: right;">-1571.792</td>
+<td style="text-align: right;">-1485.052</td>
+<td style="text-align: right;">9.243282</td>
+<td style="text-align: right;">898</td>
+<td style="text-align: right;">915</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ul>
+<li>Fit a random forest model to your <code>car_train</code> data.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a random forest model specification</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>rf_mod <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_engine</span>(<span class="st">"ranger"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Train a random forest model</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>fit_rf <span class="ot">&lt;-</span> rf_mod <span class="sc">|&gt;</span> </span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fit</span>(log_mpg <span class="sc">~</span> ., <span class="at">data =</span> car_train)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the model object</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>fit_rf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>parsnip model object
+
+Ranger result
+
+Call:
+ ranger::ranger(x = maybe_data_frame(x), y = y, num.threads = 1,      verbose = FALSE, seed = sample.int(10^5, 1)) 
+
+Type:                             Regression 
+Number of trees:                  500 
+Sample size:                      915 
+Number of independent variables:  12 
+Mtry:                             3 
+Target node size:                 5 
+Variable importance mode:         none 
+Splitrule:                        variance 
+OOB prediction error (MSE):       0.007038903 
+R squared (OOB):                  0.8650538 </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="evaluate-model-performance" class="level2">
+<h2 class="anchored" data-anchor-id="evaluate-model-performance">Evaluate model performance</h2>
+<p>The <code>fit_lm</code> and <code>fit_rf</code> models you just trained are in your environment. It’s time to see how they did! 🤩 How are we doing do this, though?! 🤔 There are several things to consider, including both what metrics and what data to use.</p>
+<p>For regression models, we will focus on evaluating using the root mean squared error metric. This quantity is measured in the same units as the original data (log of miles per gallon, in our case). Lower values indicate a better fit to the data. It’s not too hard to calculate root mean squared error manually, but the <a href="https://yardstick.tidymodels.org/">yardstick</a> package offers convenient functions for this and many other model performance metrics.</p>
+<section id="instructions-3" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-3">Instructions</h3>
+<p>Note: The <code>yardstick</code> package is loaded since it is one of the packages in <code>tidyverse</code>.</p>
+<ul>
+<li>Create new columns for model predictions from each of the models you have trained, first linear regression and then random forest.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the new columns</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> car_train <span class="sc">|&gt;</span> </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(<span class="fu">predict</span>(fit_lm, car_train) <span class="sc">|&gt;</span> </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rename</span>(<span class="at">.pred_lm =</span> .pred)) <span class="sc">|&gt;</span> </span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(<span class="fu">predict</span>(fit_rf, car_train) <span class="sc">|&gt;</span> </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rename</span>(<span class="at">.pred_rf =</span> .pred))</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(results) <span class="sc">|&gt;</span> </span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 5%">
+<col style="width: 3%">
+<col style="width: 2%">
+<col style="width: 5%">
+<col style="width: 10%">
+<col style="width: 9%">
+<col style="width: 7%">
+<col style="width: 4%">
+<col style="width: 11%">
+<col style="width: 8%">
+<col style="width: 8%">
+<col style="width: 12%">
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 3%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: right;">displacement</th>
+<th style="text-align: right;">cylinders</th>
+<th style="text-align: right;">gears</th>
+<th style="text-align: left;">transmission</th>
+<th style="text-align: left;">aspiration</th>
+<th style="text-align: left;">lockup_torque_converter</th>
+<th style="text-align: left;">drive</th>
+<th style="text-align: right;">max_ethanol</th>
+<th style="text-align: left;">recommended_fuel</th>
+<th style="text-align: right;">intake_valves_per_cyl</th>
+<th style="text-align: right;">exhaust_valves_per_cyl</th>
+<th style="text-align: left;">fuel_injection</th>
+<th style="text-align: right;">log_mpg</th>
+<th style="text-align: right;">.pred_lm</th>
+<th style="text-align: right;">.pred_rf</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">6.2</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">Automatic</td>
+<td style="text-align: left;">Naturally Aspirated</td>
+<td style="text-align: left;">Y</td>
+<td style="text-align: left;">2-Wheel Drive, Rear</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">Premium Unleaded Required</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Direct ignition</td>
+<td style="text-align: right;">2.890372</td>
+<td style="text-align: right;">2.843856</td>
+<td style="text-align: right;">2.868826</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6.2</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">Automatic</td>
+<td style="text-align: left;">Turbocharged/Supercharged</td>
+<td style="text-align: left;">Y</td>
+<td style="text-align: left;">2-Wheel Drive, Rear</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">Premium Unleaded Required</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">Direct ignition</td>
+<td style="text-align: right;">2.772589</td>
+<td style="text-align: right;">2.745411</td>
+<td style="text-align: right;">2.821072</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1.4</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: left;">Automatic</td>
+<td style="text-align: left;">Turbocharged/Supercharged</td>
+<td style="text-align: left;">Y</td>
+<td style="text-align: left;">2-Wheel Drive, Rear</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: left;">Premium Unleaded Recommended</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Multipoint/sequential ignition</td>
+<td style="text-align: right;">3.367296</td>
+<td style="text-align: right;">3.270770</td>
+<td style="text-align: right;">3.317601</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2.0</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">Automatic</td>
+<td style="text-align: left;">Turbocharged/Supercharged</td>
+<td style="text-align: left;">Y</td>
+<td style="text-align: left;">2-Wheel Drive, Rear</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: left;">Premium Unleaded Recommended</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Direct ignition</td>
+<td style="text-align: right;">3.258097</td>
+<td style="text-align: right;">3.229902</td>
+<td style="text-align: right;">3.254968</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">2.0</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">Automatic</td>
+<td style="text-align: left;">Turbocharged/Supercharged</td>
+<td style="text-align: left;">Y</td>
+<td style="text-align: left;">2-Wheel Drive, Rear</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: left;">Premium Unleaded Recommended</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Direct ignition</td>
+<td style="text-align: right;">3.258097</td>
+<td style="text-align: right;">3.229902</td>
+<td style="text-align: right;">3.254968</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3.0</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: left;">Automatic</td>
+<td style="text-align: left;">Turbocharged/Supercharged</td>
+<td style="text-align: left;">Y</td>
+<td style="text-align: left;">2-Wheel Drive, Rear</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: left;">Premium Unleaded Recommended</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: right;">2</td>
+<td style="text-align: left;">Direct ignition</td>
+<td style="text-align: right;">3.135494</td>
+<td style="text-align: right;">3.089145</td>
+<td style="text-align: right;">3.089431</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ul>
+<li>Evaluate the performance of these models using <a href="https://yardstick.tidymodels.org/reference/metrics.html"><code>metrics()</code></a> by specifying the column that contains the real fuel efficiency.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate the performance</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">metrics</span>(results, <span class="at">truth =</span> log_mpg, <span class="at">estimate =</span> .pred_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 rmse    standard      0.101 
+2 rsq     standard      0.806 
+3 mae     standard      0.0747</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">metrics</span>(results, <span class="at">truth =</span> log_mpg, <span class="at">estimate =</span> .pred_rf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 rmse    standard      0.0682
+2 rsq     standard      0.914 
+3 mae     standard      0.0494</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="use-the-testing-data" class="level2">
+<h2 class="anchored" data-anchor-id="use-the-testing-data">Use the testing data</h2>
+<p>“But wait!” you say, because you have been paying attention. 🤔 “That is how these models perform on the <strong>training</strong> data, the data that we used to build these models in the first place.” This is not a good idea because when you evaluate on the same data you used to train a model, the performance you estimate is too optimistic.</p>
+<p>Let’s evaluate how these simple models perform on the <strong>testing</strong> data instead.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the new columns</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> car_test  <span class="sc">|&gt;</span> </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(<span class="fu">predict</span>(fit_lm, car_test)  <span class="sc">|&gt;</span> </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rename</span>(<span class="at">.pred_lm =</span> .pred))  <span class="sc">|&gt;</span> </span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(<span class="fu">predict</span>(fit_rf, car_test)  <span class="sc">|&gt;</span> </span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rename</span>(<span class="at">.pred_rf =</span> .pred))</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate the performance</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="fu">metrics</span>(results, <span class="at">truth =</span> log_mpg, <span class="at">estimate =</span> .pred_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 rmse    standard      0.0969
+2 rsq     standard      0.804 
+3 mae     standard      0.0727</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">metrics</span>(results, <span class="at">truth =</span> log_mpg, <span class="at">estimate =</span> .pred_rf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 rmse    standard      0.0792
+2 rsq     standard      0.874 
+3 mae     standard      0.0584</code></pre>
+</div>
+</div>
+<p>You just trained models one time on the whole training set and then evaluated them on the testing set. Statisticians have come up with a slew of approaches to evaluate models in better ways than this; many important ones fall under the category of <strong>resampling</strong>.</p>
+<p>The idea of resampling is to create simulated data sets that can be used to estimate the performance of your model, say, because you want to compare models. You can create these resampled data sets instead of using either your training set (which can give overly optimistic results, especially for powerful ML algorithms) or your testing set (which is extremely valuable and can only be used once or at most twice).</p>
+<p>The first resampling approach we’re going to try in this course is called the bootstrap. Bootstrap resampling means drawing <strong>with replacement</strong> from our original dataset and then fitting on that dataset.</p>
+<p>Let’s think about…cars! 🚗🚌🚙🚕</p>
+</section>
+<section id="bootstrap-resampling" class="level2">
+<h2 class="anchored" data-anchor-id="bootstrap-resampling">Bootstrap resampling</h2>
+<p>In the last set of exercises, you trained linear regression and random forest models without any resampling. Resampling can help us evaluate our machine learning models more accurately.</p>
+<p>Let’s try bootstrap resampling, which means creating data sets the same size as the original one by randomly drawing <strong>with replacement</strong> from the original. In <code>tidymodels</code>, the default behavior for bootstrapping is 25 resamplings, but you can change this using the <code>times</code> argument in <code>bootstraps()</code> if desired.</p>
+<section id="instructions-4" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-4">Instructions</h3>
+<ul>
+<li>Create bootstrap resamples to evaluate these models. The function to create this kind of resample is <code>bootstraps()</code>.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Create bootstrap resamples</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">444</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>car_boot <span class="ot">&lt;-</span> <span class="fu">bootstraps</span>(<span class="at">data =</span> car_train, <span class="at">times =</span> <span class="dv">25</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Evaluate both kinds of models, the linear regression model and the random forest model.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate the models with bootstrap resampling</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>lm_res <span class="ot">&lt;-</span> lm_mod <span class="sc">|&gt;</span> </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fit_resamples</span>(</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>        log_mpg <span class="sc">~</span> .,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">resamples =</span> car_boot,</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">control =</span> <span class="fu">control_resamples</span>(<span class="at">save_pred =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>rf_res <span class="ot">&lt;-</span> rf_mod <span class="sc">|&gt;</span> </span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fit_resamples</span>(</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>        log_mpg <span class="sc">~</span> .,</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">resamples =</span> car_boot,</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">control =</span> <span class="fu">control_resamples</span>(<span class="at">save_pred =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="plot-modeling-results" class="level2">
+<h2 class="anchored" data-anchor-id="plot-modeling-results">Plot modeling results</h2>
+<p>You just trained models on bootstrap resamples of the training set and now have the results in <code>lm_res</code> and <code>rf_res</code>. These results are available in your environment, trained using the training set. Now let’s compare them.</p>
+<p>Notice in this code how we use <code>bind_rows()</code> from <code>dplyr</code> to combine the results from both models, along with <code>collect_predictions()</code> to obtain and format predictions from each resample.</p>
+<ul>
+<li>First use <code>collect_predictions()</code> for the linear model. Then use <code>collect_predictions()</code> for the random forest model.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span>  <span class="fu">bind_rows</span>(lm_res <span class="sc">|&gt;</span> </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">collect_predictions</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"lm"</span>),</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>                      rf_res <span class="sc">|&gt;</span> </span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">collect_predictions</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"rf"</span>))</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(results)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 16,798
+Columns: 6
+$ .pred   &lt;dbl&gt; 2.849282, 3.256256, 3.235188, 3.235188, 3.065159, 3.083629, 3.…
+$ id      &lt;chr&gt; "Bootstrap01", "Bootstrap01", "Bootstrap01", "Bootstrap01", "B…
+$ .row    &lt;int&gt; 1, 3, 4, 5, 8, 9, 13, 18, 20, 22, 23, 27, 33, 34, 37, 42, 45, …
+$ log_mpg &lt;dbl&gt; 2.890372, 3.367296, 3.258097, 3.258097, 3.044522, 3.091042, 3.…
+$ .config &lt;chr&gt; "Preprocessor1_Model1", "Preprocessor1_Model1", "Preprocessor1…
+$ model   &lt;chr&gt; "lm", "lm", "lm", "lm", "lm", "lm", "lm", "lm", "lm", "lm", "l…</code></pre>
+</div>
+</div>
+<ul>
+<li>Show the bootstrapped results:</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>results <span class="sc">|&gt;</span> </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(model) <span class="sc">|&gt;</span> </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> log_mpg, <span class="at">estimate =</span> .pred) <span class="sc">|&gt;</span> </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">model</th>
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">lm</td>
+<td style="text-align: left;">rmse</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.1044851</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rf</td>
+<td style="text-align: left;">rmse</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.0885234</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">lm</td>
+<td style="text-align: left;">rsq</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.7914479</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rf</td>
+<td style="text-align: left;">rsq</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.8522723</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">lm</td>
+<td style="text-align: left;">mae</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.0778044</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rf</td>
+<td style="text-align: left;">mae</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.0636667</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ul>
+<li>Visualize the results:</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>results <span class="sc">|&gt;</span> </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> log_mpg, <span class="at">y =</span> .pred)) <span class="sc">+</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">lty =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"gray50"</span>) <span class="sc">+</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> id), <span class="at">size =</span> <span class="fl">1.5</span>, <span class="at">alpha =</span> <span class="fl">0.1</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> model) <span class="sc">+</span> </span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_obs_pred</span>() <span class="sc">+</span> </span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Predicted (log_mpg)"</span>,</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Actual (log_mpg)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Not_mtcars_AGAIN_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="tune-the-random-forest-model" class="level2">
+<h2 class="anchored" data-anchor-id="tune-the-random-forest-model">Tune the Random Forest model</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a random forest model specification</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>rf_spec <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>(<span class="at">mtry =</span> <span class="fu">tune</span>(),</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">min_n =</span> <span class="fu">tune</span>(),</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">trees =</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_engine</span>(<span class="st">"ranger"</span>, <span class="at">importance =</span> <span class="st">"impurity"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>rf_spec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Random Forest Model Specification (regression)
+
+Main Arguments:
+  mtry = tune()
+  trees = 1000
+  min_n = tune()
+
+Engine-Specific Arguments:
+  importance = impurity
+
+Computational engine: ranger </code></pre>
+</div>
+</div>
+<section id="cross-validation" class="level3">
+<h3 class="anchored" data-anchor-id="cross-validation">Cross Validation</h3>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>car_folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(car_train, <span class="at">v =</span> <span class="dv">10</span>, <span class="at">repeats =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="tune-the-model" class="level3">
+<h3 class="anchored" data-anchor-id="tune-the-model">Tune the model</h3>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The next code chunk will take 20 minutes or so to run. Make sure to cache the chunk so that you can rebuild your document without having the code chunk run each time the document is rendered.</p>
+</div>
+</div>
+<div class="cell" data-layout-align="center" data-hash="Not_mtcars_AGAIN_cache/html/unnamed-chunk-23_7e29a0d9b9e849395d6a078ff762384b">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>rf_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(log_mpg <span class="sc">~</span>.,  <span class="at">data =</span> car_train) </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>rf_wkfl <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(rf_recipe) <span class="sc">|&gt;</span> </span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(rf_spec)</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">321</span>)</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>rf_tune <span class="ot">&lt;-</span> <span class="fu">tune_grid</span>(rf_wkfl, <span class="at">resample =</span> car_folds, <span class="at">grid =</span> <span class="dv">32</span>)</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>rf_tune</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Tuning results
+# 10-fold cross-validation repeated 5 times 
+# A tibble: 50 × 5
+   splits           id      id2    .metrics          .notes          
+   &lt;list&gt;           &lt;chr&gt;   &lt;chr&gt;  &lt;list&gt;            &lt;list&gt;          
+ 1 &lt;split [823/92]&gt; Repeat1 Fold01 &lt;tibble [64 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 2 &lt;split [823/92]&gt; Repeat1 Fold02 &lt;tibble [64 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 3 &lt;split [823/92]&gt; Repeat1 Fold03 &lt;tibble [64 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 4 &lt;split [823/92]&gt; Repeat1 Fold04 &lt;tibble [64 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 5 &lt;split [823/92]&gt; Repeat1 Fold05 &lt;tibble [64 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 6 &lt;split [824/91]&gt; Repeat1 Fold06 &lt;tibble [64 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 7 &lt;split [824/91]&gt; Repeat1 Fold07 &lt;tibble [64 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 8 &lt;split [824/91]&gt; Repeat1 Fold08 &lt;tibble [64 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 9 &lt;split [824/91]&gt; Repeat1 Fold09 &lt;tibble [64 × 6]&gt; &lt;tibble [0 × 3]&gt;
+10 &lt;split [824/91]&gt; Repeat1 Fold10 &lt;tibble [64 × 6]&gt; &lt;tibble [0 × 3]&gt;
+# ℹ 40 more rows</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show_best</span>(rf_tune, <span class="at">metric =</span> <span class="st">"rmse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 8
+   mtry min_n .metric .estimator   mean     n std_err .config              
+  &lt;int&gt; &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;       &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;                
+1     6     2 rmse    standard   0.0797    50 0.00138 Preprocessor1_Model18
+2     8     4 rmse    standard   0.0804    50 0.00141 Preprocessor1_Model24
+3     5     5 rmse    standard   0.0808    50 0.00134 Preprocessor1_Model13
+4    11     6 rmse    standard   0.0815    50 0.00139 Preprocessor1_Model29
+5     7     9 rmse    standard   0.0824    50 0.00135 Preprocessor1_Model19</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>rf_param <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">mtry =</span> <span class="dv">6</span>, <span class="at">min_n =</span> <span class="dv">2</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>final_rf_wkfl <span class="ot">&lt;-</span> rf_wkfl <span class="sc">|&gt;</span> </span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">finalize_workflow</span>(rf_param)</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>final_rf_wkfl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>══ Workflow ════════════════════════════════════════════════════════════════════
+Preprocessor: Recipe
+Model: rand_forest()
+
+── Preprocessor ────────────────────────────────────────────────────────────────
+0 Recipe Steps
+
+── Model ───────────────────────────────────────────────────────────────────────
+Random Forest Model Specification (regression)
+
+Main Arguments:
+  mtry = 6
+  trees = 1000
+  min_n = 2
+
+Engine-Specific Arguments:
+  importance = impurity
+
+Computational engine: ranger </code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>final_rf_fit <span class="ot">&lt;-</span> final_rf_wkfl <span class="sc">|&gt;</span> </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(car_train)</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(final_rf_fit, <span class="at">new_data =</span> car_test) <span class="sc">|&gt;</span> </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> log_mpg, <span class="at">estimate =</span> .pred) <span class="ot">-&gt;</span> RF</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>RF <span class="sc">|&gt;</span> </span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">rmse</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.0783706</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rsq</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.8719969</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">mae</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.0555310</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Variable importance plot</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>vip<span class="sc">::</span><span class="fu">vip</span>(final_rf_fit) <span class="sc">+</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Not_mtcars_AGAIN_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R-squared plot</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(final_rf_fit, <span class="at">new_data =</span> car_test) <span class="sc">|&gt;</span> </span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> log_mpg, <span class="at">y =</span> .pred)) <span class="sc">+</span> </span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">lty =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_obs_pred</span>() <span class="sc">+</span> </span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Observed log_mpg"</span>,</span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted log_mpg"</span>,</span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"R-squared Plot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Not_mtcars_AGAIN_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
