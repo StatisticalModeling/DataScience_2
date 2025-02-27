@@ -142,6 +142,8 @@ Optional Resources:
 + Read [Multiple and Logistic Regression](https://mathr.appstate.edu/connect/content/808fcaf7-161a-481d-acec-20f5114e1537)
 
 + [Start Chapters 1 and 2 in _Modeling with Tidymodels in R_ on DataCamp](https://app.datacamp.com/groups/stt3850-s2025/assignments)---Due Feb 28 NLT 5:00 PM 
+
++ [Not `mtcars` AGAIN](../QuartoStuff/Not_mtcars_AGAIN.html)
     
 * * *
 
