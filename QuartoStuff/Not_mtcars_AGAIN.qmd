@@ -403,9 +403,10 @@ xgboost_spec
 ```{r}
 xgboost_recipe <- 
   recipe(formula = log_mpg ~  . , data = car_train) |> 
-  step_normalize(all_numeric_predictors()) |> 
   step_dummy(all_nominal_predictors(), one_hot = TRUE) |> 
-  step_zv(all_predictors()) 
+  step_zv(all_predictors())  |> 
+  step_normalize(all_numeric_predictors()) |> 
+  step_corr(all_numeric_predictors(), threshold = 0.9)
 ```
 
 
@@ -417,14 +418,45 @@ xgboost_workflow <-
 xgboost_workflow
 ```
 
+:::{.callout-tip}
+Use `cache: true` as the next chunk takes almost an hour
+:::
+
 ```{r}
 #| cache: true
-set.seed(48)
+set.seed(49)
 xgboost_tune <-
-  tune_grid(xgboost_workflow, resamples = car_folds, grid = 32)
+  tune_grid(xgboost_workflow, resamples = car_folds, grid = 64)
 xgboost_tune
 ```
 
+
+```{r}
+show_best(xgboost_tune, metric = "rmse")
+```
+
+
+```{r}
+xgboost_param <- tibble(trees = 2000, 
+                        min_n = 9, 
+                        tree_depth = 6, 
+                        learn_rate = 0.00681,
+                        loss_reduction = 0.0000000155, 
+                        sample_size = 0.771)
+final_xgboost_wkfl <- xgboost_workflow |> 
+  finalize_workflow(xgboost_param)
+final_xgboost_wkfl
+```
+
+```{r}
+final_xgboost_fit <- final_xgboost_wkfl |> 
+  fit(car_train)
+
+augment(final_xgboost_fit, new_data = car_test) |> 
+  metrics(truth = log_mpg, estimate = .pred) -> R5
+R5 |> 
+  knitr::kable()
+```
 
 
 
