@@ -1,0 +1,12 @@
+name: not_mtcars_again
+title: Not_mtcars_AGAIN
+username: arnholtat
+account: arnholtat
+server: mathr.appstate.edu
+hostUrl: https://mathr.appstate.edu/connect/__api__
+appId: 127
+bundleId: 331
+url: https://mathr.appstate.edu/connect/content/d668ab4b-4985-49fe-991f-0d7d2755e47e/
+version: 1
+asMultiple: FALSE
+asStatic: TRUE
