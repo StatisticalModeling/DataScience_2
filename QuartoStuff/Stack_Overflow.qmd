@@ -1,0 +1,341 @@
+---
+title: "Stack Overflow Developer Survey"
+date: last-modified
+date-format: "[Last modified on] MMMM DD, YYYY HH:mm:ss zzz"
+format: 
+  html: default
+  pdf: default
+editor: source
+---
+
+```{r include = FALSE}
+library(knitr) # packages
+library(tidyverse)
+library(scales)
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", comment = NA, message = FALSE,  warning = FALSE)
+```
+
+:::{.callout-note title="Crediting the materials" icon=false}
+This majority of the material in the first part of this document is taken from the free online course at [https://supervised-ml-course.netlify.app/](https://supervised-ml-course.netlify.app/) written by Julia Silge.
+:::
+
+Stack Overflow is the world's largest online community for developers, and you have probably used it to find an answer to a programming question. The second chapter of this course uses data from the annual Stack Overflow Developer Survey to practice predictive modeling and find which developers are more likely to work remotely.
+
+In [Not `mtcars` Again](./Not_mtcars_AGAIN.html), you practiced how to build regression models to predict fuel efficiency. Our second case study uses a dataset from the Stack Overflow Developer Survey.
+
+In this case study, you will predict whether a developer works remotely or not (i.e., in their company offices) from characteristics of these developers, like experience and size of the company. In this analysis, we will assume that a software developer can either work remotely, or not. What kind of model will you build? **Classification** To predict group membership or discrete class labels, use **classification models**.
+
+Anytime you are planning to implement modeling, it is always a good idea to explore your dataset. Start off this modeling analysis by checking out how many remote and non-remote developers you have to work with, where they live, and how much experience they have.
+
+### Instructions
+
+```{r}
+library(tidyverse)
+library(tidymodels)
+tidymodels_prefer()
+stack_overflow <- read_csv("../Data/stack_overflow.csv")
+```
+
+
+* Take a look at the `stack_overflow` object.
+
+```{r}
+# Take a look at stack_overflow
+glimpse(stack_overflow)
+```
+
+* In the calls to `count()`, check out the distributions for `remote` status first, and then `country`.
+
+```{r}
+# First count for `remote`
+stack_overflow %>% 
+    count(remote, sort = TRUE)
+
+# then count for `country`
+stack_overflow %>% 
+    count(country, sort = TRUE)
+```
+
+
+### Instructions
+
+Use the appropriate column from the data set so you can plot a boxplot with remote status on the x-axis and professional experience on the y-axis.
+
+```{r}
+ggplot(data = stack_overflow, 
+       aes(x = remote, y = years_coded_job)) +
+    geom_boxplot() +
+    labs(x = NULL,
+         y = "Years of professional coding experience") + 
+    theme_bw()
+```
+
+## Training and testing data
+
+Before you deal with the imbalance in the remote/not remote classes, first split your data into *training* and *testing* sets. You create subsets of your data for *training* and *testing* your model for the same reasons you did before: to reduce overfitting and obtain a more accurate estimate for how your model will perform on new data.
+
+### Instructions
+
+Create a data split that divides the original data into 80%/20% sections and about evenly divides the sections between the different classes of `remote`.
+
+```{r}
+stack_overflow <- stack_overflow |> 
+  mutate(remote = factor(remote, levels = c("Remote", "Not remote"))) |> 
+  mutate_if(is.character, factor)
+```
+
+
+* Create `stack_split`:
+
+    - For the first argument to `initial_split()`, use a value for `prop` of 0.8.
+
+    - For the second argument to `initial_split()`, stratify the split by `remote` status.
+
+```{r}
+# Create stack_select dataset
+stack_select <- stack_overflow |> 
+    select(-respondent)
+# Split the data into training and testing sets
+set.seed(1234)
+stack_split <- stack_select |> 
+    initial_split(prop = 0.8,
+                  strata = remote)
+
+stack_train <- training(stack_split)
+stack_test <- testing(stack_split)
+
+glimpse(stack_train)
+glimpse(stack_test)
+```
+
+## Dealing with imbalanced data
+
+You just took this data about which developers work remotely and which do not, and split it into testing and training sets. Before we go any further, we need to talk about the class imbalance in our dataset.
+
+## Preprocess with a recipe
+
+There are multiple possible approaches to dealing with class imbalance. ⚖️ Here, you will implement downsampling using the [`step_downsample()`](https://themis.tidymodels.org/reference/step_downsample.html) function from the [`themis`](https://themis.tidymodels.org/) package.
+
+### Instructions
+
+* Use a `recipe` to preprocess your training data.
+
+* Downsample this data with respect to the remote status of the developers.
+
+```{r}
+library(themis)
+stack_recipe <- recipe(remote ~ ., data = stack_train) |>  
+    step_downsample(remote)
+
+stack_recipe
+```
+
+## Downsampling
+
+Once your recipe is defined, you can estimate the parameters required to actually preprocess the data, and then extract the processed data. This typically isn’t necessary if you use a `workflow()` for modeling, but it can be helpful to diagnose problems or explore your preprocessing results.
+
+### Instructions
+
+* First, `prep()` the recipe.
+
+```{r}
+stack_prep <- prep(stack_recipe)
+```
+
+* Then, `bake()` the prepped recipe with `new_data = NULL` to see the processed training data.
+
+```{r}
+stack_down <- bake(stack_prep, new_data = NULL)
+
+stack_down |> 
+    count(remote)
+```
+
+:::{.callout-tip title="What `bake` does..."}
+When you `bake()` the prepped recipe `stack_prep` with `new_data = NULL`, you extract the processed (i.e. balanced) training data.
+:::
+
+## Understand downsampling
+
+Consider the original data set `stack_overflow`, the training set that you created `stack_train`, and the downsampled set you created `stack_down`. Both `stack_overflow` and `stack_train` have almost 10 times as many non-remote developers as remote developers.  
+
+How do the remote and non-remote developers in `stack_down` compare?  **There are the same number of remote and non-remote developers.**
+
+## Downsampling in your workflow
+
+We are starting to add more steps into the machine learning workflow. Think about when we implemented downsampling to deal with class imbalance. Which data set did we downsample?  **The training data**.  Adjusting class imbalance helps you train a model that performs better.
+
+## Predicting remote status
+
+Now that you have understood and implemented downsampling, or undersampling, we can finally get down to the business of building supervised machine learning models to predict which developers work remotely and which do not.
+
+## Train models
+
+Finally! 😁 It’s time to train predictive models for this data set of Stack Overflow Developer Survey responses. We will specify our machine learning models with parsnip, and use workflows for convenience.
+
+### Instructions
+
+* Specify a logistic regression model using `logistic_reg()`.
+
+```{r}
+## Build a logistic regression model
+glm_spec <- logistic_reg() |> 
+    set_engine("glm") |> 
+    set_mode("classification")
+glm_spec
+```
+
+* Build a `workflow()` to hold your modeling components.
+
+```{r}
+## Start a workflow (recipe only)
+stack_wf <- workflow() |> 
+    add_recipe(stack_recipe)
+stack_wf
+```
+
+* Add your model specification to your `workflow()` before fitting.
+
+```{r}
+## Add the model and fit the workflow
+stack_glm <- stack_wf |> 
+    add_model(glm_spec) |> 
+    fit(data = stack_train)
+
+# Print the fitted model
+stack_glm
+```
+
+### Instructions 
+
+Build a decision tree model with downsampling.
+
+* Specify a decision tree regression model using `decision_tree()`.
+
+```{r}
+## Build a decision tree model
+tree_spec <- decision_tree()  |>          
+    set_engine("rpart")  |>       
+    set_mode("classification") 
+```
+
+* Add your recipe `stack_recipe` to your `workflow()`.
+
+```{r}
+## Start a workflow (recipe only)
+stack_wf <- workflow()  |> 
+    add_recipe(stack_recipe)
+```
+
+* Fit your workflow, after you have added your model to it.
+
+```{r}
+## Add the model and fit the workflow
+stack_tree <- stack_wf  |> 
+    add_model(tree_spec)  |> 
+    fit(data = stack_train)
+
+# Print the fitted model
+stack_tree
+```
+
+* Graph the tree using `rpart.plot()` from the `rpart.plot` package.
+
+```{r}
+#| label: "fig-tree"
+#| fig-cap: "Tree model for predicting where a person works"
+stack_tree |> 
+  extract_fit_engine() |> 
+  rpart.plot::rpart.plot()
+```
+
+
+:::{.callout-tip title="Node explanation"}
+Each node  in @fig-tree shows:
+
+  * the predicted class (Remote or Not remote),
+  
+  * the predicted probability of `Not remote`,
+  
+  * the percentage of observations in the node.
+:::
+
+* Display the rules used to create @fig-tree.
+
+```{r}
+stack_tree |> 
+  extract_fit_engine() |> 
+  rpart.plot::rpart.rules()
+```
+
+## Confusion matrix
+
+A confusion matrix describes how well a classification model (like the ones you just trained!) performs. A confusion matrix tabulates how many examples in each class were correctly classified by a model. In your case, it will show you how many remote developers were classified as remote and how many non-remote developers were classified as non-remote; the confusion matrix also shows you how many were classified into the **wrong** categories.
+
+Here you will use the [`conf_mat()`](https://yardstick.tidymodels.org/reference/conf_mat.html) function from `yardstick` to evaluate the performance of the two models you trained, `stack_glm` and `stack_tree`. The models available in your environment were trained on the training data.
+
+### Instructions
+
+Print the confusion matrix for the `stack_glm` model on the `stack_test` data. If we wanted to compare more than two modeling options, we should definitely create some resampled data sets like we did in the first case study. This case study is already getting long, so let’s stick with the testing data.
+
+Note that the first argument to `conf_mat()` is truth and the second is `estimate`.
+
+```{r}
+results <- stack_test |> 
+    bind_cols(predict(stack_glm, stack_test) |> 
+                  rename(.pred_glm = .pred_class))
+# Confusion matrix for logistic regression model
+results |> 
+    conf_mat(truth = remote, estimate = .pred_glm)
+```
+
+### Instructions
+
+Print the confusion matrix for the `stack_tree` model on the `stack_test` data.
+
+```{r}
+results <- stack_test  |> 
+    bind_cols(predict(stack_tree, stack_test)  |> 
+                  rename(.pred_tree = .pred_class))
+
+# Confusion matrix for decision tree model
+results  |> 
+    conf_mat(truth = remote, estimate = .pred_tree)
+
+results  |> 
+    conf_mat(truth = remote, estimate = .pred_tree) |> 
+    summary()
+```
+
+## Classification model metrics
+
+The `conf_mat()` function is helpful but often you also want to store specific performance estimates for later, perhaps in a dataframe-friendly form. The yardstick package is built to handle such needs. For this kind of classification model, you might look at the positive or negative predictive value or perhaps overall accuracy.
+
+The models available in your environment, `stack_glm` and `stack_tree` were trained on the **training** data.
+
+### Instructions
+
+* Predict values for logistic regression (`stack_glm`) and decision tree (`stack_tree)`.
+
+```{r}
+results <- stack_test |> 
+    bind_cols(predict(stack_glm, stack_test) |> 
+                  rename(.pred_glm = .pred_class)) |> 
+    bind_cols(predict(stack_tree, stack_test) |> 
+                  rename(.pred_tree = .pred_class))
+knitr::kable(head(results |> select(.pred_glm, .pred_tree)))
+```
+
+
+* Calculate both accuracy and positive predictive value for these two models.
+
+```{r}
+## Calculate accuracy
+accuracy(results, truth = remote, estimate = .pred_glm)
+accuracy(results, truth = remote, estimate = .pred_tree)
+
+## Calculate positive predict value
+ppv(results, truth = remote, estimate = .pred_glm)
+ppv(results, truth = remote, estimate = .pred_tree)
+```
+

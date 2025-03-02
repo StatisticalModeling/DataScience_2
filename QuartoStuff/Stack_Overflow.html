@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Stack Overflow Developer Survey</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Stack_Overflow_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Stack_Overflow_files/libs/quarto-html/quarto.js"></script>
+<script src="Stack_Overflow_files/libs/quarto-html/popper.min.js"></script>
+<script src="Stack_Overflow_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Stack_Overflow_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Stack_Overflow_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Stack_Overflow_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Stack_Overflow_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Stack_Overflow_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Stack_Overflow_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="Stack_Overflow.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Stack Overflow Developer Survey</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">Last modified on March 02, 2025 14:08:13 Eastern Standard Time</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Crediting the materials">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Crediting the materials
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This majority of the material in the first part of this document is taken from the free online course at <a href="https://supervised-ml-course.netlify.app/">https://supervised-ml-course.netlify.app/</a> written by Julia Silge.</p>
+</div>
+</div>
+<p>Stack Overflow is the world’s largest online community for developers, and you have probably used it to find an answer to a programming question. The second chapter of this course uses data from the annual Stack Overflow Developer Survey to practice predictive modeling and find which developers are more likely to work remotely.</p>
+<p>In <a href="./Not_mtcars_AGAIN.html">Not <code>mtcars</code> Again</a>, you practiced how to build regression models to predict fuel efficiency. Our second case study uses a dataset from the Stack Overflow Developer Survey.</p>
+<p>In this case study, you will predict whether a developer works remotely or not (i.e., in their company offices) from characteristics of these developers, like experience and size of the company. In this analysis, we will assume that a software developer can either work remotely, or not. What kind of model will you build? <strong>Classification</strong> To predict group membership or discrete class labels, use <strong>classification models</strong>.</p>
+<p>Anytime you are planning to implement modeling, it is always a good idea to explore your dataset. Start off this modeling analysis by checking out how many remote and non-remote developers you have to work with, where they live, and how much experience they have.</p>
+<section id="instructions" class="level3">
+<h3 class="anchored" data-anchor-id="instructions">Instructions</h3>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tidymodels_prefer</span>()</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>stack_overflow <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../Data/stack_overflow.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Take a look at the <code>stack_overflow</code> object.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Take a look at stack_overflow</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(stack_overflow)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 6,991
+Columns: 22
+$ respondent                           &lt;dbl&gt; 3, 15, 18, 19, 26, 55, 62, 71, 73…
+$ country                              &lt;chr&gt; "United Kingdom", "United Kingdom…
+$ salary                               &lt;dbl&gt; 113750.000, 100000.000, 130000.00…
+$ years_coded_job                      &lt;dbl&gt; 20, 20, 20, 3, 16, 4, 1, 1, 20, 2…
+$ open_source                          &lt;lgl&gt; TRUE, FALSE, TRUE, FALSE, FALSE, …
+$ hobby                                &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, FAL…
+$ company_size_number                  &lt;dbl&gt; 10000, 5000, 1000, 10000, 10000, …
+$ remote                               &lt;chr&gt; "Not remote", "Remote", "Remote",…
+$ career_satisfaction                  &lt;dbl&gt; 8, 8, 9, 5, 7, 9, 5, 8, 8, 10, 7,…
+$ data_scientist                       &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ database_administrator               &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ desktop_applications_developer       &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ developer_with_stats_math_background &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ dev_ops                              &lt;lgl&gt; FALSE, FALSE, TRUE, FALSE, FALSE,…
+$ embedded_developer                   &lt;lgl&gt; FALSE, TRUE, TRUE, FALSE, FALSE, …
+$ graphic_designer                     &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ graphics_programming                 &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ machine_learning_specialist          &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ mobile_developer                     &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ quality_assurance_engineer           &lt;lgl&gt; FALSE, FALSE, TRUE, FALSE, FALSE,…
+$ systems_administrator                &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ web_developer                        &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, TRUE, T…</code></pre>
+</div>
+</div>
+<ul>
+<li>In the calls to <code>count()</code>, check out the distributions for <code>remote</code> status first, and then <code>country</code>.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># First count for `remote`</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>stack_overflow <span class="sc">%&gt;%</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(remote, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+  remote         n
+  &lt;chr&gt;      &lt;int&gt;
+1 Not remote  6273
+2 Remote       718</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># then count for `country`</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>stack_overflow <span class="sc">%&gt;%</span> </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(country, <span class="at">sort =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 2
+  country            n
+  &lt;chr&gt;          &lt;int&gt;
+1 United States   3486
+2 United Kingdom  1270
+3 Germany          950
+4 India            666
+5 Canada           619</code></pre>
+</div>
+</div>
+</section>
+<section id="instructions-1" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-1">Instructions</h3>
+<p>Use the appropriate column from the data set so you can plot a boxplot with remote status on the x-axis and professional experience on the y-axis.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> stack_overflow, </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(<span class="at">x =</span> remote, <span class="at">y =</span> years_coded_job)) <span class="sc">+</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">"Years of professional coding experience"</span>) <span class="sc">+</span> </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Stack_Overflow_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="training-and-testing-data" class="level2">
+<h2 class="anchored" data-anchor-id="training-and-testing-data">Training and testing data</h2>
+<p>Before you deal with the imbalance in the remote/not remote classes, first split your data into <em>training</em> and <em>testing</em> sets. You create subsets of your data for <em>training</em> and <em>testing</em> your model for the same reasons you did before: to reduce overfitting and obtain a more accurate estimate for how your model will perform on new data.</p>
+<section id="instructions-2" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-2">Instructions</h3>
+<p>Create a data split that divides the original data into 80%/20% sections and about evenly divides the sections between the different classes of <code>remote</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>stack_overflow <span class="ot">&lt;-</span> stack_overflow <span class="sc">|&gt;</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">remote =</span> <span class="fu">factor</span>(remote, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Remote"</span>, <span class="st">"Not remote"</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate_if</span>(is.character, factor)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li><p>Create <code>stack_split</code>:</p>
+<ul>
+<li><p>For the first argument to <code>initial_split()</code>, use a value for <code>prop</code> of 0.8.</p></li>
+<li><p>For the second argument to <code>initial_split()</code>, stratify the split by <code>remote</code> status.</p></li>
+</ul></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create stack_select dataset</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>stack_select <span class="ot">&lt;-</span> stack_overflow <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>respondent)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Split the data into training and testing sets</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>stack_split <span class="ot">&lt;-</span> stack_select <span class="sc">|&gt;</span> </span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">initial_split</span>(<span class="at">prop =</span> <span class="fl">0.8</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">strata =</span> remote)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>stack_train <span class="ot">&lt;-</span> <span class="fu">training</span>(stack_split)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>stack_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(stack_split)</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(stack_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 5,592
+Columns: 21
+$ country                              &lt;fct&gt; United Kingdom, United States, Ge…
+$ salary                               &lt;dbl&gt; 113750.000, 175000.000, 64516.129…
+$ years_coded_job                      &lt;dbl&gt; 20, 16, 4, 1, 13, 7, 17, 1, 1, 10…
+$ open_source                          &lt;lgl&gt; TRUE, FALSE, FALSE, FALSE, FALSE,…
+$ hobby                                &lt;lgl&gt; TRUE, TRUE, FALSE, TRUE, TRUE, TR…
+$ company_size_number                  &lt;dbl&gt; 10000, 10000, 1000, 5000, 20, 20,…
+$ remote                               &lt;fct&gt; Not remote, Not remote, Not remot…
+$ career_satisfaction                  &lt;dbl&gt; 8, 7, 9, 5, 7, 8, 9, 10, 5, 8, 7,…
+$ data_scientist                       &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ database_administrator               &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ desktop_applications_developer       &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ developer_with_stats_math_background &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ dev_ops                              &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ embedded_developer                   &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ graphic_designer                     &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ graphics_programming                 &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ machine_learning_specialist          &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ mobile_developer                     &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ quality_assurance_engineer           &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ systems_administrator                &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ web_developer                        &lt;lgl&gt; FALSE, TRUE, TRUE, TRUE, TRUE, FA…</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(stack_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 1,399
+Columns: 21
+$ country                              &lt;fct&gt; United States, United States, Ger…
+$ salary                               &lt;dbl&gt; 82500.000, 65000.000, 53763.441, …
+$ years_coded_job                      &lt;dbl&gt; 3, 1, 4, 1, 14, 1, 7, 9, 4, 20, 6…
+$ open_source                          &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, FALSE, …
+$ hobby                                &lt;lgl&gt; TRUE, TRUE, FALSE, FALSE, TRUE, T…
+$ company_size_number                  &lt;dbl&gt; 10000, 20, 5000, 10, 20, 10000, 1…
+$ remote                               &lt;fct&gt; Not remote, Not remote, Not remot…
+$ career_satisfaction                  &lt;dbl&gt; 5, 8, 7, 9, 7, 8, 7, 6, 5, 10, 10…
+$ data_scientist                       &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ database_administrator               &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, TRUE,…
+$ desktop_applications_developer       &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ developer_with_stats_math_background &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ dev_ops                              &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, TRUE,…
+$ embedded_developer                   &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ graphic_designer                     &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ graphics_programming                 &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ machine_learning_specialist          &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ mobile_developer                     &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ quality_assurance_engineer           &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE…
+$ systems_administrator                &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, TRUE,…
+$ web_developer                        &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRU…</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="dealing-with-imbalanced-data" class="level2">
+<h2 class="anchored" data-anchor-id="dealing-with-imbalanced-data">Dealing with imbalanced data</h2>
+<p>You just took this data about which developers work remotely and which do not, and split it into testing and training sets. Before we go any further, we need to talk about the class imbalance in our dataset.</p>
+</section>
+<section id="preprocess-with-a-recipe" class="level2">
+<h2 class="anchored" data-anchor-id="preprocess-with-a-recipe">Preprocess with a recipe</h2>
+<p>There are multiple possible approaches to dealing with class imbalance. ⚖️ Here, you will implement downsampling using the <a href="https://themis.tidymodels.org/reference/step_downsample.html"><code>step_downsample()</code></a> function from the <a href="https://themis.tidymodels.org/"><code>themis</code></a> package.</p>
+<section id="instructions-3" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-3">Instructions</h3>
+<ul>
+<li><p>Use a <code>recipe</code> to preprocess your training data.</p></li>
+<li><p>Downsample this data with respect to the remote status of the developers.</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(themis)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>stack_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(remote <span class="sc">~</span> ., <span class="at">data =</span> stack_train) <span class="sc">|&gt;</span>  </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">step_downsample</span>(remote)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>stack_recipe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="downsampling" class="level2">
+<h2 class="anchored" data-anchor-id="downsampling">Downsampling</h2>
+<p>Once your recipe is defined, you can estimate the parameters required to actually preprocess the data, and then extract the processed data. This typically isn’t necessary if you use a <code>workflow()</code> for modeling, but it can be helpful to diagnose problems or explore your preprocessing results.</p>
+<section id="instructions-4" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-4">Instructions</h3>
+<ul>
+<li>First, <code>prep()</code> the recipe.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>stack_prep <span class="ot">&lt;-</span> <span class="fu">prep</span>(stack_recipe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Then, <code>bake()</code> the prepped recipe with <code>new_data = NULL</code> to see the processed training data.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>stack_down <span class="ot">&lt;-</span> <span class="fu">bake</span>(stack_prep, <span class="at">new_data =</span> <span class="cn">NULL</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>stack_down <span class="sc">|&gt;</span> </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(remote)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 2
+  remote         n
+  &lt;fct&gt;      &lt;int&gt;
+1 Remote       574
+2 Not remote   574</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="What `bake` does...">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+What <code>bake</code> does…
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When you <code>bake()</code> the prepped recipe <code>stack_prep</code> with <code>new_data = NULL</code>, you extract the processed (i.e.&nbsp;balanced) training data.</p>
+</div>
+</div>
+</section>
+</section>
+<section id="understand-downsampling" class="level2">
+<h2 class="anchored" data-anchor-id="understand-downsampling">Understand downsampling</h2>
+<p>Consider the original data set <code>stack_overflow</code>, the training set that you created <code>stack_train</code>, and the downsampled set you created <code>stack_down</code>. Both <code>stack_overflow</code> and <code>stack_train</code> have almost 10 times as many non-remote developers as remote developers.</p>
+<p>How do the remote and non-remote developers in <code>stack_down</code> compare? <strong>There are the same number of remote and non-remote developers.</strong></p>
+</section>
+<section id="downsampling-in-your-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="downsampling-in-your-workflow">Downsampling in your workflow</h2>
+<p>We are starting to add more steps into the machine learning workflow. Think about when we implemented downsampling to deal with class imbalance. Which data set did we downsample? <strong>The training data</strong>. Adjusting class imbalance helps you train a model that performs better.</p>
+</section>
+<section id="predicting-remote-status" class="level2">
+<h2 class="anchored" data-anchor-id="predicting-remote-status">Predicting remote status</h2>
+<p>Now that you have understood and implemented downsampling, or undersampling, we can finally get down to the business of building supervised machine learning models to predict which developers work remotely and which do not.</p>
+</section>
+<section id="train-models" class="level2">
+<h2 class="anchored" data-anchor-id="train-models">Train models</h2>
+<p>Finally! 😁 It’s time to train predictive models for this data set of Stack Overflow Developer Survey responses. We will specify our machine learning models with parsnip, and use workflows for convenience.</p>
+<section id="instructions-5" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-5">Instructions</h3>
+<ul>
+<li>Specify a logistic regression model using <code>logistic_reg()</code>.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Build a logistic regression model</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>glm_spec <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_engine</span>(<span class="st">"glm"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>glm_spec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Logistic Regression Model Specification (classification)
+
+Computational engine: glm </code></pre>
+</div>
+</div>
+<ul>
+<li>Build a <code>workflow()</code> to hold your modeling components.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Start a workflow (recipe only)</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>stack_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_recipe</span>(stack_recipe)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>stack_wf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>══ Workflow ════════════════════════════════════════════════════════════════════
+Preprocessor: Recipe
+Model: None
+
+── Preprocessor ────────────────────────────────────────────────────────────────
+1 Recipe Step
+
+• step_downsample()</code></pre>
+</div>
+</div>
+<ul>
+<li>Add your model specification to your <code>workflow()</code> before fitting.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add the model and fit the workflow</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>stack_glm <span class="ot">&lt;-</span> stack_wf <span class="sc">|&gt;</span> </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_model</span>(glm_spec) <span class="sc">|&gt;</span> </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fit</span>(<span class="at">data =</span> stack_train)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the fitted model</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>stack_glm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>══ Workflow [trained] ══════════════════════════════════════════════════════════
+Preprocessor: Recipe
+Model: logistic_reg()
+
+── Preprocessor ────────────────────────────────────────────────────────────────
+1 Recipe Step
+
+• step_downsample()
+
+── Model ───────────────────────────────────────────────────────────────────────
+
+Call:  stats::glm(formula = ..y ~ ., family = stats::binomial, data = data)
+
+Coefficients:
+                             (Intercept)  
+                               2.587e+00  
+                          countryGermany  
+                               4.730e-01  
+                            countryIndia  
+                              -1.218e+00  
+                   countryUnited Kingdom  
+                               2.127e-01  
+                    countryUnited States  
+                              -4.732e-01  
+                                  salary  
+                              -6.372e-06  
+                         years_coded_job  
+                              -4.959e-02  
+                         open_sourceTRUE  
+                              -3.692e-01  
+                               hobbyTRUE  
+                              -2.325e-01  
+                     company_size_number  
+                               4.979e-05  
+                     career_satisfaction  
+                              -1.253e-01  
+                      data_scientistTRUE  
+                              -9.083e-02  
+              database_administratorTRUE  
+                              -2.924e-01  
+      desktop_applications_developerTRUE  
+                               1.559e-01  
+developer_with_stats_math_backgroundTRUE  
+                               5.614e-02  
+                             dev_opsTRUE  
+                               2.424e-01  
+                  embedded_developerTRUE  
+                               1.113e-01  
+                    graphic_designerTRUE  
+                               4.943e-01  
+                graphics_programmingTRUE  
+                              -4.932e-01  
+         machine_learning_specialistTRUE  
+                               5.468e-01  
+                    mobile_developerTRUE  
+                              -2.298e-01  
+          quality_assurance_engineerTRUE  
+                               5.156e-01  
+               systems_administratorTRUE  
+                              -4.082e-01  
+
+...
+and 6 more lines.</code></pre>
+</div>
+</div>
+</section>
+<section id="instructions-6" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-6">Instructions</h3>
+<p>Build a decision tree model with downsampling.</p>
+<ul>
+<li>Specify a decision tree regression model using <code>decision_tree()</code>.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Build a decision tree model</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>tree_spec <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>()  <span class="sc">|&gt;</span>          </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_engine</span>(<span class="st">"rpart"</span>)  <span class="sc">|&gt;</span>       </span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_mode</span>(<span class="st">"classification"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Add your recipe <code>stack_recipe</code> to your <code>workflow()</code>.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Start a workflow (recipe only)</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>stack_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>()  <span class="sc">|&gt;</span> </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_recipe</span>(stack_recipe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Fit your workflow, after you have added your model to it.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add the model and fit the workflow</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>stack_tree <span class="ot">&lt;-</span> stack_wf  <span class="sc">|&gt;</span> </span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_model</span>(tree_spec)  <span class="sc">|&gt;</span> </span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fit</span>(<span class="at">data =</span> stack_train)</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the fitted model</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>stack_tree</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>══ Workflow [trained] ══════════════════════════════════════════════════════════
+Preprocessor: Recipe
+Model: decision_tree()
+
+── Preprocessor ────────────────────────────────────────────────────────────────
+1 Recipe Step
+
+• step_downsample()
+
+── Model ───────────────────────────────────────────────────────────────────────
+n= 1148 
+
+node), split, n, loss, yval, (yprob)
+      * denotes terminal node
+
+1) root 1148 574 Remote (0.5000000 0.5000000)  
+  2) salary&gt;=87750 472 163 Remote (0.6546610 0.3453390) *
+  3) salary&lt; 87750 676 265 Not remote (0.3920118 0.6079882)  
+    6) company_size_number&lt; 5.5 95  30 Remote (0.6842105 0.3157895) *
+    7) company_size_number&gt;=5.5 581 200 Not remote (0.3442341 0.6557659) *</code></pre>
+</div>
+</div>
+<ul>
+<li>Graph the tree using <code>rpart.plot()</code> from the <code>rpart.plot</code> package.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>stack_tree <span class="sc">|&gt;</span> </span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_fit_engine</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  rpart.plot<span class="sc">::</span><span class="fu">rpart.plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-tree" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="Stack_Overflow_files/figure-html/fig-tree-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: Tree model for predicting where a person works</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Node explanation">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Node explanation
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Each node in <a href="#fig-tree">Figure&nbsp;1</a> shows:</p>
+<ul>
+<li><p>the predicted class (Remote or Not remote),</p></li>
+<li><p>the predicted probability of <code>Not remote</code>,</p></li>
+<li><p>the percentage of observations in the node.</p></li>
+</ul>
+</div>
+</div>
+<ul>
+<li>Display the rules used to create <a href="#fig-tree">Figure&nbsp;1</a>.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>stack_tree <span class="sc">|&gt;</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_fit_engine</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  rpart.plot<span class="sc">::</span><span class="fu">rpart.rules</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  ..y                                                  
+ 0.32 when salary &lt;  87750 &amp; company_size_number &lt;  5.5
+ 0.35 when salary &gt;= 87750                             
+ 0.66 when salary &lt;  87750 &amp; company_size_number &gt;= 5.5</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="confusion-matrix" class="level2">
+<h2 class="anchored" data-anchor-id="confusion-matrix">Confusion matrix</h2>
+<p>A confusion matrix describes how well a classification model (like the ones you just trained!) performs. A confusion matrix tabulates how many examples in each class were correctly classified by a model. In your case, it will show you how many remote developers were classified as remote and how many non-remote developers were classified as non-remote; the confusion matrix also shows you how many were classified into the <strong>wrong</strong> categories.</p>
+<p>Here you will use the <a href="https://yardstick.tidymodels.org/reference/conf_mat.html"><code>conf_mat()</code></a> function from <code>yardstick</code> to evaluate the performance of the two models you trained, <code>stack_glm</code> and <code>stack_tree</code>. The models available in your environment were trained on the training data.</p>
+<section id="instructions-7" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-7">Instructions</h3>
+<p>Print the confusion matrix for the <code>stack_glm</code> model on the <code>stack_test</code> data. If we wanted to compare more than two modeling options, we should definitely create some resampled data sets like we did in the first case study. This case study is already getting long, so let’s stick with the testing data.</p>
+<p>Note that the first argument to <code>conf_mat()</code> is truth and the second is <code>estimate</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> stack_test <span class="sc">|&gt;</span> </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(<span class="fu">predict</span>(stack_glm, stack_test) <span class="sc">|&gt;</span> </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rename</span>(<span class="at">.pred_glm =</span> .pred_class))</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Confusion matrix for logistic regression model</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>results <span class="sc">|&gt;</span> </span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">conf_mat</span>(<span class="at">truth =</span> remote, <span class="at">estimate =</span> .pred_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            Truth
+Prediction   Remote Not remote
+  Remote         86        424
+  Not remote     58        831</code></pre>
+</div>
+</div>
+</section>
+<section id="instructions-8" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-8">Instructions</h3>
+<p>Print the confusion matrix for the <code>stack_tree</code> model on the <code>stack_test</code> data.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> stack_test  <span class="sc">|&gt;</span> </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(<span class="fu">predict</span>(stack_tree, stack_test)  <span class="sc">|&gt;</span> </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rename</span>(<span class="at">.pred_tree =</span> .pred_class))</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Confusion matrix for decision tree model</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>results  <span class="sc">|&gt;</span> </span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">conf_mat</span>(<span class="at">truth =</span> remote, <span class="at">estimate =</span> .pred_tree)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            Truth
+Prediction   Remote Not remote
+  Remote         94        401
+  Not remote     50        854</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>results  <span class="sc">|&gt;</span> </span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">conf_mat</span>(<span class="at">truth =</span> remote, <span class="at">estimate =</span> .pred_tree) <span class="sc">|&gt;</span> </span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 13 × 3
+   .metric              .estimator .estimate
+   &lt;chr&gt;                &lt;chr&gt;          &lt;dbl&gt;
+ 1 accuracy             binary         0.678
+ 2 kap                  binary         0.160
+ 3 sens                 binary         0.653
+ 4 spec                 binary         0.680
+ 5 ppv                  binary         0.190
+ 6 npv                  binary         0.945
+ 7 mcc                  binary         0.212
+ 8 j_index              binary         0.333
+ 9 bal_accuracy         binary         0.667
+10 detection_prevalence binary         0.354
+11 precision            binary         0.190
+12 recall               binary         0.653
+13 f_meas               binary         0.294</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="classification-model-metrics" class="level2">
+<h2 class="anchored" data-anchor-id="classification-model-metrics">Classification model metrics</h2>
+<p>The <code>conf_mat()</code> function is helpful but often you also want to store specific performance estimates for later, perhaps in a dataframe-friendly form. The yardstick package is built to handle such needs. For this kind of classification model, you might look at the positive or negative predictive value or perhaps overall accuracy.</p>
+<p>The models available in your environment, <code>stack_glm</code> and <code>stack_tree</code> were trained on the <strong>training</strong> data.</p>
+<section id="instructions-9" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-9">Instructions</h3>
+<ul>
+<li>Predict values for logistic regression (<code>stack_glm</code>) and decision tree (<code>stack_tree)</code>.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> stack_test <span class="sc">|&gt;</span> </span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(<span class="fu">predict</span>(stack_glm, stack_test) <span class="sc">|&gt;</span> </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rename</span>(<span class="at">.pred_glm =</span> .pred_class)) <span class="sc">|&gt;</span> </span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(<span class="fu">predict</span>(stack_tree, stack_test) <span class="sc">|&gt;</span> </span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rename</span>(<span class="at">.pred_tree =</span> .pred_class))</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">head</span>(results <span class="sc">|&gt;</span> <span class="fu">select</span>(.pred_glm, .pred_tree)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.pred_glm</th>
+<th style="text-align: left;">.pred_tree</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Not remote</td>
+<td style="text-align: left;">Not remote</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Not remote</td>
+<td style="text-align: left;">Not remote</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Not remote</td>
+<td style="text-align: left;">Not remote</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Not remote</td>
+<td style="text-align: left;">Not remote</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Remote</td>
+<td style="text-align: left;">Remote</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Not remote</td>
+<td style="text-align: left;">Not remote</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<ul>
+<li>Calculate both accuracy and positive predictive value for these two models.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Calculate accuracy</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">accuracy</span>(results, <span class="at">truth =</span> remote, <span class="at">estimate =</span> .pred_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  .metric  .estimator .estimate
+  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+1 accuracy binary         0.655</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">accuracy</span>(results, <span class="at">truth =</span> remote, <span class="at">estimate =</span> .pred_tree)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  .metric  .estimator .estimate
+  &lt;chr&gt;    &lt;chr&gt;          &lt;dbl&gt;
+1 accuracy binary         0.678</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Calculate positive predict value</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ppv</span>(results, <span class="at">truth =</span> remote, <span class="at">estimate =</span> .pred_glm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 ppv     binary         0.169</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ppv</span>(results, <span class="at">truth =</span> remote, <span class="at">estimate =</span> .pred_tree)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 ppv     binary         0.190</code></pre>
+</div>
+</div>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
