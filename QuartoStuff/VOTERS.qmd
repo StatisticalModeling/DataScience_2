@@ -1,0 +1,104 @@
+---
+title: "Get out the vote"
+date: last-modified
+date-format: "[Last modified on] MMMM DD, YYYY HH:mm:ss zzz"
+format: 
+  html: default
+  pdf: default
+editor: source
+---
+
+```{r include = FALSE}
+library(knitr) # packages
+library(tidyverse)
+library(scales)
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", comment = NA, message = FALSE,  warning = FALSE)
+```
+
+:::{.callout-note title="Crediting the materials" icon=false}
+This majority of the material in the first part of this document is taken from the free online course at [https://supervised-ml-course.netlify.app/](https://supervised-ml-course.netlify.app/) written by Julia Silge.
+:::
+
+
+In this case study, you will use data on attitudes and beliefs in the United States to predict voter turnout. You will apply your skills in dealing with imbalanced data and explore more resampling options.
+
+
+## Predicting voter turnout from survey data 🗳
+
+So far, you have built one regression model and one classification model, and now it's time for our third case study. In this case study, we are going to use a survey of voters in the United States to predict voter turnout, whether someone did or did not vote, based on their responses on the survey.
+
+## Choose an appropriate model
+
+In this case study, you will predict whether a person voted or not in the United States 2016 presidential election from responses that person gave on a survey. The survey focuses on opinions about political and economic topics. What kind of model will you build?
+
+**To predict group membership or discrete class labels, use classification models.**
+
+## Explore the VOTER data
+
+To do a good job with predictive modeling, you need to explore your dataset to understand it first. Start off this modeling analysis by checking out how many people voted or did not vote, and the answers to a few questions. The answers to the questions on this survey have been coded as integers, and the corresponding text has been provided for you here.
+
+### Instructions
+
+* Load `tidyverse`.
+
+```{r}
+# Load tidyverse
+library(tidyverse)
+```
+
+* Take a look at voters to check out the data.
+
+```{r}
+voters <- read_csv("../Data/voters.csv")
+# Take a look at voters
+glimpse(voters)
+```
+
+* In the call to `count()`, use the appropriate variable (`turnout16_2016`) to see how many examples you have of those who voted and did not vote.
+
+```{r}
+# How many people voted?
+voters |> 
+    count(turnout16_2016)
+```
+
+* Check out how three responses on the survey vary with voting behavior by using `group_by()` and `summarise()`.
+
+```{r}
+# How do the responses on the survey vary with voting behavior?
+voters |> 
+    group_by(turnout16_2016) |> 
+    summarise(`Elections don't matter` = mean(RIGGED_SYSTEM_1_2016 <= 2),
+              `Economy is getting better` = mean(econtrend_2016 == 1),
+              `Crime is very important` = mean(imiss_a_2016 == 2))
+```
+
+## Visualization for exploratory analysis
+
+Visualization is a powerful tool for exploratory data analysis. Plotting your data before you start modeling gives you the opportunity to understand its characteristics. 📈
+
+### Instructions
+
+* Call `ggplot()` to initialize a new plot.
+
+* Use the correct `ggplot2` geom to make a histogram of survey responses for one question (`econtrend_2016`) and examine the difference by voting behavior.
+
+On this question about how the economy is doing, an answer of 1 indicates “getting better”, 2 indicates “about the same”, 3 indicates “getting worse”, and 4 indicates “don’t know”.
+
+```{r}
+voters <- voters |> 
+    mutate(turnout16_2016 = factor(turnout16_2016))
+
+## Visualize difference by voter turnout
+voters %>%
+    ggplot(aes(econtrend_2016, after_stat(density), fill = turnout16_2016)) +
+    geom_histogram(alpha = 0.5, position = "identity", binwidth = 1) +
+    labs(title = "Overall, is the economy getting better or worse?")
+### Really not the correct graph
+
+ggplot(data = voters, aes(x = econtrend_2016, fill = turnout16_2016)) + 
+  geom_bar() + 
+  facet_wrap(vars(turnout16_2016))
+```
+
+
