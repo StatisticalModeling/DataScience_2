@@ -19,16 +19,6 @@ knitr::opts_chunk$set(echo = TRUE, fig.align = "center", comment = NA, message =
 This majority of the material in the first part of this document is taken from the free online course at [https://supervised-ml-course.netlify.app/](https://supervised-ml-course.netlify.app/) written by Julia Silge.
 :::
 
-Stack Overflow is the world's largest online community for developers, and you have probably used it to find an answer to a programming question. The second chapter of this course uses data from the annual Stack Overflow Developer Survey to practice predictive modeling and find which developers are more likely to work remotely.
-
-In [Not `mtcars` Again](./Not_mtcars_AGAIN.html), you practiced how to build regression models to predict fuel efficiency. Our second case study uses a dataset from the Stack Overflow Developer Survey.
-
-In this case study, you will predict whether a developer works remotely or not (i.e., in their company offices) from characteristics of these developers, like experience and size of the company. In this analysis, we will assume that a software developer can either work remotely, or not. What kind of model will you build? **Classification** To predict group membership or discrete class labels, use **classification models**.
-
-Anytime you are planning to implement modeling, it is always a good idea to explore your dataset. Start off this modeling analysis by checking out how many remote and non-remote developers you have to work with, where they live, and how much experience they have.
-
-### Instructions
-
 ```{r}
 library(tidyverse)
 library(tidymodels)
@@ -36,6 +26,35 @@ tidymodels_prefer()
 stack_overflow <- read_csv("../Data/stack_overflow.csv")
 ```
 
+## Essential copying and pasting from stack Overflow
+
+In [Not `mtcars` Again](./Not_mtcars_AGAIN.html), you practiced how to build regression models to predict fuel efficiency. Our second case study uses a dataset from the Stack Overflow Developer Survey.
+
+Stack Overflow is the world's largest, most trusted online community for developers (I bet you have used it!) and every year there is a large survey of developers, to learn about developers' opinions on different technologies, work habits, and so forth.
+
+In this case study, you are going to use data from the annual Developer Survey to build predictive models. First, you'll do exploratory data analysis to understand what's in the dataset, and how some of the quantities in the survey are distributed, and then you'll practice your machine learning skills by training classification models.
+
+Every year, the data for the Stack Overflow Developer Survey is made public, so this is all data that you can access and analyze yourself. I've already done some data cleaning and preparation, but we'll practice some of that in this chapter as well. There are a lot of predictive modeling possibilities in this dataset.  Analyze the [data](https://survey.stackoverflow.co/) yourself!
+
+The specific question we are going to address is what makes a developer more likely to work remotely. Developers can work in their company offices or they can work remotely, and it turns out that there are specific characteristics of developers, such as the size of the company that they work for, how much experience they have, or where in the world they live, that affect how likely they are to be a remote developer.
+
+That is what you are going to model! One of the things you'll notice right away about this dataset, however, is that the proportion of developers who are remote and those who work in an office is not balanced. This kind of class imbalance can have a significant negative impact on model performance, so we are going to have to cope with it. We will need to preprocess our data before we model it.
+
+```{r}
+stack_overflow  |>  
+    count(remote)
+```
+
+Let's start by exploring this new dataset, and then splitting our data into testing and training sets.
+
+## Choose an appropriate model
+
+In this case study, you will predict whether a developer works remotely or not (i.e., in their company offices) from characteristics of these developers, like experience and size of the company. In this analysis, we will assume that a software developer can either work remotely, or not. What kind of model will you build? To predict group membership or discrete class labels, use **classification models**.
+
+
+Anytime you are planning to implement modeling, it is always a good idea to explore your dataset. Start off this modeling analysis by checking out how many remote and non-remote developers you have to work with, where they live, and how much experience they have.
+
+### Instructions
 
 * Take a look at the `stack_overflow` object.
 
@@ -112,6 +131,69 @@ glimpse(stack_test)
 
 You just took this data about which developers work remotely and which do not, and split it into testing and training sets. Before we go any further, we need to talk about the class imbalance in our dataset.
 
+It's good that we're going to talk about class imbalance because it comes up a lot in real life. In many practical, real-world situations, there are a lot more of one kind of category in a dataset than another. In our example here, there are about ten times more non-remote developers than there are remote developers. What can happen in a situation like this is that a machine learning model will always predict the majority class or otherwise exhibit poor performance on the metrics that we care about.
+
+Class imbalance
+
+  * is a common problem!
+
+  * often negatively affects the performance of your model 🙀
+
+
+```{r}
+stack_overflow  |>  
+    count(remote)
+```
+
+This is in fact what happens with our dataset here (I know because I tested it out ✅) so we need to do something to address this imbalance. There are a variety of options available to you, which vary from quite simple to more complex, and we're going to start with a simple option.
+
+n this case study, we're going to implement **downsampling**, also known as undersampling. With this approach, we randomly remove observations from the majority class until it's the same size as the minority class and both classes can have the same effect on the machine learning model we're training.
+
+Are we really going to throw out a large percentage of our data here?! 😱 Yes! We do this because such an approach can be helpful at producing a useful model that can recognize both classes, instead of only one.
+
+### Downsampling
+
+  * Remove some of the majority class so it has less effect on the predictive model
+  
+  * Randomly remove examples from the majority class until it is the same size as the minority class
+
+In our case study, there are roughly ten times more non-remote developers compared to the remote developers.
+
+When we implement downsampling, we remove some of the non-remote developers until the proportion is equal and the classes are balanced. This approach is simple to implement and understand, but there are other more complex approaches to class imbalance available as well.
+
+### Implementing downsampling
+
+```{r}
+library(themis)
+stack_recipe <- recipe(remote ~ ., data = stack_train) |>  
+    step_downsample(remote)
+```
+
+Downsampling is an example of a preprocessing step for modeling. In tidymodels, you can preprocess your data using [recipes](https://recipes.tidymodels.org/). The recipe shown above has one preprocessing step (downsampling, that comes from an extra add-on package called [`themis`](https://themis.tidymodels.org/)), but you can implement many steps on one dataset during preprocessing. There are an enormous number of different kinds of preprocessing you can do, from creating indicator variables to implementing principal component analysis to extracting date features and more.
+
+When you `prep()` a recipe, you estimate the required parameters from a data set for the preprocessing steps in that recipe (as an example, think about finding the mean and standard deviation if you are centering and scaling).
+
+When you `bake()` a prepped recipe with `new_data = NULL`, you get the preprocessed data back out.
+
+You don't typically need to `prep()` and `bake()` recipes when you use `tidymodels`, but they are helpful functions to have in your toolkit for confirming that recipes are doing what you expect.
+
+### Implementing downsampling
+
+```{r}
+stack_prep <- prep(stack_recipe)
+bake(stack_prep, new_data = NULL)
+```
+
+### When do you balance classes? 🤔
+
+* Training set?
+
+* ~~Testing set?~~
+
+Does it make sense to try to change the class imbalance of the test set? No, it does not! 🙅 You want the set test to look like new data that your model will see in the future, so you don't want to mess with the class balance there; you want to see how your model will perform on imbalanced data, even if you have trained it on artificially balanced data.
+
+All right, we've talked about some serious machine learning tools here and it's time to put them into practice.
+
 ## Preprocess with a recipe
 
 There are multiple possible approaches to dealing with class imbalance. ⚖️ Here, you will implement downsampling using the [`step_downsample()`](https://themis.tidymodels.org/reference/step_downsample.html) function from the [`themis`](https://themis.tidymodels.org/) package.
@@ -168,6 +250,55 @@ We are starting to add more steps into the machine learning workflow. Think abou
 ## Predicting remote status
 
 Now that you have understood and implemented downsampling, or undersampling, we can finally get down to the business of building supervised machine learning models to predict which developers work remotely and which do not.
+
+Unlike the first case study, when you built regression models to predict a numeric or continuous variable, in this case study you are going to build classification models, to predict the class: **remote** or **not remote**. We are going to stick with two methods to understand and implement classification models, logistic regression and a decision tree.
+
+There are lots of other options, and one of the great characteristics of using tidymodels for predictive modeling is that if you want to try something else, you can extend your work to new model types within the same framework. 💁
+
+We are going to use model specifications from `parsnip` to set up the models. Notice here that one model is logistic regression while the other is a decision tree. 
+
+### Logistic Regression
+
+```{r}
+glm_spec <- logistic_reg()  |> 
+    set_engine("glm")
+```
+
+### Decision tree
+
+```{r}
+tree_spec <- decision_tree() |>         
+    set_engine("rpart") |>      
+    set_mode("classification") 
+```
+
+How do we combine these model specifications with the data preprocessing we need to do from our recipe? 🤔
+
+You have a few options for that, but one straightforward way is to use a `workflow()`, an object that makes it easier to carry around pieces of, well, modeling workflows! The components of a `workflow()` go together like LEGO blocks; you add a preprocessor like a `recipe` or a `formula`, and a `model`.
+
+If you don't add one of those components (for example, `stack_wf` below) the `workflow()` holds an empty spot ready for, say, the `model`. You may find this a convenient way to write your modeling code when you want to fit with the same preprocessor but different model specifications.
+
+```{r}
+stack_wf <- workflow()  |> 
+    add_recipe(stack_recipe)
+
+stack_wf |> 
+    add_model(glm_spec)
+```
+
+A `workflow()` can be fit in much the same way a `model` can, and all the pieces are composable and pipeable. 🎉
+
+```{r}
+stack_wf <- workflow()  |> 
+    add_recipe(stack_recipe)
+
+stack_wf  |> 
+    add_model(tree_spec)  |> 
+    fit(data = stack_train)
+```
+
+Classification models can be evaluated using a confusion matrix. This kind of matrix or table counts which examples were classified correctly and incorrectly. 
+
 
 ## Train models
 
@@ -258,6 +389,7 @@ Each node  in @fig-tree shows:
   * the predicted probability of `Not remote`,
   
   * the percentage of observations in the node.
+
 :::
 
 * Display the rules used to create @fig-tree.
@@ -278,7 +410,7 @@ Here you will use the [`conf_mat()`](https://yardstick.tidymodels.org/reference/
 
 Print the confusion matrix for the `stack_glm` model on the `stack_test` data. If we wanted to compare more than two modeling options, we should definitely create some resampled data sets like we did in the first case study. This case study is already getting long, so let’s stick with the testing data.
 
-Note that the first argument to `conf_mat()` is truth and the second is `estimate`.
+Note that the first argument to `conf_mat()` is `truth` and the second is `estimate`.
 
 ```{r}
 results <- stack_test |> 
@@ -309,7 +441,7 @@ results  |>
 
 ## Classification model metrics
 
-The `conf_mat()` function is helpful but often you also want to store specific performance estimates for later, perhaps in a dataframe-friendly form. The yardstick package is built to handle such needs. For this kind of classification model, you might look at the positive or negative predictive value or perhaps overall accuracy.
+The `conf_mat()` function is helpful but often you also want to store specific performance estimates for later, perhaps in a dataframe-friendly form. The yardstick package is built to handle such needs. For this kind of classification model, you might look at the [positive or negative predictive value](https://yardstick.tidymodels.org/reference/ppv.html) or perhaps overall [accuracy](https://yardstick.tidymodels.org/reference/accuracy.html).
 
 The models available in your environment, `stack_glm` and `stack_tree` were trained on the **training** data.
 

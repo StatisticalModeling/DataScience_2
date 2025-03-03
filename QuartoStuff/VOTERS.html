@@ -93,7 +93,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on March 03, 2025 11:03:53 Eastern Standard Time</p>
+      <p class="date">Last modified on March 03, 2025 15:40:50 Eastern Standard Time</p>
     </div>
   </div>
   
@@ -120,6 +120,24 @@ Crediting the materials
 <section id="predicting-voter-turnout-from-survey-data" class="level2">
 <h2 class="anchored" data-anchor-id="predicting-voter-turnout-from-survey-data">Predicting voter turnout from survey data 🗳</h2>
 <p>So far, you have built one regression model and one classification model, and now it’s time for our third case study. In this case study, we are going to use a survey of voters in the United States to predict voter turnout, whether someone did or did not vote, based on their responses on the survey.</p>
+<p>This data comes from a research collaboration of about two dozen analysts and scholars across the political spectrum in the United States who want to understand what is important to voters and how the views of the electorate in the U.S. are evolving.</p>
+<p>Views of the Electorate Research Survey (VOTER) 🇺🇸</p>
+<ul>
+<li>Democracy Fund Voter Study Group</li>
+<li>Politically diverse group of analysts and scholars in the United States</li>
+<li>Data is freely available</li>
+</ul>
+<p>There are a lot of questions on this survey, so many that I can’t go over them all with you in this course, but they are all about people’s opinions on political and economic topics. The survey asks respondents how they feel about where the US economy is headed, whether they think their vote makes a difference, and how important various issues are to them.</p>
+<p>Views of the Electorate Research Survey (VOTER) 🇺🇸</p>
+<ul>
+<li>Life in America today for people like you compared to fifty years ago is better? about the same? worse?</li>
+<li>Was your vote primarily a vote in favor of your choice or was it mostly a vote against his/her opponent?</li>
+<li>How important are the following issues to you? + Crime + Immigration + The environment + Gay rights</li>
+</ul>
+<p>The dataset that you have to work with in these exercises has about 40 variables, or questions on the survey, and the variable <code>turnout16_2016</code> tells us whether that respondent said they voted in the 2016 election or not. Notice that the answers to the survey questions have been coded as integers. This is actually pretty convenient for modeling, but in a situation like this, you need to look at a data dictionary or guide to understand what the integers mean.</p>
+<p>For example, one of the questions asked survey respondents how much they agree or disagree with this statement about how fair society in America is and their responses are coded as these integers. All of the survey responses are coded as integers like this, which means we can use these responses directly for modeling. I’ll include the answers that correspond to the integers when it’s relevant in this case study, but you can go get this data yourself as well.</p>
+<p>We are going to build machine learning models to predict whether a respondent voted or not based on their responses to the survey questions. You are going to be able to use many of the approaches you’ve been practicing already in the course, and develop some new ones.</p>
+<p>It’s time for you to get started with this new dataset and see what you can learn.</p>
 </section>
 <section id="choose-an-appropriate-model" class="level2">
 <h2 class="anchored" data-anchor-id="choose-an-appropriate-model">Choose an appropriate model</h2>
@@ -256,7 +274,7 @@ $ imiss_y_2016         &lt;dbl&gt; 1, 4, 2, 3, 1, 1, 1, 3, 2, 1, 1, 3, 1, 1, 1, 
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="VOTERS_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="VOTERS_files/figure-html/visualize-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -273,7 +291,7 @@ $ imiss_y_2016         &lt;dbl&gt; 1, 4, 2, 3, 1, 1, 1, 3, 2, 1, 1, 3, 1, 1, 1, 
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="VOTERS_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="VOTERS_files/figure-html/visualize-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -283,7 +301,452 @@ $ imiss_y_2016         &lt;dbl&gt; 1, 4, 2, 3, 1, 1, 1, 3, 2, 1, 1, 3, 1, 1, 1, 
 <section id="imbalanced-data" class="level2">
 <h2 class="anchored" data-anchor-id="imbalanced-data">Imbalanced data</h2>
 <p>This is real data from the real world, so you need to think through important modeling concerns, including how imbalanced the class is that you want to predict. You have been exploring this data set in the past few exercises. What is your assessment?</p>
-<p><strong>There are over <span class="math inline">\(6428/264 \approx 24.35\)</span> times more people in this survey who said they did vote than who said they did not vote.</strong></p>
+<p><strong>There are over <span class="math inline">\(6428/264 \approx 24.34\)</span> times more people in this survey who said they did vote than who said they did not vote.</strong></p>
+</section>
+<section id="training-and-testing-data" class="level2">
+<h2 class="anchored" data-anchor-id="training-and-testing-data">Training and testing data</h2>
+<p>It’s time to split your data into training and testing sets, in the same way that you created these subsets in the previous case studies. You want to split your data about evenly on the class <code>turnout16_2016.</code></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>voters_select <span class="ot">&lt;-</span> voters  <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">turnout16_2016 =</span> <span class="fu">factor</span>(turnout16_2016)) <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>case_identifier)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="instructions-2" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-2">Instructions</h3>
+<ul>
+<li><p>Load the <code>tidymodels</code> metapackage, for using the functions to split your data.</p></li>
+<li><p>Use the correct function to create a data split that divides <code>voters_select</code> into 80%/20% sections.</p></li>
+<li><p>Assign the 80% partition to <code>vote_train</code> and the 20% partition to <code>vote_test</code>.</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load tidymodels</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Split data into training and testing sets</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>vote_split <span class="ot">&lt;-</span> voters_select <span class="sc">%&gt;%</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">initial_split</span>(<span class="at">prop =</span> <span class="fl">0.8</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                  <span class="at">strata =</span> turnout16_2016)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>vote_train <span class="ot">&lt;-</span> <span class="fu">training</span>(vote_split)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>vote_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(vote_split)</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(vote_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 5,353
+Columns: 42
+$ turnout16_2016       &lt;fct&gt; Voted, Voted, Voted, Voted, Voted, Voted, Voted, …
+$ RIGGED_SYSTEM_1_2016 &lt;dbl&gt; 3, 2, 1, 3, 3, 3, 4, 2, 3, 4, 4, 3, 3, 2, 3, 2, 4…
+$ RIGGED_SYSTEM_2_2016 &lt;dbl&gt; 4, 4, 4, 1, 3, 4, 4, 3, 2, 3, 2, 4, 3, 2, 3, 3, 1…
+$ RIGGED_SYSTEM_3_2016 &lt;dbl&gt; 1, 1, 1, 3, 2, 1, 1, 1, 1, 1, 1, 1, 1, 3, 2, 2, 2…
+$ RIGGED_SYSTEM_4_2016 &lt;dbl&gt; 4, 4, 4, 1, 2, 1, 3, 2, 4, 3, 4, 2, 2, 1, 1, 1, 1…
+$ RIGGED_SYSTEM_5_2016 &lt;dbl&gt; 3, 1, 2, 3, 2, 2, 3, 2, 2, 3, 3, 2, 3, 2, 1, 2, 2…
+$ RIGGED_SYSTEM_6_2016 &lt;dbl&gt; 2, 1, 1, 2, 3, 1, 1, 2, 1, 1, 2, 1, 1, 2, 1, 1, 1…
+$ track_2016           &lt;dbl&gt; 2, 1, 1, 2, 2, 1, 2, 2, 1, 2, 3, 2, 2, 2, 2, 2, 2…
+$ persfinretro_2016    &lt;dbl&gt; 2, 3, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 3…
+$ econtrend_2016       &lt;dbl&gt; 1, 3, 1, 2, 2, 1, 1, 1, 1, 2, 1, 4, 3, 2, 2, 2, 3…
+$ Americatrend_2016    &lt;dbl&gt; 1, 1, 3, 3, 1, 2, 2, 1, 3, 2, 1, 1, 3, 1, 4, 3, 3…
+$ futuretrend_2016     &lt;dbl&gt; 4, 1, 3, 4, 3, 1, 1, 1, 3, 1, 4, 3, 4, 3, 1, 3, 3…
+$ wealth_2016          &lt;dbl&gt; 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 1…
+$ values_culture_2016  &lt;dbl&gt; 2, 3, 3, 3, 2, 3, 1, 3, 3, 1, 1, 3, 8, 3, 3, 3, 3…
+$ US_respect_2016      &lt;dbl&gt; 2, 1, 1, 2, 2, 2, 3, 3, 3, 3, 2, 3, 3, 3, 3, 3, 3…
+$ trustgovt_2016       &lt;dbl&gt; 3, 3, 3, 3, 2, 3, 3, 3, 3, 3, 2, 3, 3, 3, 3, 3, 3…
+$ trust_people_2016    &lt;dbl&gt; 8, 1, 1, 1, 2, 2, 2, 1, 2, 2, 8, 8, 2, 2, 2, 2, 1…
+$ helpful_people_2016  &lt;dbl&gt; 1, 2, 1, 1, 1, 2, 1, 2, 2, 1, 2, 8, 1, 1, 2, 1, 2…
+$ fair_people_2016     &lt;dbl&gt; 8, 1, 1, 1, 2, 2, 2, 1, 1, 2, 2, 8, 2, 1, 2, 2, 1…
+$ imiss_a_2016         &lt;dbl&gt; 2, 1, 1, 1, 2, 1, 3, 1, 1, 2, 1, 2, 2, 2, 1, 2, 1…
+$ imiss_b_2016         &lt;dbl&gt; 2, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1…
+$ imiss_c_2016         &lt;dbl&gt; 1, 2, 3, 1, 2, 2, 4, 2, 3, 2, 2, 3, 1, 1, 1, 1, 1…
+$ imiss_d_2016         &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 2, 4, 2…
+$ imiss_e_2016         &lt;dbl&gt; 1, 3, 1, 1, 3, 1, 1, 1, 2, 4, 1, 4, 2, 1, 1, 2, 1…
+$ imiss_f_2016         &lt;dbl&gt; 2, 1, 2, 1, 2, 1, 2, 1, 1, 2, 1, 3, 2, 2, 1, 2, 2…
+$ imiss_g_2016         &lt;dbl&gt; 1, 3, 3, 3, 1, 3, 2, 2, 1, 1, 2, 1, 1, 4, 3, 4, 3…
+$ imiss_h_2016         &lt;dbl&gt; 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 2, 2…
+$ imiss_i_2016         &lt;dbl&gt; 2, 4, 4, 2, 1, 1, 2, 1, 1, 1, 2, 2, 2, 3, 3, 3, 2…
+$ imiss_j_2016         &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1…
+$ imiss_k_2016         &lt;dbl&gt; 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 4, 1, 2…
+$ imiss_l_2016         &lt;dbl&gt; 1, 1, 2, 4, 1, 1, 1, 1, 1, 2, 1, 1, 1, 3, 3, 4, 4…
+$ imiss_m_2016         &lt;dbl&gt; 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 2…
+$ imiss_n_2016         &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 3, 1, 2…
+$ imiss_o_2016         &lt;dbl&gt; 2, 1, 1, 1, 2, 1, 2, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1…
+$ imiss_p_2016         &lt;dbl&gt; 2, 2, 3, 1, 3, 1, 4, 1, 1, 2, 3, 2, 3, 1, 2, 2, 1…
+$ imiss_q_2016         &lt;dbl&gt; 1, 1, 2, 2, 1, 1, 2, 1, 1, 1, 1, 2, 2, 3, 3, 1, 3…
+$ imiss_r_2016         &lt;dbl&gt; 2, 1, 2, 1, 2, 1, 4, 2, 2, 3, 2, 2, 2, 1, 1, 2, 1…
+$ imiss_s_2016         &lt;dbl&gt; 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 3, 1, 1…
+$ imiss_t_2016         &lt;dbl&gt; 1, 3, 3, 1, 1, 3, 1, 1, 1, 1, 3, 1, 1, 3, 3, 3, 4…
+$ imiss_u_2016         &lt;dbl&gt; 2, 2, 2, 1, 3, 3, 4, 2, 3, 4, 3, 3, 3, 1, 1, 2, 1…
+$ imiss_x_2016         &lt;dbl&gt; 1, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 3, 3, 3…
+$ imiss_y_2016         &lt;dbl&gt; 1, 2, 3, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 2, 4, 3, 3…</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(vote_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 1,339
+Columns: 42
+$ turnout16_2016       &lt;fct&gt; Voted, Voted, Voted, Voted, Voted, Voted, Voted, …
+$ RIGGED_SYSTEM_1_2016 &lt;dbl&gt; 2, 2, 3, 4, 3, 3, 3, 3, 3, 3, 2, 2, 2, 3, 3, 1, 3…
+$ RIGGED_SYSTEM_2_2016 &lt;dbl&gt; 1, 3, 2, 3, 2, 1, 2, 2, 2, 2, 2, 1, 4, 3, 1, 4, 2…
+$ RIGGED_SYSTEM_3_2016 &lt;dbl&gt; 3, 3, 4, 1, 2, 2, 2, 2, 2, 2, 2, 3, 1, 2, 3, 1, 2…
+$ RIGGED_SYSTEM_4_2016 &lt;dbl&gt; 1, 2, 1, 3, 3, 3, 2, 2, 2, 2, 1, 1, 2, 3, 1, 2, 3…
+$ RIGGED_SYSTEM_5_2016 &lt;dbl&gt; 3, 1, 2, 1, 2, 2, 3, 2, 4, 3, 1, 1, 1, 3, 3, 1, 2…
+$ RIGGED_SYSTEM_6_2016 &lt;dbl&gt; 2, 2, 1, 2, 1, 4, 2, 2, 1, 2, 1, 1, 1, 2, 2, 1, 2…
+$ track_2016           &lt;dbl&gt; 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 2, 2, 2, 3, 1, 2, 2…
+$ persfinretro_2016    &lt;dbl&gt; 3, 3, 3, 2, 2, 1, 1, 2, 1, 3, 2, 3, 2, 2, 3, 1, 2…
+$ econtrend_2016       &lt;dbl&gt; 3, 3, 3, 2, 1, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2…
+$ Americatrend_2016    &lt;dbl&gt; 1, 3, 3, 3, 2, 1, 1, 3, 3, 3, 1, 1, 2, 1, 2, 3, 1…
+$ futuretrend_2016     &lt;dbl&gt; 1, 3, 1, 4, 1, 1, 1, 3, 4, 1, 2, 3, 3, 2, 4, 3, 3…
+$ wealth_2016          &lt;dbl&gt; 1, 1, 1, 2, 2, 1, 1, 2, 1, 1, 1, 8, 2, 2, 1, 2, 2…
+$ values_culture_2016  &lt;dbl&gt; 3, 3, 2, 3, 2, 3, 3, 3, 3, 2, 3, 3, 3, 1, 3, 2, 3…
+$ US_respect_2016      &lt;dbl&gt; 3, 3, 3, 3, 2, 3, 3, 3, 3, 1, 3, 3, 3, 2, 3, 3, 2…
+$ trustgovt_2016       &lt;dbl&gt; 3, 3, 3, 2, 2, 3, 3, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3…
+$ trust_people_2016    &lt;dbl&gt; 2, 1, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 1, 1, 2…
+$ helpful_people_2016  &lt;dbl&gt; 1, 2, 1, 1, 1, 2, 1, 2, 1, 1, 1, 2, 8, 2, 2, 2, 1…
+$ fair_people_2016     &lt;dbl&gt; 2, 1, 1, 2, 2, 2, 2, 1, 2, 8, 2, 2, 8, 8, 1, 1, 2…
+$ imiss_a_2016         &lt;dbl&gt; 1, 1, 1, 2, 2, 3, 2, 2, 1, 2, 1, 1, 2, 1, 1, 2, 2…
+$ imiss_b_2016         &lt;dbl&gt; 1, 2, 1, 1, 1, 2, 2, 1, 1, 2, 1, 1, 1, 2, 2, 1, 1…
+$ imiss_c_2016         &lt;dbl&gt; 2, 1, 1, 1, 3, 4, 2, 2, 2, 2, 1, 1, 1, 3, 1, 2, 3…
+$ imiss_d_2016         &lt;dbl&gt; 2, 2, 3, 2, 2, 1, 2, 1, 1, 3, 3, 1, 1, 2, 2, 1, 1…
+$ imiss_e_2016         &lt;dbl&gt; 1, 2, 2, 2, 2, 3, 2, 2, 2, 3, 1, 1, 1, 1, 2, 4, 4…
+$ imiss_f_2016         &lt;dbl&gt; 1, 3, 1, 2, 1, 3, 2, 2, 1, 2, 1, 1, 2, 2, 1, 2, 2…
+$ imiss_g_2016         &lt;dbl&gt; 4, 4, 4, 1, 2, 2, 2, 3, 1, 4, 4, 1, 3, 1, 3, 1, 1…
+$ imiss_h_2016         &lt;dbl&gt; 2, 2, 2, 1, 3, 2, 2, 2, 1, 2, 2, 1, 1, 1, 2, 1, 1…
+$ imiss_i_2016         &lt;dbl&gt; 2, 3, 2, 2, 3, 4, 3, 3, 2, 3, 4, 1, 2, 2, 4, 1, 2…
+$ imiss_j_2016         &lt;dbl&gt; 1, 1, 1, 1, 1, 3, 2, 1, 1, 2, 2, 1, 1, 1, 2, 1, 1…
+$ imiss_k_2016         &lt;dbl&gt; 2, 4, 3, 2, 2, 2, 2, 2, 2, 2, 4, 3, 1, 1, 2, 1, 1…
+$ imiss_l_2016         &lt;dbl&gt; 4, 3, 4, 2, 1, 1, 2, 1, 2, 4, 4, 4, 1, 1, 4, 1, 1…
+$ imiss_m_2016         &lt;dbl&gt; 2, 1, 2, 1, 1, 4, 2, 1, 1, 2, 2, 1, 1, 2, 2, 1, 1…
+$ imiss_n_2016         &lt;dbl&gt; 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 2, 1, 1…
+$ imiss_o_2016         &lt;dbl&gt; 1, 2, 2, 1, 2, 2, 2, 1, 1, 2, 1, 1, 1, 2, 2, 1, 1…
+$ imiss_p_2016         &lt;dbl&gt; 1, 1, 1, 3, 2, 3, 2, 2, 2, 2, 2, 1, 2, 2, 1, 2, 3…
+$ imiss_q_2016         &lt;dbl&gt; 1, 4, 3, 1, 1, 3, 2, 2, 1, 2, 3, 1, 1, 1, 2, 1, 1…
+$ imiss_r_2016         &lt;dbl&gt; 1, 2, 1, 3, 2, 4, 2, 1, 1, 2, 1, 1, 1, 1, 2, 1, 1…
+$ imiss_s_2016         &lt;dbl&gt; 2, 1, 3, 1, 1, 4, 2, 1, 2, 2, 2, 1, 1, 2, 1, 1, 1…
+$ imiss_t_2016         &lt;dbl&gt; 1, 4, 3, 3, 3, 4, 2, 2, 2, 3, 2, 1, 2, 2, 3, 1, 2…
+$ imiss_u_2016         &lt;dbl&gt; 2, 1, 2, 3, 3, 3, 2, 3, 2, 1, 1, 1, 2, 2, 2, 2, 4…
+$ imiss_x_2016         &lt;dbl&gt; 3, 4, 2, 2, 2, 3, 2, 2, 2, 3, 3, 2, 1, 1, 2, 1, 1…
+$ imiss_y_2016         &lt;dbl&gt; 4, 3, 3, 2, 1, 4, 2, 2, 1, 3, 4, 3, 2, 1, 3, 1, 1…</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="vote-2016" class="level2">
+<h2 class="anchored" data-anchor-id="vote-2016">VOTE 2016 🇺🇸</h2>
+<p>To do a good job with predictive modeling, you need to explore and understand your data before you start building machine learning models. When you do exploratory data analysis, you learn important things, such as how imbalanced the class you are trying to predict is…</p>
+<p>…and how much of a difference you see in survey responses between the two groups. We see here that people who say that elections don’t matter and things stay the same no matter who we vote in were less likely to vote, while people who think that gay rights are important were more likely to vote. We can see differences like this for many of the survey questions.</p>
+<p>Visualizing your data before modeling is always a good idea. 👍</p>
+<p>Here, for example, we can see that people who say the economy is getting better are more likely to vote.</p>
+<p>This is another case study with imbalanced data. We are again going to preprocess our training data so we can build a better performing model, but this time we are going to <strong>upsample</strong> (or oversample) our data.</p>
+<p>When we implement upsampling, we add more of the people who did not vote (just more of the same ones we already have) until the proportion is equal and the classes are balanced.</p>
+<p>We are going to use <a href="https://themis.tidymodels.org/reference/step_upsample.html"><code>step_upsample()</code></a> for oversampling because it is simple to implement and understand, but it can lead a classifier to overfit to just a few examples, if you’re not lucky. There are other more complex approaches to oversampling available in the <code>themis</code> package as well, but we will focus on random upsampling with replacement here.</p>
+<p>Upsampling is another example of a preprocessing step for modeling. You can again preprocess your data using <a href="https://recipes.tidymodels.org/">recipes</a>. The recipe shown below has just one preprocessing step (upsampling) but you can create recipes for preprocessing with as many steps as you need.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(themis)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>vote_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(turnout16_2016 <span class="sc">~</span> ., <span class="at">data =</span> vote_train) <span class="sc">|&gt;</span>  </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">step_upsample</span>(turnout16_2016)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To put our recipe and our model specification together, let’s use a <code>workflow()</code>. We can fit our workflow much like we would fit a model.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Specify a ranger model</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>rf_spec <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>()  <span class="sc">|&gt;</span> </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_engine</span>(<span class="st">"ranger"</span>)  <span class="sc">|&gt;</span> </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>vote_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>()  <span class="sc">|&gt;</span> </span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_recipe</span>(vote_recipe)  <span class="sc">|&gt;</span> </span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_model</span>(rf_spec)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>vote_wf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now that you have explored your data and have some understanding of it, it’s time to move into machine learning.</p>
+</section>
+<section id="preprocess-with-a-recipe" class="level2">
+<h2 class="anchored" data-anchor-id="preprocess-with-a-recipe">Preprocess with a recipe</h2>
+<p>This dataset needs to prepared for modeling.</p>
+<section id="instructions-3" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-3">Instructions</h3>
+<ul>
+<li><p>Use a <code>recipe()</code> to preprocess your training data, <code>vote_train</code>.</p></li>
+<li><p>Upsample this training data with the function <code>step_upsample()</code>.</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(themis)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>vote_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(turnout16_2016 <span class="sc">~</span> ., <span class="at">data =</span> vote_train) <span class="sc">|&gt;</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">step_upsample</span>(turnout16_2016)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>vote_recipe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="creating-a-modeling-workflow" class="level2">
+<h2 class="anchored" data-anchor-id="creating-a-modeling-workflow">Creating a modeling workflow</h2>
+<p>In this case study, we’ll experiment with a new engine for the random forest model, the <code>ranger</code> package. You can combine the model with your preprocessing steps (your recipe) in a <a href="https://workflows.tidymodels.org/"><code>workflow()</code></a> for convenience.</p>
+<section id="instructions-4" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-4">Instructions</h3>
+<ul>
+<li>Use <code>rand_forest()</code> to specify a random forest model. Notice that we are using a different engine than in the first case study.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Specify a ranger model</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>rf_spec <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>()  <span class="sc">|&gt;</span> </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_engine</span>(<span class="st">"ranger"</span>)  <span class="sc">|&gt;</span> </span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Add the recipe and the model specification to the workflow.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Add the recipe + model to a workflow</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>vote_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>()  <span class="sc">|&gt;</span> </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_recipe</span>(vote_recipe)  <span class="sc">|&gt;</span> </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_model</span>(rf_spec)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Show vote_wf</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>vote_wf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>══ Workflow ════════════════════════════════════════════════════════════════════
+Preprocessor: Recipe
+Model: rand_forest()
+
+── Preprocessor ────────────────────────────────────────────────────────────────
+1 Recipe Step
+
+• step_upsample()
+
+── Model ───────────────────────────────────────────────────────────────────────
+Random Forest Model Specification (classification)
+
+Computational engine: ranger </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="cross-validation" class="level2">
+<h2 class="anchored" data-anchor-id="cross-validation">Cross-validation</h2>
+<p>You have created a training set and testing set and laid out how to deal with class imbalance via upsampling. Now it’s time to talk about a new resampling approach. In the first case study, we used bootstrap resampling and talked through what that means. In this chapter, we’re going to use cross-validation.</p>
+<p>Cross-validation means taking your training set and randomly dividing it up evenly into subsets, sometimes called “folds”. A fold here means a group or subset or partition.</p>
+<p>You use one of the folds for validation and the rest for training, then you repeat these steps with all the subsets and combine the results, usually by taking the mean. The reason we do this is the same reason we would use bootstrap resampling; cross-validation allows you to get a more accurate estimate of how your model will perform on new data.</p>
+<p>In <code>tidymodels</code>, you can create cross-validation <code>resamples</code> with the function <code>vfold_cv()</code>, either with or without the <code>repeats</code> argument.</p>
+<p>Let’s look at this in more detail. 🧐</p>
+<ul>
+<li><code>vfold_cv(vote_train, v = 10)</code></li>
+<li><code>vfold_cv(vote_train, v = 10, repeats = 5)</code></li>
+</ul>
+<p>Let’s say we have a sample of lots of people, some of whom voted and some of whom did not, and we want to implement 10-fold cross-validation. This means we divide our training data into 10 groups or folds, and 1 subset or fold acts as our assessment fold (like a mini testing test). We train our model on 9 of the folds and then evaluate the model on the assessment fold.</p>
+<p>If we are using preprocessing steps such as upsampling that should only be applied to the 9/10 of the data used for analysis (not the 1/10 of the data used for assessment), the recipes package will automatically take care of that for us. 👍</p>
+<p>Now we move to the next fold and do this again. We train the model on the rest of the data, the other 9 folds, and evaluate the model on 1/10 of the data, the fold that is currently acting as our assessment fold.</p>
+<p>We do it again using another of our folds as the assessment fold, training the model on the rest of the data, and we move through all the subsets or folds of the data that we made…</p>
+<p>.. until we do them all, and have trained the model 10 times, on 10 different subsets of the data, with 10 different assessment sets. We then combine all those results together to get one, better estimate of how our model will perform.</p>
+<p>This procedure I just described is one round of 10-fold cross-validation. Sometimes practictioners do this more than once, perhaps 5 times. In that case, you repeat the whole process of 10-fold cross-validation 5 times, with 5 different random partitionings into 10 subsets. This is an approach to training models that has demonstrated good performance.</p>
+<p>However, it can be computationally expensive. ⏳ It does lend itself to parallel processing, since the repeats don’t depend on each other, so this is a situation where it likely is worth getting your computer set up to use all the cores you have.</p>
+<p>Cross-validation</p>
+<ul>
+<li>Repeated cross-validation can take a long time</li>
+<li>Parallel processing can be worth it</li>
+</ul>
+</section>
+<section id="understanding-cross-validation" class="level2">
+<h2 class="anchored" data-anchor-id="understanding-cross-validation">Understanding cross-validation</h2>
+<p>When you implement 10-fold cross-validation repeated 5 times, you randomly divide your training data into 10 subsets and train on 9 at a time (assessing on the other subset), iterating through all 10 subsets for assessment. Then you repeat that process 5 times. Simulations and practical experience show that 10-fold cross-validation repeated 5 times is a great resampling approach for many situations. This approach involves randomly dividing your training data into 10 folds, or subsets or groups, and training on only 9 while using the other fold for assessment. You iterate through all 10 folds being used for assessment; this is one round of cross-validation. You can then repeat the whole process multiple, perhaps 5, times.</p>
+</section>
+<section id="create-cross-validation-folds" class="level2">
+<h2 class="anchored" data-anchor-id="create-cross-validation-folds">Create cross-validation folds</h2>
+<p>You can use tidymodels functions to create the kind of cross-validation folds appropriate for your use case. Here, try 10-fold cross-validation repeated 5 times.</p>
+<section id="instructions-5" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-5">Instructions</h3>
+<ul>
+<li>The argument <code>v</code> specifies the number of folds for cross-validation.</li>
+<li>The argument <code>repeats</code> specifies the number of repeats.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>vote_folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(vote_train, <span class="at">v =</span> <span class="dv">10</span>, <span class="at">repeats =</span> <span class="dv">5</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(vote_folds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 50
+Columns: 3
+$ splits &lt;list&gt; [&lt;vfold_split[4817 x 536 x 5353 x 42]&gt;], [&lt;vfold_split[4817 x …
+$ id     &lt;chr&gt; "Repeat1", "Repeat1", "Repeat1", "Repeat1", "Repeat1", "Repeat1…
+$ id2    &lt;chr&gt; "Fold01", "Fold02", "Fold03", "Fold04", "Fold05", "Fold06", "Fo…</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="evaluate-model-performance" class="level2">
+<h2 class="anchored" data-anchor-id="evaluate-model-performance">Evaluate model performance</h2>
+<p>Excellent job! You preprocessed this data, built a modeling workflow, and created cross-validation folds to evaluate model performance. 😎</p>
+<p>Let’s talk about that model performance now, how to set non-default performance metrics and save predictions from resampled data.</p>
+<p>Just like in our first case study, we can use the function <code>fit_resamples()</code> to fit a model (a workflow in this case, actually, that holds both a preprocessor and a model specification) to each cross-validation fold and compute performance metrics. The code shown below will fit our workflow <code>vote_wf</code> to the cross-validation folds in <code>vote_folds</code> and determine how well the model performed each time.</p>
+<p>The fitted models themselves are not kept or stored because they are only used for computing performance metrics. However, we are saving the predictions with <code>save_pred = TRUE</code> so we can build a confusion matrix, and we have also set specific performance metrics to be computed (instead of the defaults) with <code>metric_set(roc_auc, sensitivity, specificity)</code>. We will have:</p>
+<ul>
+<li>the area under the ROC curve,</li>
+<li>sensitivity, and</li>
+<li>specificity.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluating models with resampling</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>vote_wf <span class="sc">|&gt;</span> </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fit_resamples</span>(</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">resamples =</span> vote_folds,</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">metrics =</span> <span class="fu">metric_set</span>(roc_auc, sensitivity, specificity),</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">control =</span> <span class="fu">control_resamples</span>(<span class="at">save_pred =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If we start by looking at the metrics for the logistic regression model, you can see that sensitivity and specificity (the true positive and true negative rates) are both around 0.6 or 0.7, which means that most people are being classified into the right categories but we are not getting fantastic results with this model.</p>
+<p>When we look at the metrics for the random forest model, we see that the AUC is higher, but sensitivity (the true positive rate, or recall) has dropped to zero! 😱 The random forest model is not able to identify any of the people who did not vote.</p>
+<p>What we’re seeing here is evidence of dramatic overfitting, despite the fact that we used cross-validation. For the amount of data we have available to train this model, the power of a random forest ends up resulting in memorization of the features of the training set, instead of building a useful predictive model. Our choice to use upsampling (where the same small number of positive cases were drawn from again and again) likely made this worse!</p>
+<p>Notice that this is the first time that this has happened in this course. In the first and second case studies we did, the more powerful machine learning algorithm outperformed the simpler model.</p>
+<p>The logistic regression model will likely be the best option, so we can evaluate its performance on the testing data. We can use the <code>last_fit()</code> function with a workflow to fit to the entire training set and evaluate on the testing set. You only need to give this function the split object!</p>
+<p>We can see that we did a better job identifying the people who voted than those who did not.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>vote_final <span class="ot">&lt;-</span> vote_wf  <span class="sc">|&gt;</span> </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">last_fit</span>(vote_split)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>vote_final <span class="sc">%&gt;%</span> </span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">collect_predictions</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">conf_mat</span>(turnout16_2016, .pred_class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Before we wrap up this case study, it’s time for you to evaluate these models for yourself.</p>
+</section>
+<section id="resampling-two-models" class="level2">
+<h2 class="anchored" data-anchor-id="resampling-two-models">Resampling two models</h2>
+<p>Let’s use cross-validation resampling to evaluate performance for two kinds of models with this vote data. You’ve already learned how to create resamples, preprocess data for modeling, build a model specification, and combine this in a workflow; now it’s time to put this all together and evaluate this model’s performance.</p>
+<section id="instructions-6" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-6">Instructions</h3>
+<ul>
+<li><p>Use <code>fit_resamples()</code> to evaluate how this logistic regression model performs on the cross-validation resamples.</p></li>
+<li><p>Compute the metrics <code>roc_auc</code>, <code>sensitivity</code>, and <code>specificity</code>.</p></li>
+</ul>
+<div class="cell" data-layout-align="center" data-hash="VOTERS_cache/html/unnamed-chunk-17_995f56b6e292548b1a3572320e55ab78">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>vote_folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(vote_train, <span class="at">v =</span> <span class="dv">10</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>vote_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(turnout16_2016 <span class="sc">~</span> ., <span class="at">data =</span> vote_train) <span class="sc">|&gt;</span>  </span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">step_upsample</span>(turnout16_2016)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>glm_spec <span class="ot">&lt;-</span> <span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_engine</span>(<span class="st">"glm"</span>)</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>vote_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_recipe</span>(vote_recipe) <span class="sc">|&gt;</span> </span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_model</span>(glm_spec)</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">234</span>)</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>glm_res <span class="ot">&lt;-</span> vote_wf <span class="sc">|&gt;</span> </span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fit_resamples</span>(</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>                  <span class="at">resamples =</span> vote_folds, </span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>                  <span class="at">metrics =</span> <span class="fu">metric_set</span>(roc_auc, sensitivity, specificity),</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>                  <span class="at">control =</span> <span class="fu">control_resamples</span>(<span class="at">save_pred =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>                  )</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(glm_res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 10
+Columns: 5
+$ splits       &lt;list&gt; [&lt;vfold_split[4817 x 536 x 5353 x 42]&gt;], [&lt;vfold_split[4…
+$ id           &lt;chr&gt; "Fold01", "Fold02", "Fold03", "Fold04", "Fold05", "Fold06…
+$ .metrics     &lt;list&gt; [&lt;tbl_df[3 x 4]&gt;], [&lt;tbl_df[3 x 4]&gt;], [&lt;tbl_df[3 x 4]&gt;],…
+$ .notes       &lt;list&gt; [&lt;tbl_df[0 x 3]&gt;], [&lt;tbl_df[0 x 3]&gt;], [&lt;tbl_df[0 x 3]&gt;],…
+$ .predictions &lt;list&gt; [&lt;tbl_df[536 x 6]&gt;], [&lt;tbl_df[536 x 6]&gt;], [&lt;tbl_df[536 x…</code></pre>
+</div>
+</div>
+</section>
+<section id="instructions-7" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-7">Instructions</h3>
+<ul>
+<li><p>Now fit the resamples <code>vote_folds</code> to the random forest model.</p></li>
+<li><p>Compute the metrics <code>roc_auc</code>, <code>sensitivity</code>, and <code>specificity</code>.</p></li>
+</ul>
+<div class="cell" data-layout-align="center" data-hash="VOTERS_cache/html/unnamed-chunk-18_f2e7d952daf0cea970f14419f60a4063">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>rf_spec <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>()  <span class="sc">|&gt;</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_engine</span>(<span class="st">"ranger"</span>)  <span class="sc">|&gt;</span> </span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>vote_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>()  <span class="sc">|&gt;</span> </span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_recipe</span>(vote_recipe)  <span class="sc">|&gt;</span> </span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_model</span>(rf_spec)</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">234</span>)</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>rf_res <span class="ot">&lt;-</span> vote_wf  <span class="sc">|&gt;</span> </span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fit_resamples</span>(</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>                 <span class="at">resamples =</span> vote_folds,</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>                 <span class="at">metrics =</span> <span class="fu">metric_set</span>(roc_auc, sensitivity, specificity),</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>                 <span class="at">control =</span> <span class="fu">control_resamples</span>(<span class="at">save_pred =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>                 )</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(rf_res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 10
+Columns: 5
+$ splits       &lt;list&gt; [&lt;vfold_split[4817 x 536 x 5353 x 42]&gt;], [&lt;vfold_split[4…
+$ id           &lt;chr&gt; "Fold01", "Fold02", "Fold03", "Fold04", "Fold05", "Fold06…
+$ .metrics     &lt;list&gt; [&lt;tbl_df[3 x 4]&gt;], [&lt;tbl_df[3 x 4]&gt;], [&lt;tbl_df[3 x 4]&gt;],…
+$ .notes       &lt;list&gt; [&lt;tbl_df[0 x 3]&gt;], [&lt;tbl_df[0 x 3]&gt;], [&lt;tbl_df[0 x 3]&gt;],…
+$ .predictions &lt;list&gt; [&lt;tbl_df[536 x 6]&gt;], [&lt;tbl_df[536 x 6]&gt;], [&lt;tbl_df[536 x…</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="performance-metrics-from-resampling" class="level2">
+<h2 class="anchored" data-anchor-id="performance-metrics-from-resampling">Performance metrics from resampling</h2>
+<p>Now, let’s evaluate these results from resampling.</p>
+<section id="instructions-8" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-8">Instructions</h3>
+<p>Use the function <code>collect_metrics()</code> to obtain the metrics we specified from the resampling results.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">collect_metrics</span>(glm_res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 6
+  .metric     .estimator  mean     n std_err .config             
+  &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               
+1 roc_auc     binary     0.718    10 0.0148  Preprocessor1_Model1
+2 sensitivity binary     0.606    10 0.0201  Preprocessor1_Model1
+3 specificity binary     0.702    10 0.00999 Preprocessor1_Model1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">collect_metrics</span>(rf_res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 6
+  .metric     .estimator  mean     n  std_err .config             
+  &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;chr&gt;               
+1 roc_auc     binary     0.715    10 0.0222   Preprocessor1_Model1
+2 sensitivity binary     0        10 0        Preprocessor1_Model1
+3 specificity binary     1.00     10 0.000195 Preprocessor1_Model1</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="which-model-is-best" class="level2">
+<h2 class="anchored" data-anchor-id="which-model-is-best">Which model is best?</h2>
+<p>You have just spent most of this chapter exploring how to predict voter turnout based on survey responses. Of the two types of models you tried, which is the better choice? Which do you expect to perform better on new data? Logistic regression is a simpler model, but in this case, it performed better and you can expect it to do a better job predicting on new data.</p>
+</section>
+<section id="back-to-the-testing-data" class="level2">
+<h2 class="anchored" data-anchor-id="back-to-the-testing-data">Back to the testing data</h2>
+<p>When we used resampling to evaluate model performance with the training set, the logistic regression model performed better. Now, let’s put this model to the test! 😎</p>
+<p>Let’s use the <code>last_fit()</code> function to fit to the entire training set one time and evaluate one time on the testing set, with everything we’ve learned during this case study. Our model has not yet seen the testing data, so this last step is the best way to estimate how well the model will perform when predicting with new data.</p>
+<section id="instructions-9" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-9">Instructions</h3>
+<ul>
+<li>Fit to the training set and evaluate on the testing set using <code>last_fit()</code>.</li>
+</ul>
+<div class="cell" data-layout-align="center" data-hash="VOTERS_cache/html/final_glm_fit_181ed14f6635fbb877559815776fbfa7">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Combine in workflow</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Cache this chunk!</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>vote_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>()  <span class="sc">|&gt;</span> </span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_recipe</span>(vote_recipe)  <span class="sc">|&gt;</span> </span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_model</span>(glm_spec)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="do">## Final fit</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>vote_final <span class="ot">&lt;-</span> vote_wf <span class="sc">|&gt;</span> </span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">last_fit</span>(vote_split)</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>vote_final <span class="sc">|&gt;</span> </span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Create a confusion matrix for the results from the testing set.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Confusion matrix</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>vote_final  <span class="sc">|&gt;</span>  </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">collect_predictions</span>()  <span class="sc">|&gt;</span>  </span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">conf_mat</span>(<span class="at">observe =</span> turnout16_2016, <span class="at">estimate =</span> .pred_class)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
 </section>
 
 </main>

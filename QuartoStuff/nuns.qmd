@@ -1,0 +1,255 @@
+---
+title: "But what do the nuns think?"
+date: last-modified
+date-format: "[Last modified on] MMMM DD, YYYY HH:mm:ss zzz"
+format: 
+  html: default
+  pdf: default
+editor: source
+---
+
+```{r include = FALSE}
+library(knitr) # packages
+library(tidyverse)
+library(scales)
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", comment = NA, message = FALSE,  warning = FALSE)
+```
+
+:::{.callout-note title="Crediting the materials" icon=false}
+This majority of the material in the first part of this document is taken from the free online course at [https://supervised-ml-course.netlify.app/](https://supervised-ml-course.netlify.app/) written by Julia Silge.
+:::
+
+This case study uses an extensive survey of Catholic nuns fielded in 1967 to once more put your practical machine learning skills to use. You will predict the age of these religious women from their responses about their beliefs and attitudes.
+
+## Surveying Catholic sisters in 1967
+
+You have made it to the last case study of our course! 🎉 It is a particularly compelling one, where we are going to practice some advanced skills in modeling.
+
+In this case study, you will predict the age of Catholic nuns from their answers on a survey fielded in 1967 focusing on questions about social and religious issues. What kind of model will you build?  To predict a continuous, numeric quantity like age, use **regression models**.
+
+## Visualize the age distribution
+
+The first step before you start modeling is to explore your data, and we are going to spend a little more time on this step in this last case study. To start with, check out the distribution of ages for the respondents in this survey. 📊 (Keep in mind throughout this case study that the data you have in your environment is one quarter of the real survey data.)
+
+### Instructions
+
+```{r}
+library(tidyverse)
+library(tidymodels)
+sisters67 <- read_csv("../Data/sisters.csv")
+```
+
+
+* Call `glimpse()` on `sisters67` to take a look at the structure of the data. Notice how many columns there are, and what their characteristics are.
+
+```{r}
+# View sisters67
+glimpse(sisters67)
+```
+
+* Plot a histogram of `age`.
+
+```{r}
+# Plot the histogram
+ggplot(sisters67, aes(x = age)) +
+  geom_histogram(binwidth = 10, color = "black", fill = "purple") +
+  theme_bw()
+```
+
+## Tidy the survey data
+
+Embracing [tidy data principles](https://tidyverse.tidyverse.org/articles/manifesto.html) is a powerful option for exploratory data analysis. When your data is tidy, you can quickly iterate in getting to know your data better and making exploratory plots. Let’s transform this **wide** data set into a **tidy** data frame with one observation per row, and then check out some characteristics of this subset of the original survey.
+
+:::{.callout-note title="Using select()"}
+There is a column called sister in this dataset that is an identifier for each survey respondent. We are removing this column in the exercise using [`select()`](https://dplyr.tidyverse.org/reference/select.html).
+:::
+
+### Instructions
+
+* Use the `pivot_longer()` function to transform the wide data set with each survey question in a separate column to a narrow, tidy data set with each survey question in a separate row.
+
+```{r}
+# Tidy the data set
+tidy_sisters <- sisters67 |> 
+    select(-sister) |> 
+    pivot_longer(-age, names_to = "question", values_to = "rating")
+```
+
+* View the structure of this tidy data set using `glimpse()`.
+
+```{r}
+# Print the structure of tidy_sisters
+glimpse(tidy_sisters)
+```
+
+Next look at question agreement overall.
+
+### Instructions
+
+Group by `age` and summarize the `rating` column to see how the overall agreement with all questions varied by `age`.
+
+```{r}
+# Overall agreement with all questions varied by age
+tidy_sisters  |> 
+    group_by(age)  |> 
+    summarize(rating = mean(rating, na.rm = TRUE))
+```
+
+* Count the `rating` column to check out how many respondents agreed or disagreed overall.
+
+```{r}
+# Number of respondents agreed or disagreed overall
+tidy_sisters |> 
+    count(rating)
+```
+
+## Exploratory data analysis with tidy data
+
+You just created a tidy version of this survey data, which allows you to quickly ask and answer many different kinds of questions in exploratory data analysis.
+
+## Visualize agreement with `age`
+
+The tidied version of the survey data that you constructed is available in your environment. You have many options at your fingertips with this tidy data now. Make a plot that shows how agreement on a subset of the questions changes with age. 📉 In this exercise, we are using [`filter()`](https://dplyr.tidyverse.org/reference/filter.html) to subset the data to just a subset of the questions on the survey to look at.
+
+### Instructions
+
+* Group by two variables, `question` and `rating`, so you can calculate an average `age` for each answer to each question.
+
+* Summarize for each grouping to find an average `age`.
+
+* Choose the correct `geom` to make a line plot.
+
+
+```{r}
+# Visualize agreement with age
+tidy_sisters  |> 
+    filter(question %in% paste0("v", 153:170))  |> 
+    group_by(question, rating)  |> 
+    summarize(age = mean(age, na.rm = TRUE))  |> 
+    ggplot(aes(rating, age, color = question)) +
+    geom_line(show.legend = FALSE) +
+    facet_wrap(~question, nrow = 3) 
+```
+
+## Trainingm validation, and testing data
+
+It’s time to split your data into different sets now. You’ve done this three times already in this course, but in this last case study we are also going to create a validation set. Using a validation set is a good option when you have enough data (otherwise, you can use resampling).
+
+```{r}
+sisters_select <- read_csv("../Data/sisters.csv") |> 
+    select(-sister)
+```
+
+
+### Instructions
+
+* Create two data partitions:
+
+    + Specify one to split between testing and everything else.
+    
+    + Specify another one to split between validation and training.
+
+```{r}
+# Split off the testing set
+set.seed(123)
+sisters_split <- initial_split(sisters_select, strata = age)
+
+sisters_other <- training(sisters_split)
+sisters_test <- testing(sisters_split)
+
+# Create the validation split
+set.seed(123)
+sisters_val <- validation_split(sisters_other, strata = age)
+
+glimpse(sisters_val)
+```
+
+## Using your validation set
+
+This new validation set you just created will be used to compare models you have trained and choose which one to use.  A validation test is used to compare models or tune hyperparameters.
+
+## Tune model hyperparameters
+
+You have prepared training, validation, and test sets and now it's time to build predictive models.
+
+In this last case study, you are going to work with model hyperparameters for the first time in this course. Some model parameters cannot be learned directly from a dataset during model training; these kinds of parameters are called hyperparameters. 💥 Some examples of hyperparameters include the number of predictors that are sampled at splits in a tree-based model (we call this `mtry` in tidymodels) or the learning rate in a boosted tree model (we call this `learn_rate`).
+
+Instead of learning these kinds of hyperparameters during model training, we can estimate the best values for these values by training many models on a resampled data set (like the validation set you just created) and measuring how well all these models perform. This process is called **tuning**.
+
+You can identify which parameters to `tune()` in a model specification as shown here. Let's build a decision tree model to predict `age` for our nuns, and tune the cost complexity and the maximum tree depth.
+
+### What is a model hyperparameter?
+
+```{r}
+tree_spec <- decision_tree(
+  cost_complexity = tune(),
+  tree_depth = tune()
+) |> 
+  set_engine("rpart") |> 
+  set_mode("regression")
+```
+
+
+Model hyperparameters aren't the only things you can tune. You can also tune steps in your preprocessing pipeline. This recipe has two steps:
+
+* First, this recipe centers and scales all those numeric predictors we have in this dataset, cataloging the nuns' responses to the survey questions.
+
+* Second, this recipe implements principal component analysis on these same predictors. Except... this recipe identifies that we want to implement PCA and we aren't sure how many predictors we should use. We want to choose the best 🏆 number of predictors.
+
+```{r}
+sisters_recipe <- recipe(age ~ ., data = sisters_other) |> 
+  step_normalize(all_predictors())  |> 
+  step_pca(all_predictors(), num_comp = tune())
+```
+
+You have a couple of options for how to choose which possible values for the tuning parameters to try. One option is to set up a grid of possible parameter values.
+
+Here, we are using default ranges for cost complexity and tree depth, and we are going to try 3 to 12 principal components. When we set `levels = 5`, we are saying we want five levels for each parameter, which means there will be 125 (5 * 5 * 5) total models to try.
+
+You can use the function `tune_grid()` to fit all these models; you can tune either a workflow or a model specification with a set of resampled data, such as the validation set you created (i.e. a single `resample`).
+
+### Grid of tuning parameters
+
+```{r}
+grid_regular(num_comp(c(3, 12)),
+             cost_complexity(),
+             tree_depth(),
+             levels = 5)
+```
+
+You train these 125 possible models on the training data and use the validation data to compare all the results in terms of performance. We won't use the testing data until the very end of our modeling process, when we use it to estimate how our model will perform on new data.
+
+### Why three data partitions?
+
+For some modeling use cases, an approach with three data partitions is overkill, perhaps a bit too much, but if you have enough data that you can use some of these powerful machine learning algorithms or techniques, the danger you face is underestimating your uncertainty for new data if you estimate it with data that you used to pick a model.
+
+To get a reliable estimate from tuning, for example, you need to use another heldout dataset for assessing the models, either a validation set or a set of simulated datasets created through resampling.
+
+Why three data partitions? Don't overestimate how well your model is performing! 🙅
+
+### Tune model hyperparameters
+
+This dataset of extensive survey responses from Catholic nuns in the 1960s is a great demonstration of all of these issues. You will use your validation set to find which values of the parameters (cost complexity, tree depth, and number of principal components) result in the highest R-squared and lowest RMSE. Notice here that we get the best results with a tree depth of 4 and 5 principal components.
+
+As you work through the final set of exercises, you will see all of this come together, along with all the other practical predictive modeling skills we've explored in this course.
+
+## Identify tuning parameters
+
+It’s time to build a modeling `workflow()` for this last dataset. We aren’t going to fit this dataset just once, but instead many times! We are going to use this `workflow()` to tune hyperparameters both in our model specification and our preprocessing recipe.
+
+### Instructions
+
+Let’s start with our preprocessing tuning.
+
+* Add two preprocessing steps to this recipe, first to normalize and them to implement PCA.
+
+* Specify that we want to `tune()` the number of principal components.
+
+```{r}
+sisters_recipe <- recipe(age ~ ., data = sisters_other)  |>  
+    step_normalize(all_predictors())  |> 
+    step_pca(all_predictors(), num_comp = tune())
+
+sisters_recipe
+```
+

@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.3.433">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>But what do the nuns think?</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="nuns_files/libs/clipboard/clipboard.min.js"></script>
+<script src="nuns_files/libs/quarto-html/quarto.js"></script>
+<script src="nuns_files/libs/quarto-html/popper.min.js"></script>
+<script src="nuns_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="nuns_files/libs/quarto-html/anchor.min.js"></script>
+<link href="nuns_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="nuns_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="nuns_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="nuns_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="nuns_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+<div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="nuns.pdf"><i class="bi bi-file-pdf"></i>PDF</a></li></ul></div></div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">But what do the nuns think?</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">Last modified on March 03, 2025 15:42:30 Eastern Standard Time</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="callout callout-style-default callout-note no-icon callout-titled" title="Crediting the materials">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Crediting the materials
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This majority of the material in the first part of this document is taken from the free online course at <a href="https://supervised-ml-course.netlify.app/">https://supervised-ml-course.netlify.app/</a> written by Julia Silge.</p>
+</div>
+</div>
+<p>This case study uses an extensive survey of Catholic nuns fielded in 1967 to once more put your practical machine learning skills to use. You will predict the age of these religious women from their responses about their beliefs and attitudes.</p>
+<section id="surveying-catholic-sisters-in-1967" class="level2">
+<h2 class="anchored" data-anchor-id="surveying-catholic-sisters-in-1967">Surveying Catholic sisters in 1967</h2>
+<p>You have made it to the last case study of our course! 🎉 It is a particularly compelling one, where we are going to practice some advanced skills in modeling.</p>
+<p>In this case study, you will predict the age of Catholic nuns from their answers on a survey fielded in 1967 focusing on questions about social and religious issues. What kind of model will you build? To predict a continuous, numeric quantity like age, use <strong>regression models</strong>.</p>
+</section>
+<section id="visualize-the-age-distribution" class="level2">
+<h2 class="anchored" data-anchor-id="visualize-the-age-distribution">Visualize the age distribution</h2>
+<p>The first step before you start modeling is to explore your data, and we are going to spend a little more time on this step in this last case study. To start with, check out the distribution of ages for the respondents in this survey. 📊 (Keep in mind throughout this case study that the data you have in your environment is one quarter of the real survey data.)</p>
+<section id="instructions" class="level3">
+<h3 class="anchored" data-anchor-id="instructions">Instructions</h3>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>sisters67 <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../Data/sisters.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Call <code>glimpse()</code> on <code>sisters67</code> to take a look at the structure of the data. Notice how many columns there are, and what their characteristics are.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># View sisters67</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(sisters67)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 19,278
+Columns: 67
+$ age    &lt;dbl&gt; 60, 40, 30, 40, 70, 70, 30, 50, 30, 30, 60, 60, 50, 70, 30, 60,…
+$ sister &lt;dbl&gt; 89986, 37950, 117200, 104452, 23709, 51361, 101419, 23722, 1016…
+$ v116   &lt;dbl&gt; 5, 2, 4, 5, 5, 4, 5, 4, 4, 4, 4, 4, 5, 5, 4, 5, 4, 2, 4, 4, 2, …
+$ v117   &lt;dbl&gt; 2, 1, 1, 4, 5, 4, 2, 1, 1, 1, 1, 2, 2, 1, 1, 3, 1, 2, 5, 1, 1, …
+$ v118   &lt;dbl&gt; 3, 5, 5, 5, 5, 1, 4, 2, 2, 5, 3, 4, 1, 5, 4, 4, 4, 1, 1, 5, 5, …
+$ v119   &lt;dbl&gt; 1, 5, 5, 4, 5, 1, 2, 1, 4, 4, 5, 3, 4, 5, 2, 4, 5, 4, 4, 5, 5, …
+$ v120   &lt;dbl&gt; 5, 1, 4, 2, 5, 4, 1, 2, 5, 1, 1, 5, 1, 1, 2, 5, 4, 4, 5, 1, 1, …
+$ v121   &lt;dbl&gt; 1, 4, 1, 4, 2, 1, 1, 5, 5, 1, 1, 5, 3, 1, 2, 4, 4, 4, 5, 4, 1, …
+$ v122   &lt;dbl&gt; 1, 1, 3, 1, 4, 4, 1, 2, 1, 2, 1, 3, 1, 1, 2, 1, 1, 2, 1, 5, 3, …
+$ v123   &lt;dbl&gt; 2, 5, 5, 3, 4, 4, 5, 5, 4, 5, 5, 3, 5, 5, 4, 3, 5, 5, 3, 5, 5, …
+$ v124   &lt;dbl&gt; 1, 1, 1, 4, 4, 1, 1, 4, 2, 2, 3, 5, 1, 1, 1, 4, 4, 2, 4, 4, 2, …
+$ v125   &lt;dbl&gt; 4, 5, 1, 2, 5, 1, 2, 5, 5, 4, 5, 5, 2, 5, 5, 5, 1, 4, 5, 5, 5, …
+$ v126   &lt;dbl&gt; 1, 4, 1, 1, 5, 1, 1, 4, 2, 1, 3, 4, 1, 1, 1, 4, 1, 1, 5, 1, 1, …
+$ v127   &lt;dbl&gt; 1, 2, 2, 2, 4, 2, 1, 4, 2, 4, 4, 4, 4, 1, 1, 5, 2, 4, 4, 4, 1, …
+$ v128   &lt;dbl&gt; 5, 5, 1, 4, 4, 1, 5, 1, 4, 4, 4, 3, 2, 5, 2, 4, 2, 2, 3, 4, 1, …
+$ v129   &lt;dbl&gt; 1, 5, 5, 5, 5, 1, 4, 5, 5, 1, 5, 3, 5, 5, 5, 4, 5, 5, 5, 4, 5, …
+$ v130   &lt;dbl&gt; 5, 1, 1, 2, 2, 5, 1, 4, 2, 2, 1, 5, 1, 1, 2, 5, 4, 5, 4, 4, 1, …
+$ v131   &lt;dbl&gt; 3, 4, 2, 4, 4, 3, 2, 3, 4, 4, 3, 3, 3, 4, 2, 2, 4, 4, 2, 4, 5, …
+$ v132   &lt;dbl&gt; 5, 5, 4, 3, 5, 1, 5, 5, 5, 5, 5, 4, 5, 5, 5, 5, 5, 5, 4, 5, 1, …
+$ v133   &lt;dbl&gt; 2, 4, 1, 2, 4, 1, 5, 2, 4, 1, 3, 3, 5, 1, 2, 4, 4, 4, 5, 4, 1, …
+$ v134   &lt;dbl&gt; 3, 3, 4, 4, 2, 4, 3, 5, 3, 4, 3, 3, 5, 5, 4, 4, 5, 4, 3, 2, 5, …
+$ v135   &lt;dbl&gt; 4, 2, 5, 3, 4, 1, 5, 5, 2, 4, 5, 2, 5, 5, 4, 4, 5, 5, 1, 5, 5, …
+$ v136   &lt;dbl&gt; 1, 4, 2, 4, 2, 4, 4, 2, 2, 1, 3, 4, 1, 1, 4, 4, 4, 2, 1, 2, 1, …
+$ v137   &lt;dbl&gt; 3, 2, 1, 2, 4, 5, 1, 5, 2, 1, 1, 2, 1, 1, 1, 2, 1, 1, 2, 1, 1, …
+$ v138   &lt;dbl&gt; 5, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 3, 1, 1, 1, 3, 1, 1, 1, 1, 1, …
+$ v139   &lt;dbl&gt; 5, 1, 1, 2, 2, 5, 1, 4, 1, 1, 2, 5, 4, 1, 1, 2, 1, 1, 2, 1, 1, …
+$ v140   &lt;dbl&gt; 5, 1, 1, 4, 4, 4, 1, 1, 2, 1, 1, 3, 1, 1, 4, 5, 1, 5, 5, 3, 4, …
+$ v141   &lt;dbl&gt; 5, 5, 5, 4, 5, 4, 5, 5, 3, 3, 3, 2, 3, 5, 3, 2, 5, 5, 1, 5, 5, …
+$ v142   &lt;dbl&gt; 3, 2, 1, 4, 2, 2, 4, 1, 2, 1, 3, 3, 3, 1, 2, 2, 1, 2, 1, 4, 1, …
+$ v143   &lt;dbl&gt; 4, 5, 5, 3, 4, 1, 5, 4, 4, 5, 4, 3, 5, 5, 2, 5, 5, 4, 5, 5, 5, …
+$ v144   &lt;dbl&gt; 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 2, 4, 1, 1, 1, 1, 5, 1, 1, 2, 1, …
+$ v145   &lt;dbl&gt; 5, 5, 2, 4, 5, 5, 1, 4, 4, 2, 2, 5, 5, 1, 4, 5, 5, 1, 5, 4, 2, …
+$ v146   &lt;dbl&gt; 3, 5, 4, 2, 5, 1, 1, 1, 4, 5, 4, 4, 4, 5, 5, 2, 5, 4, 5, 5, 5, …
+$ v147   &lt;dbl&gt; 4, 4, 1, 2, 1, 4, 4, 4, 2, 3, 3, 1, 1, 1, 1, 2, 5, 1, 4, 3, 1, …
+$ v148   &lt;dbl&gt; 1, 3, 1, 3, 2, 2, 1, 1, 3, 1, 3, 3, 3, 4, 3, 4, 1, 1, 1, 1, 1, …
+$ v149   &lt;dbl&gt; 3, 2, 1, 4, 4, 4, 4, 4, 4, 2, 3, 3, 3, 1, 2, 2, 2, 4, 3, 4, 4, …
+$ v150   &lt;dbl&gt; 4, 2, 1, 2, 2, 4, 2, 1, 2, 1, 5, 5, 2, 5, 1, 5, 1, 2, 4, 5, 3, …
+$ v151   &lt;dbl&gt; 2, 5, 2, 4, 5, 5, 5, 4, 4, 2, 3, 4, 2, 5, 2, 5, 2, 4, 4, 4, 5, …
+$ v152   &lt;dbl&gt; 3, 1, 1, 4, 4, 5, 4, 1, 2, 1, 3, 3, 1, 1, 1, 5, 1, 2, 5, 4, 1, …
+$ v153   &lt;dbl&gt; 5, 5, 5, 1, 2, 4, 5, 4, 3, 5, 3, 1, 1, 1, 5, 5, 5, 5, 4, 4, 5, …
+$ v154   &lt;dbl&gt; 5, 1, 1, 3, 5, 5, 2, 1, 4, 1, 3, 1, 5, 1, 1, 5, 4, 1, 5, 4, 1, …
+$ v155   &lt;dbl&gt; 4, 3, 4, 5, 5, 1, 5, 4, 4, 4, 4, 3, 5, 5, 2, 5, 5, 5, 4, 5, 5, …
+$ v156   &lt;dbl&gt; 4, 1, 1, 1, 4, 4, 1, 1, 1, 1, 2, 4, 1, 1, 1, 1, 5, 1, 1, 2, 1, …
+$ v157   &lt;dbl&gt; 2, 2, 1, 2, 2, 5, 5, 5, 4, 1, 3, 3, 1, 1, 1, 5, 4, 1, 4, 5, 2, …
+$ v158   &lt;dbl&gt; 3, 4, 4, 4, 5, 5, 2, 5, 4, 4, 3, 3, 4, 5, 4, 4, 3, 4, 5, 4, 3, …
+$ v159   &lt;dbl&gt; 5, 2, 1, 2, 2, 5, 5, 3, 4, 1, 3, 3, 3, 1, 1, 2, 2, 1, 5, 1, 1, …
+$ v160   &lt;dbl&gt; 3, 5, 4, 5, 5, 5, 5, 5, 5, 1, 3, 3, 5, 5, 5, 5, 5, 4, 4, 5, 4, …
+$ v161   &lt;dbl&gt; 5, 4, 1, 2, 4, 1, 1, 3, 2, 1, 1, 2, 1, 1, 2, 5, 3, 2, 4, 1, 1, …
+$ v162   &lt;dbl&gt; 2, 5, 5, 4, 4, 1, 5, 4, 5, 5, 3, 5, 5, 1, 4, 4, 4, 5, 3, 5, 5, …
+$ v163   &lt;dbl&gt; 4, 1, 1, 4, 2, 1, 1, 1, 4, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1, 4, 1, …
+$ v164   &lt;dbl&gt; 4, 1, 1, 5, 2, 1, 1, 1, 4, 1, 4, 5, 1, 1, 4, 5, 1, 1, 4, 5, 1, …
+$ v165   &lt;dbl&gt; 3, 4, 1, 1, 2, 4, 1, 5, 2, 1, 1, 3, 3, 1, 1, 3, 1, 2, 1, 1, 1, …
+$ v166   &lt;dbl&gt; 5, 5, 1, 2, 2, 1, 2, 3, 3, 3, 3, 5, 4, 1, 4, 5, 4, 4, 5, 5, 4, …
+$ v167   &lt;dbl&gt; 5, 1, 5, 4, 2, 1, 4, 3, 1, 4, 4, 4, 5, 1, 2, 4, 4, 4, 3, 4, 4, …
+$ v168   &lt;dbl&gt; 3, 5, 5, 5, 5, 4, 5, 4, 5, 5, 5, 3, 3, 5, 4, 5, 5, 4, 2, 5, 3, …
+$ v169   &lt;dbl&gt; 2, 1, 1, 4, 1, 1, 1, 4, 1, 1, 5, 5, 1, 5, 2, 1, 1, 2, 1, 1, 1, …
+$ v170   &lt;dbl&gt; 5, 4, 3, 3, 4, 1, 1, 4, 4, 4, 3, 3, 5, 5, 4, 2, 4, 2, 4, 4, 4, …
+$ v171   &lt;dbl&gt; 5, 2, 1, 5, 5, 1, 5, 1, 5, 4, 5, 5, 5, 5, 4, 5, 5, 4, 5, 4, 5, …
+$ v172   &lt;dbl&gt; 5, 5, 5, 2, 2, 4, 5, 5, 5, 1, 5, 5, 2, 5, 2, 5, 5, 1, 5, 5, 2, …
+$ v173   &lt;dbl&gt; 4, 4, 1, 2, 5, 1, 1, 5, 1, 4, 1, 3, 1, 1, 4, 1, 4, 1, 2, 1, 1, …
+$ v174   &lt;dbl&gt; 3, 5, 1, 1, 4, 1, 5, 1, 3, 3, 3, 4, 5, 1, 4, 4, 4, 4, 5, 5, 5, …
+$ v175   &lt;dbl&gt; 2, 2, 1, 4, 2, 5, 1, 3, 4, 1, 1, 5, 2, 1, 2, 5, 2, 4, 1, 1, 1, …
+$ v176   &lt;dbl&gt; 3, 2, 1, 4, 4, 1, 5, 4, 3, 1, 3, 2, 4, 5, 4, 5, 5, 4, 5, 3, 1, …
+$ v177   &lt;dbl&gt; 5, 4, 1, 5, 4, 5, 5, 5, 2, 1, 4, 2, 5, 5, 2, 5, 5, 4, 5, 4, 5, …
+$ v178   &lt;dbl&gt; 1, 5, 2, 4, 4, 1, 1, 3, 4, 1, 4, 5, 1, 1, 4, 5, 5, 4, 5, 5, 2, …
+$ v179   &lt;dbl&gt; 1, 4, 1, 5, 2, 5, 5, 1, 5, 1, 4, 5, 2, 4, 2, 5, 4, 1, 4, 4, 3, …
+$ v180   &lt;dbl&gt; 4, 4, 2, 4, 2, 5, 4, 1, 3, 1, 3, 4, 2, 4, 4, 4, 4, 2, 2, 4, 4, …</code></pre>
+</div>
+</div>
+<ul>
+<li>Plot a histogram of <code>age</code>.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the histogram</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(sisters67, <span class="fu">aes</span>(<span class="at">x =</span> age)) <span class="sc">+</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">10</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">fill =</span> <span class="st">"purple"</span>) <span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="nuns_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="tidy-the-survey-data" class="level2">
+<h2 class="anchored" data-anchor-id="tidy-the-survey-data">Tidy the survey data</h2>
+<p>Embracing <a href="https://tidyverse.tidyverse.org/articles/manifesto.html">tidy data principles</a> is a powerful option for exploratory data analysis. When your data is tidy, you can quickly iterate in getting to know your data better and making exploratory plots. Let’s transform this <strong>wide</strong> data set into a <strong>tidy</strong> data frame with one observation per row, and then check out some characteristics of this subset of the original survey.</p>
+<div class="callout callout-style-default callout-note callout-titled" title="Using select()">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Using select()
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>There is a column called sister in this dataset that is an identifier for each survey respondent. We are removing this column in the exercise using <a href="https://dplyr.tidyverse.org/reference/select.html"><code>select()</code></a>.</p>
+</div>
+</div>
+<section id="instructions-1" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-1">Instructions</h3>
+<ul>
+<li>Use the <code>pivot_longer()</code> function to transform the wide data set with each survey question in a separate column to a narrow, tidy data set with each survey question in a separate row.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tidy the data set</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>tidy_sisters <span class="ot">&lt;-</span> sisters67 <span class="sc">|&gt;</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>sister) <span class="sc">|&gt;</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="sc">-</span>age, <span class="at">names_to =</span> <span class="st">"question"</span>, <span class="at">values_to =</span> <span class="st">"rating"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>View the structure of this tidy data set using <code>glimpse()</code>.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the structure of tidy_sisters</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(tidy_sisters)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 1,253,070
+Columns: 3
+$ age      &lt;dbl&gt; 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 6…
+$ question &lt;chr&gt; "v116", "v117", "v118", "v119", "v120", "v121", "v122", "v123…
+$ rating   &lt;dbl&gt; 5, 2, 3, 1, 5, 1, 1, 2, 1, 4, 1, 1, 5, 1, 5, 3, 5, 2, 3, 4, 1…</code></pre>
+</div>
+</div>
+<p>Next look at question agreement overall.</p>
+</section>
+<section id="instructions-2" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-2">Instructions</h3>
+<p>Group by <code>age</code> and summarize the <code>rating</code> column to see how the overall agreement with all questions varied by <code>age</code>.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Overall agreement with all questions varied by age</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>tidy_sisters  <span class="sc">|&gt;</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(age)  <span class="sc">|&gt;</span> </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">rating =</span> <span class="fu">mean</span>(rating, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 9 × 2
+    age rating
+  &lt;dbl&gt;  &lt;dbl&gt;
+1    20   2.85
+2    30   2.81
+3    40   2.84
+4    50   2.95
+5    60   3.11
+6    70   3.26
+7    80   3.43
+8    90   3.52
+9   100   3.79</code></pre>
+</div>
+</div>
+<ul>
+<li>Count the <code>rating</code> column to check out how many respondents agreed or disagreed overall.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Number of respondents agreed or disagreed overall</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>tidy_sisters <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(rating)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 2
+  rating      n
+   &lt;dbl&gt;  &lt;int&gt;
+1      1 324374
+2      2 210312
+3      3 161765
+4      4 277986
+5      5 278633</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="exploratory-data-analysis-with-tidy-data" class="level2">
+<h2 class="anchored" data-anchor-id="exploratory-data-analysis-with-tidy-data">Exploratory data analysis with tidy data</h2>
+<p>You just created a tidy version of this survey data, which allows you to quickly ask and answer many different kinds of questions in exploratory data analysis.</p>
+</section>
+<section id="visualize-agreement-with-age" class="level2">
+<h2 class="anchored" data-anchor-id="visualize-agreement-with-age">Visualize agreement with <code>age</code></h2>
+<p>The tidied version of the survey data that you constructed is available in your environment. You have many options at your fingertips with this tidy data now. Make a plot that shows how agreement on a subset of the questions changes with age. 📉 In this exercise, we are using <a href="https://dplyr.tidyverse.org/reference/filter.html"><code>filter()</code></a> to subset the data to just a subset of the questions on the survey to look at.</p>
+<section id="instructions-3" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-3">Instructions</h3>
+<ul>
+<li><p>Group by two variables, <code>question</code> and <code>rating</code>, so you can calculate an average <code>age</code> for each answer to each question.</p></li>
+<li><p>Summarize for each grouping to find an average <code>age</code>.</p></li>
+<li><p>Choose the correct <code>geom</code> to make a line plot.</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize agreement with age</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>tidy_sisters  <span class="sc">|&gt;</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(question <span class="sc">%in%</span> <span class="fu">paste0</span>(<span class="st">"v"</span>, <span class="dv">153</span><span class="sc">:</span><span class="dv">170</span>))  <span class="sc">|&gt;</span> </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(question, rating)  <span class="sc">|&gt;</span> </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">age =</span> <span class="fu">mean</span>(age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))  <span class="sc">|&gt;</span> </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(rating, age, <span class="at">color =</span> question)) <span class="sc">+</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>question, <span class="at">nrow =</span> <span class="dv">3</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="nuns_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="trainingm-validation-and-testing-data" class="level2">
+<h2 class="anchored" data-anchor-id="trainingm-validation-and-testing-data">Trainingm validation, and testing data</h2>
+<p>It’s time to split your data into different sets now. You’ve done this three times already in this course, but in this last case study we are also going to create a validation set. Using a validation set is a good option when you have enough data (otherwise, you can use resampling).</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>sisters_select <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../Data/sisters.csv"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>sister)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="instructions-4" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-4">Instructions</h3>
+<ul>
+<li><p>Create two data partitions:</p>
+<ul>
+<li><p>Specify one to split between testing and everything else.</p></li>
+<li><p>Specify another one to split between validation and training.</p></li>
+</ul></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split off the testing set</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>sisters_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(sisters_select, <span class="at">strata =</span> age)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>sisters_other <span class="ot">&lt;-</span> <span class="fu">training</span>(sisters_split)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>sisters_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(sisters_split)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the validation split</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>sisters_val <span class="ot">&lt;-</span> <span class="fu">validation_split</span>(sisters_other, <span class="at">strata =</span> age)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(sisters_val)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 1
+Columns: 2
+$ splits &lt;list&gt; [&lt;val_split[10841 x 3616 x 14457 x 66]&gt;]
+$ id     &lt;chr&gt; "validation"</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="using-your-validation-set" class="level2">
+<h2 class="anchored" data-anchor-id="using-your-validation-set">Using your validation set</h2>
+<p>This new validation set you just created will be used to compare models you have trained and choose which one to use. A validation test is used to compare models or tune hyperparameters.</p>
+</section>
+<section id="tune-model-hyperparameters" class="level2">
+<h2 class="anchored" data-anchor-id="tune-model-hyperparameters">Tune model hyperparameters</h2>
+<p>You have prepared training, validation, and test sets and now it’s time to build predictive models.</p>
+<p>In this last case study, you are going to work with model hyperparameters for the first time in this course. Some model parameters cannot be learned directly from a dataset during model training; these kinds of parameters are called hyperparameters. 💥 Some examples of hyperparameters include the number of predictors that are sampled at splits in a tree-based model (we call this <code>mtry</code> in tidymodels) or the learning rate in a boosted tree model (we call this <code>learn_rate</code>).</p>
+<p>Instead of learning these kinds of hyperparameters during model training, we can estimate the best values for these values by training many models on a resampled data set (like the validation set you just created) and measuring how well all these models perform. This process is called <strong>tuning</strong>.</p>
+<p>You can identify which parameters to <code>tune()</code> in a model specification as shown here. Let’s build a decision tree model to predict <code>age</code> for our nuns, and tune the cost complexity and the maximum tree depth.</p>
+<section id="what-is-a-model-hyperparameter" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-a-model-hyperparameter">What is a model hyperparameter?</h3>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>tree_spec <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">cost_complexity =</span> <span class="fu">tune</span>(),</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">tree_depth =</span> <span class="fu">tune</span>()</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Model hyperparameters aren’t the only things you can tune. You can also tune steps in your preprocessing pipeline. This recipe has two steps:</p>
+<ul>
+<li><p>First, this recipe centers and scales all those numeric predictors we have in this dataset, cataloging the nuns’ responses to the survey questions.</p></li>
+<li><p>Second, this recipe implements principal component analysis on these same predictors. Except… this recipe identifies that we want to implement PCA and we aren’t sure how many predictors we should use. We want to choose the best 🏆 number of predictors.</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>sisters_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(age <span class="sc">~</span> ., <span class="at">data =</span> sisters_other) <span class="sc">|&gt;</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_predictors</span>())  <span class="sc">|&gt;</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_pca</span>(<span class="fu">all_predictors</span>(), <span class="at">num_comp =</span> <span class="fu">tune</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>You have a couple of options for how to choose which possible values for the tuning parameters to try. One option is to set up a grid of possible parameter values.</p>
+<p>Here, we are using default ranges for cost complexity and tree depth, and we are going to try 3 to 12 principal components. When we set <code>levels = 5</code>, we are saying we want five levels for each parameter, which means there will be 125 (5 * 5 * 5) total models to try.</p>
+<p>You can use the function <code>tune_grid()</code> to fit all these models; you can tune either a workflow or a model specification with a set of resampled data, such as the validation set you created (i.e.&nbsp;a single <code>resample</code>).</p>
+</section>
+<section id="grid-of-tuning-parameters" class="level3">
+<h3 class="anchored" data-anchor-id="grid-of-tuning-parameters">Grid of tuning parameters</h3>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grid_regular</span>(<span class="fu">num_comp</span>(<span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">12</span>)),</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>             <span class="fu">cost_complexity</span>(),</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>             <span class="fu">tree_depth</span>(),</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">levels =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 125 × 3
+   num_comp cost_complexity tree_depth
+      &lt;int&gt;           &lt;dbl&gt;      &lt;int&gt;
+ 1        3    0.0000000001          1
+ 2        5    0.0000000001          1
+ 3        7    0.0000000001          1
+ 4        9    0.0000000001          1
+ 5       12    0.0000000001          1
+ 6        3    0.0000000178          1
+ 7        5    0.0000000178          1
+ 8        7    0.0000000178          1
+ 9        9    0.0000000178          1
+10       12    0.0000000178          1
+# ℹ 115 more rows</code></pre>
+</div>
+</div>
+<p>You train these 125 possible models on the training data and use the validation data to compare all the results in terms of performance. We won’t use the testing data until the very end of our modeling process, when we use it to estimate how our model will perform on new data.</p>
+</section>
+<section id="why-three-data-partitions" class="level3">
+<h3 class="anchored" data-anchor-id="why-three-data-partitions">Why three data partitions?</h3>
+<p>For some modeling use cases, an approach with three data partitions is overkill, perhaps a bit too much, but if you have enough data that you can use some of these powerful machine learning algorithms or techniques, the danger you face is underestimating your uncertainty for new data if you estimate it with data that you used to pick a model.</p>
+<p>To get a reliable estimate from tuning, for example, you need to use another heldout dataset for assessing the models, either a validation set or a set of simulated datasets created through resampling.</p>
+<p>Why three data partitions? Don’t overestimate how well your model is performing! 🙅</p>
+</section>
+<section id="tune-model-hyperparameters-1" class="level3">
+<h3 class="anchored" data-anchor-id="tune-model-hyperparameters-1">Tune model hyperparameters</h3>
+<p>This dataset of extensive survey responses from Catholic nuns in the 1960s is a great demonstration of all of these issues. You will use your validation set to find which values of the parameters (cost complexity, tree depth, and number of principal components) result in the highest R-squared and lowest RMSE. Notice here that we get the best results with a tree depth of 4 and 5 principal components.</p>
+<p>As you work through the final set of exercises, you will see all of this come together, along with all the other practical predictive modeling skills we’ve explored in this course.</p>
+</section>
+</section>
+<section id="identify-tuning-parameters" class="level2">
+<h2 class="anchored" data-anchor-id="identify-tuning-parameters">Identify tuning parameters</h2>
+<p>It’s time to build a modeling <code>workflow()</code> for this last dataset. We aren’t going to fit this dataset just once, but instead many times! We are going to use this <code>workflow()</code> to tune hyperparameters both in our model specification and our preprocessing recipe.</p>
+<section id="instructions-5" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-5">Instructions</h3>
+<p>Let’s start with our preprocessing tuning.</p>
+<ul>
+<li><p>Add two preprocessing steps to this recipe, first to normalize and them to implement PCA.</p></li>
+<li><p>Specify that we want to <code>tune()</code> the number of principal components.</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>sisters_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(age <span class="sc">~</span> ., <span class="at">data =</span> sisters_other)  <span class="sc">|&gt;</span>  </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">step_normalize</span>(<span class="fu">all_predictors</span>())  <span class="sc">|&gt;</span> </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">step_pca</span>(<span class="fu">all_predictors</span>(), <span class="at">num_comp =</span> <span class="fu">tune</span>())</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>sisters_recipe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
