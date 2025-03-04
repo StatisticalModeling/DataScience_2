@@ -158,7 +158,7 @@ It’s time to split your data into training and testing sets, in the same way t
 ```{r}
 voters_select <- voters  |> 
     mutate(turnout16_2016 = factor(turnout16_2016)) |> 
-    select(-case_identifier)
+    select(-case_identifier) 
 ```
 
 
@@ -176,7 +176,7 @@ library(tidymodels)
 
 # Split data into training and testing sets
 set.seed(1234)
-vote_split <- voters_select %>%
+vote_split <- voters_select |> 
     initial_split(prop = 0.8,
                   strata = turnout16_2016)
 vote_train <- training(vote_split)
@@ -204,7 +204,7 @@ We are going to use [`step_upsample()`](https://themis.tidymodels.org/reference/
 
 Upsampling is another example of a preprocessing step for modeling. You can again preprocess your data using [recipes](https://recipes.tidymodels.org/). The recipe shown below has just one preprocessing step (upsampling) but you can create recipes for preprocessing with as many steps as you need.
 
-```{r, eval = FALSE}
+```{r}
 library(themis)
 vote_recipe <- recipe(turnout16_2016 ~ ., data = vote_train) |>  
     step_upsample(turnout16_2016)
@@ -212,7 +212,7 @@ vote_recipe <- recipe(turnout16_2016 ~ ., data = vote_train) |>
 
 To put our recipe and our model specification together, let's use a `workflow()`. We can fit our workflow much like we would fit a model.
 
-```{r, eval = FALSE}
+```{r}
 ## Specify a ranger model
 rf_spec <- rand_forest()  |> 
     set_engine("ranger")  |> 
@@ -343,8 +343,9 @@ The fitted models themselves are not kept or stored because they are only used f
 * sensitivity, and
 * specificity.
 
-```{r, eval = FALSE}
-# Evaluating models with resampling
+```{r}
+#| cache: true
+# Evaluating models with resampling. 
 vote_wf |> 
     fit_resamples(
         resamples = vote_folds,
@@ -365,11 +366,13 @@ The logistic regression model will likely be the best option, so we can evaluate
 
 We can see that we did a better job identifying the people who voted than those who did not.
 
-```{r, eval = FALSE}
+```{r}
+#| cache: true
+# Who is working?
 vote_final <- vote_wf  |> 
     last_fit(vote_split)
 
-vote_final %>% 
+vote_final |>  
     collect_predictions() |> 
     conf_mat(turnout16_2016, .pred_class)
 ```
@@ -389,6 +392,7 @@ Let’s use cross-validation resampling to evaluate performance for two kinds of
 
 ```{r}
 #| cache: true
+# all together now
 set.seed(1234)
 vote_folds <- vfold_cv(vote_train, v = 10)
 
@@ -421,6 +425,7 @@ glimpse(glm_res)
 
 ```{r}
 #| cache: true
+# rf model
 rf_spec <- rand_forest()  |> 
     set_engine("ranger")  |> 
     set_mode("classification")
@@ -468,10 +473,10 @@ Let’s use the `last_fit()` function to fit to the entire training set one time
 
 * Fit to the training set and evaluate on the testing set using `last_fit()`.
 
-```{r, eval = FALSE}
+```{r}
 #| cache: true
 #| label: "final_glm_fit"
-## Combine in workflow
+## Combine in workflow.
 ## Cache this chunk!
 vote_wf <- workflow()  |> 
     add_recipe(vote_recipe)  |> 
@@ -480,17 +485,18 @@ vote_wf <- workflow()  |>
 ## Final fit
 vote_final <- vote_wf |> 
     last_fit(vote_split)
-vote_final |> 
-  head() |> 
-  knitr::kable()
+vote_final
 ```
 
 * Create a confusion matrix for the results from the testing set.
 
-```{r, eval = FALSE}
+```{r}
 ## Confusion matrix
-vote_final  |>  
+vote_final |>  
     collect_predictions()  |>  
-    conf_mat(observe = turnout16_2016, estimate = .pred_class)
+    conf_mat(truth = turnout16_2016, estimate = .pred_class) -> CM
+CM
+CM |> 
+  summary()
 ```
 
