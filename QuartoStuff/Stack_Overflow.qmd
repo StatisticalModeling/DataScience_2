@@ -67,11 +67,11 @@ glimpse(stack_overflow)
 
 ```{r}
 # First count for `remote`
-stack_overflow %>% 
+stack_overflow |> 
     count(remote, sort = TRUE)
 
 # then count for `country`
-stack_overflow %>% 
+stack_overflow |> 
     count(country, sort = TRUE)
 ```
 
@@ -147,15 +147,15 @@ stack_overflow  |>
 
 This is in fact what happens with our dataset here (I know because I tested it out ✅) so we need to do something to address this imbalance. There are a variety of options available to you, which vary from quite simple to more complex, and we're going to start with a simple option.
 
-n this case study, we're going to implement **downsampling**, also known as undersampling. With this approach, we randomly remove observations from the majority class until it's the same size as the minority class and both classes can have the same effect on the machine learning model we're training.
+In this case study, we're going to implement **downsampling**, also known as undersampling. With this approach, we randomly remove observations from the majority class until it's the same size as the minority class and both classes can have the same effect on the machine learning model we're training.
 
 Are we really going to throw out a large percentage of our data here?! 😱 Yes! We do this because such an approach can be helpful at producing a useful model that can recognize both classes, instead of only one.
 
 ### Downsampling
 
-  * Remove some of the majority class so it has less effect on the predictive model
+  * Remove some of the majority class so it has less effect on the predictive model.
   
-  * Randomly remove examples from the majority class until it is the same size as the minority class
+  * Randomly remove examples from the majority class until it is the same size as the minority class.
 
 In our case study, there are roughly ten times more non-remote developers compared to the remote developers.
 
