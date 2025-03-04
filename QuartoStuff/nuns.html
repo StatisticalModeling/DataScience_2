@@ -91,7 +91,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on March 03, 2025 15:42:30 Eastern Standard Time</p>
+      <p class="date">Last modified on March 04, 2025 13:43:48 Eastern Standard Time</p>
     </div>
   </div>
   
@@ -118,7 +118,36 @@ Crediting the materials
 <section id="surveying-catholic-sisters-in-1967" class="level2">
 <h2 class="anchored" data-anchor-id="surveying-catholic-sisters-in-1967">Surveying Catholic sisters in 1967</h2>
 <p>You have made it to the last case study of our course! 🎉 It is a particularly compelling one, where we are going to practice some advanced skills in modeling.</p>
-<p>In this case study, you will predict the age of Catholic nuns from their answers on a survey fielded in 1967 focusing on questions about social and religious issues. What kind of model will you build? To predict a continuous, numeric quantity like age, use <strong>regression models</strong>.</p>
+<p>In 1967, a Catholic nun named Sister Marie Augusta Neal who had a PhD in sociology from Harvard fielded a survey of all members of Catholic women’s religious communities, i.e., nuns. It was a survey with over 600 questions that went out to over 130,000 individual sisters and was fielded in a time of significant change both for the Catholic church and society in general.</p>
+<p>This survey is so big with so much data that we’re actually only giving you a subset, about one quarter of it, in your environment here during the case study. The whole survey is available online and it is pretty interesting, so I encourage you to take a look for yourself.</p>
+<section id="conference-of-major-superiors-of-women-sisters-survey" class="level3">
+<h3 class="anchored" data-anchor-id="conference-of-major-superiors-of-women-sisters-survey">Conference of Major Superiors of Women Sisters’ Survey</h3>
+<ul>
+<li>Fielded in 1967 with over 600 questions</li>
+<li>Responses from over 130,000 sisters in almost 400 congregations</li>
+<li>Data is freely <a href="https://curate.nd.edu/articles/dataset/The_Conference_of_Major_Superiors_of_Women_CMSW_Sisters_Survey_of_1967/24723888">available</a></li>
+</ul>
+<p>There is demographic information in the survey, along with a lot of diverse kinds of questions. About 60 of the survey questions were agreement questions, with a statement (of some kind) that the survey asked the respondent to agree or disagree with on this scale. The answers are coded as integers from 1 to 5.</p>
+<p>The integer 1 corresponds to “disagree very much” and 5 corresponds to “agree very much”. This kind of coding is convenient for our modeling purposes here. The data that you will have available within this case study is only this subset of the survey: the agree/disagree statements, plus age.</p>
+<p>The original survey question asked for age in bins of 10 years, under 20, from 21 to 30, from 31 to 40, and so forth. I have recoded these as numeric values corresponding to the top of each age bin, 20, 30, 40, and so on. This means that this isn’t quite a continuous variable, since we haven’t measured these women’s ages very precisely, but we can do a pretty good job modeling it as if it is. There are more sophisticated modeling approaches possible with these kinds of measurements that you could explore.</p>
+<p>These agreement questions on the survey are mostly social and religious in nature, focusing on what the respondent believes about society, the place of religion within the world, and her own role.</p>
+<p>I do want to point out that this survey was fielded during the 1960s and there are some words used, for example for people of color, that are not used in professional or academic environments today. This is a historical dataset that we can approach and understand as centered in its context.</p>
+</section>
+<section id="opinions-and-attitudes-in-the-1960s" class="level3">
+<h3 class="anchored" data-anchor-id="opinions-and-attitudes-in-the-1960s">Opinions and attitudes in the 1960s</h3>
+<ul>
+<li>“Catholics should boycott indecent movies.”</li>
+<li>“In the past 25 years, this country has moved dangerously close to socialism.”</li>
+<li>“I would rather be called an idealist than a practical person.”</li>
+</ul>
+<p>In this case study, we are going to spend a bit more effort on exploratory data analysis. You are going to create a tidy version of the survey data with one row per observation.</p>
+<p>In the original way the data is structured, there is one row per respondent with a separate column for each answer. After you tidy the data, using the function <code>pivot_longer()</code>, you will have one row for each combination of respondent and question, a much longer and skinnier dataset. This kind of tidy data structure is well suited to exploratory data analysis.</p>
+<p>Let’s go learn something about Catholic nuns in the 1960s.</p>
+</section>
+</section>
+<section id="choose-an-appropriate-model" class="level2">
+<h2 class="anchored" data-anchor-id="choose-an-appropriate-model">Choose an appropriate model</h2>
+<p>In this case study, you will predict the age of Catholic nuns from their answers on a survey fielded in 1967 focusing on questions about social and religious issues. What kind of model will you build? To predict a continuous, numeric quantity like <code>age</code>, use <strong>regression models</strong>.</p>
 </section>
 <section id="visualize-the-age-distribution" class="level2">
 <h2 class="anchored" data-anchor-id="visualize-the-age-distribution">Visualize the age distribution</h2>
@@ -315,6 +344,66 @@ $ rating   &lt;dbl&gt; 5, 2, 3, 1, 5, 1, 1, 2, 1, 4, 1, 1, 5, 1, 5, 3, 5, 2, 3, 
 <section id="exploratory-data-analysis-with-tidy-data" class="level2">
 <h2 class="anchored" data-anchor-id="exploratory-data-analysis-with-tidy-data">Exploratory data analysis with tidy data</h2>
 <p>You just created a tidy version of this survey data, which allows you to quickly ask and answer many different kinds of questions in exploratory data analysis.</p>
+<p>You can easily see how many times survey respondents chose each option on the agreement scale with just one call to dplyr’s <a href="https://dplyr.tidyverse.org/reference/n_distinct.html?q=count#null"><code>count()</code></a> function.</p>
+<p>We can see here that 1 was the most commonly chosen option; this corresponds to “disagree very much”. The options for disagree very much, agree very much, and agree somewhat are chosen much more often than the other two.</p>
+<p>You can also check out how the overall answers to all survey questions vary with age. There were more statements on the survey that older respondents agreed with than statements younger respondents agreed with.</p>
+<p>We can go a few steps further and dig into how the answers to individual questions depend on age. The code below first filters to a subset of questions on the survey, groups by these survey questions and the possible answers to them, and then calculates the mean age for each possible answer to each of the questions we’re considering.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>tidy_sisters <span class="sc">|&gt;</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(question <span class="sc">%in%</span> <span class="fu">paste0</span>(<span class="st">"v"</span>, <span class="dv">153</span><span class="sc">:</span><span class="dv">170</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(question, rating) <span class="sc">%&gt;%</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">age =</span> <span class="fu">mean</span>(age)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(rating, age, <span class="at">color =</span> question)) <span class="sc">+</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>question)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-sisters" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="nuns_files/figure-html/fig-sisters-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Figure&nbsp;1: Trends for questions v153 - v170</figcaption>
+</figure>
+</div>
+</div>
+</div>
+<p>This is now getting closer to what we really care about and we can then pipe it to <code>ggplot2</code> to make an exploratory plot to visualize these relationships. 📊 <a href="#fig-sisters">Figure&nbsp;1</a> shows trends for a subset of the questions on the survey. Let’s talk through a few of them.</p>
+<p>The first question in this plot, v153, slopes downward. This means that the more a respondent agreed with this statement, the younger she was. What was v153 on the survey? v153 was “People who don’t believe in God have as much right to freedom of speech as anyone else.” This item was a statement about support of freedom of speech, regardless of religious belief.</p>
+<p>Other panels of this plot look different. v161, for example, slopes upward, which means that the more a respondent agreed with this statement, the older she was. What was this statement? v161 was “I like conservatism because it represents a stand to preserve our glorious heritage.” This item on the survey was a statement about identifying with conservatism and heritage.</p>
+<p>Notice that some panels in the plot don’t slope up or down; there is no strong trend with age for some statements. Let’s look at v165; see how it is flat and we don’t see any trends up or down. v165 was “Catholics as a group should consider active opposition to US participation in Vietnam.” This statement was about the Vietnam War, which was in a pivotal period in 1967. There is no trend with age that we can see in this plot, meaning that we don’t see evidence here that younger or older Catholic nuns had different opinions about the United States involvement in the war.</p>
+<p>These are the relationships that we want to build a machine learning model to understand and use for prediction. Exploratory data analysis is an important first step so that you as a machine learning practitioner understand something about your data and what your model will be capable of learning.</p>
+<p>Once you have done that important exploration, you can build a very simple model and then create <strong>training</strong> and <strong>testing</strong> sets. 💫</p>
+<p>In this case study, you are going to split the original data into three sets:</p>
+<ul>
+<li>training,</li>
+<li>validation, and</li>
+<li>test sets.</li>
+</ul>
+<p>You’ve already used training and test sets throughout this course, and in this last case study we’re going to talk about how to use a validation set to choose a model. 🧐</p>
+<p>In previous case studies, we used resampling to choose a model. Resampling lets you use your training data to create simulated datasets. These simulated datasets can help you learn which model is best without relying on performance metrics for the training set as a whole (which are overly optimistic) or the testing set (which can only be used one time at the very end of your analysis.)</p>
+<p>If you have enough data, you may not need resampling at all and instead can divide your data into a training set, a validation set, and a testing set. Instead of computing performance metrics on resampled datasets, you can compute them for the validation set. This survey of nuns is quite large so we can create a validation set to use for choosing a model. You can think of a validation set as a <strong>single resample</strong>.</p>
+<p>To split your data into three sets (training, validation, and testing), first make an <code>initial_split()</code> to split off your testing set from the rest. Then use the function <code>validation_split()</code> to create what you can think of as a single resample of that data.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>sisters_select <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../Data/sisters.csv"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>sister)</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>sisters_splits <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(sisters_select, <span class="at">strata =</span> age)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>sisters_other <span class="ot">&lt;-</span> <span class="fu">training</span>(sisters_splits)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>sisters_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(sisters_splits)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>sisters_val <span class="ot">&lt;-</span> <span class="fu">validation_split</span>(sisters_other, <span class="at">strata =</span> age)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>sisters_val</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Validation Set Split (0.75/0.25)  using stratification 
+# A tibble: 1 × 2
+  splits               id        
+  &lt;list&gt;               &lt;chr&gt;     
+1 &lt;split [10841/3616]&gt; validation</code></pre>
+</div>
+</div>
+<p>Now it’s your turn to take your tidy dataset and practice exploring for yourself.</p>
 </section>
 <section id="visualize-agreement-with-age" class="level2">
 <h2 class="anchored" data-anchor-id="visualize-agreement-with-age">Visualize agreement with <code>age</code></h2>
@@ -327,30 +416,30 @@ $ rating   &lt;dbl&gt; 5, 2, 3, 1, 5, 1, 1, 2, 1, 4, 1, 1, 5, 1, 5, 3, 5, 2, 3, 
 <li><p>Choose the correct <code>geom</code> to make a line plot.</p></li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize agreement with age</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>tidy_sisters  <span class="sc">|&gt;</span> </span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(question <span class="sc">%in%</span> <span class="fu">paste0</span>(<span class="st">"v"</span>, <span class="dv">153</span><span class="sc">:</span><span class="dv">170</span>))  <span class="sc">|&gt;</span> </span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(question, rating)  <span class="sc">|&gt;</span> </span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">age =</span> <span class="fu">mean</span>(age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))  <span class="sc">|&gt;</span> </span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(rating, age, <span class="at">color =</span> question)) <span class="sc">+</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>question, <span class="at">nrow =</span> <span class="dv">3</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualize agreement with age</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>tidy_sisters  <span class="sc">|&gt;</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(question <span class="sc">%in%</span> <span class="fu">paste0</span>(<span class="st">"v"</span>, <span class="dv">153</span><span class="sc">:</span><span class="dv">170</span>))  <span class="sc">|&gt;</span> </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(question, rating)  <span class="sc">|&gt;</span> </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">age =</span> <span class="fu">mean</span>(age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))  <span class="sc">|&gt;</span> </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(rating, age, <span class="at">color =</span> question)) <span class="sc">+</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>question, <span class="at">nrow =</span> <span class="dv">3</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="nuns_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="nuns_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 </section>
 </section>
-<section id="trainingm-validation-and-testing-data" class="level2">
-<h2 class="anchored" data-anchor-id="trainingm-validation-and-testing-data">Trainingm validation, and testing data</h2>
+<section id="training-validation-and-testing-data" class="level2">
+<h2 class="anchored" data-anchor-id="training-validation-and-testing-data">Training, validation, and testing data</h2>
 <p>It’s time to split your data into different sets now. You’ve done this three times already in this course, but in this last case study we are also going to create a validation set. Using a validation set is a good option when you have enough data (otherwise, you can use resampling).</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>sisters_select <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../Data/sisters.csv"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>sister)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>sisters_select <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../Data/sisters.csv"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>sister)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <section id="instructions-4" class="level3">
 <h3 class="anchored" data-anchor-id="instructions-4">Instructions</h3>
@@ -362,18 +451,18 @@ $ rating   &lt;dbl&gt; 5, 2, 3, 1, 5, 1, 1, 2, 1, 4, 1, 1, 5, 1, 5, 3, 5, 2, 3, 
 </ul></li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split off the testing set</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>sisters_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(sisters_select, <span class="at">strata =</span> age)</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>sisters_other <span class="ot">&lt;-</span> <span class="fu">training</span>(sisters_split)</span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>sisters_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(sisters_split)</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the validation split</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>sisters_val <span class="ot">&lt;-</span> <span class="fu">validation_split</span>(sisters_other, <span class="at">strata =</span> age)</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(sisters_val)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Split off the testing set</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>sisters_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(sisters_select, <span class="at">strata =</span> age)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>sisters_other <span class="ot">&lt;-</span> <span class="fu">training</span>(sisters_split)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>sisters_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(sisters_split)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the validation split</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>sisters_val <span class="ot">&lt;-</span> <span class="fu">validation_split</span>(sisters_other, <span class="at">strata =</span> age)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(sisters_val)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 1
 Columns: 2
@@ -396,12 +485,12 @@ $ id     &lt;chr&gt; "validation"</code></pre>
 <section id="what-is-a-model-hyperparameter" class="level3">
 <h3 class="anchored" data-anchor-id="what-is-a-model-hyperparameter">What is a model hyperparameter?</h3>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>tree_spec <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>(</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">cost_complexity =</span> <span class="fu">tune</span>(),</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">tree_depth =</span> <span class="fu">tune</span>()</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> </span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>tree_spec <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">cost_complexity =</span> <span class="fu">tune</span>(),</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">tree_depth =</span> <span class="fu">tune</span>()</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Model hyperparameters aren’t the only things you can tune. You can also tune steps in your preprocessing pipeline. This recipe has two steps:</p>
 <ul>
@@ -409,9 +498,9 @@ $ id     &lt;chr&gt; "validation"</code></pre>
 <li><p>Second, this recipe implements principal component analysis on these same predictors. Except… this recipe identifies that we want to implement PCA and we aren’t sure how many predictors we should use. We want to choose the best 🏆 number of predictors.</p></li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>sisters_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(age <span class="sc">~</span> ., <span class="at">data =</span> sisters_other) <span class="sc">|&gt;</span> </span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_predictors</span>())  <span class="sc">|&gt;</span> </span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_pca</span>(<span class="fu">all_predictors</span>(), <span class="at">num_comp =</span> <span class="fu">tune</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>sisters_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(age <span class="sc">~</span> ., <span class="at">data =</span> sisters_other) <span class="sc">|&gt;</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_predictors</span>())  <span class="sc">|&gt;</span> </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_pca</span>(<span class="fu">all_predictors</span>(), <span class="at">num_comp =</span> <span class="fu">tune</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>You have a couple of options for how to choose which possible values for the tuning parameters to try. One option is to set up a grid of possible parameter values.</p>
 <p>Here, we are using default ranges for cost complexity and tree depth, and we are going to try 3 to 12 principal components. When we set <code>levels = 5</code>, we are saying we want five levels for each parameter, which means there will be 125 (5 * 5 * 5) total models to try.</p>
@@ -420,10 +509,10 @@ $ id     &lt;chr&gt; "validation"</code></pre>
 <section id="grid-of-tuning-parameters" class="level3">
 <h3 class="anchored" data-anchor-id="grid-of-tuning-parameters">Grid of tuning parameters</h3>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grid_regular</span>(<span class="fu">num_comp</span>(<span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">12</span>)),</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>             <span class="fu">cost_complexity</span>(),</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>             <span class="fu">tree_depth</span>(),</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">levels =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grid_regular</span>(<span class="fu">num_comp</span>(<span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">12</span>)),</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>             <span class="fu">cost_complexity</span>(),</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>             <span class="fu">tree_depth</span>(),</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">levels =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 125 × 3
    num_comp cost_complexity tree_depth
@@ -466,11 +555,42 @@ $ id     &lt;chr&gt; "validation"</code></pre>
 <li><p>Specify that we want to <code>tune()</code> the number of principal components.</p></li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>sisters_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(age <span class="sc">~</span> ., <span class="at">data =</span> sisters_other)  <span class="sc">|&gt;</span>  </span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">step_normalize</span>(<span class="fu">all_predictors</span>())  <span class="sc">|&gt;</span> </span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">step_pca</span>(<span class="fu">all_predictors</span>(), <span class="at">num_comp =</span> <span class="fu">tune</span>())</span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>sisters_recipe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>sisters_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(age <span class="sc">~</span> ., <span class="at">data =</span> sisters_other)  <span class="sc">|&gt;</span>  </span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">step_normalize</span>(<span class="fu">all_predictors</span>())  <span class="sc">|&gt;</span> </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">step_pca</span>(<span class="fu">all_predictors</span>(), <span class="at">num_comp =</span> <span class="fu">tune</span>())</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>sisters_recipe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Recipe ──────────────────────────────────────────────────────────────────────</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Inputs </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Number of variables by role</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>outcome:    1
+predictor: 65</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Operations </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>• Centering and scaling for: all_predictors()</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>• PCA extraction with: all_predictors()</code></pre>
+</div>
 </div>
 </section>
 </section>
