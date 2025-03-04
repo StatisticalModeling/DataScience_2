@@ -157,7 +157,8 @@ Optional Resources:
 
 + Start reproduction of [_Modeling with Tidymodels in R_](https://classroom.github.com/a/4i3ONvjK) - Due Mar 24 NLT 5:00 PM
     
-    
++ [Stack Overflow](../QuartoStuff/Stack_Overflow.html)
+
 * * *   
 
 ## Spring Break: Mar 10 -- 14 {-}
