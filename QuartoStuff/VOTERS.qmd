@@ -468,7 +468,7 @@ Let’s use the `last_fit()` function to fit to the entire training set one time
 
 * Fit to the training set and evaluate on the testing set using `last_fit()`.
 
-```{r}
+```{r, eval = FALSE}
 #| cache: true
 #| label: "final_glm_fit"
 ## Combine in workflow
@@ -487,7 +487,7 @@ vote_final |>
 
 * Create a confusion matrix for the results from the testing set.
 
-```{r}
+```{r, eval = FALSE}
 ## Confusion matrix
 vote_final  |>  
     collect_predictions()  |>  
