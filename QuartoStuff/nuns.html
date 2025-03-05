@@ -91,7 +91,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on March 04, 2025 13:43:48 Eastern Standard Time</p>
+      <p class="date">Last modified on March 05, 2025 11:57:04 Eastern Standard Time</p>
     </div>
   </div>
   
@@ -111,7 +111,7 @@ Crediting the materials
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This majority of the material in the first part of this document is taken from the free online course at <a href="https://supervised-ml-course.netlify.app/">https://supervised-ml-course.netlify.app/</a> written by Julia Silge.</p>
+<p>The majority of the material in the first part of this document is taken from the free online course at <a href="https://supervised-ml-course.netlify.app/">https://supervised-ml-course.netlify.app/</a> written by Julia Silge.</p>
 </div>
 </div>
 <p>This case study uses an extensive survey of Catholic nuns fielded in 1967 to once more put your practical machine learning skills to use. You will predict the age of these religious women from their responses about their beliefs and attitudes.</p>
@@ -356,7 +356,7 @@ $ rating   &lt;dbl&gt; 5, 2, 3, 1, 5, 1, 1, 2, 1, 4, 1, 1, 5, 1, 5, 3, 5, 2, 3, 
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(rating, age, <span class="at">color =</span> question)) <span class="sc">+</span></span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>question)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(question))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div id="fig-sisters" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
@@ -381,26 +381,23 @@ $ rating   &lt;dbl&gt; 5, 2, 3, 1, 5, 1, 1, 2, 1, 4, 1, 1, 5, 1, 5, 3, 5, 2, 3, 
 <p>You’ve already used training and test sets throughout this course, and in this last case study we’re going to talk about how to use a validation set to choose a model. 🧐</p>
 <p>In previous case studies, we used resampling to choose a model. Resampling lets you use your training data to create simulated datasets. These simulated datasets can help you learn which model is best without relying on performance metrics for the training set as a whole (which are overly optimistic) or the testing set (which can only be used one time at the very end of your analysis.)</p>
 <p>If you have enough data, you may not need resampling at all and instead can divide your data into a training set, a validation set, and a testing set. Instead of computing performance metrics on resampled datasets, you can compute them for the validation set. This survey of nuns is quite large so we can create a validation set to use for choosing a model. You can think of a validation set as a <strong>single resample</strong>.</p>
-<p>To split your data into three sets (training, validation, and testing), first make an <code>initial_split()</code> to split off your testing set from the rest. Then use the function <code>validation_split()</code> to create what you can think of as a single resample of that data.</p>
+<p>To split your data into three sets (training, validation, and testing), first make an <code>initial_split()</code> to split off your testing set from the rest. Then use the function <code>initial_validation_split()</code> to create what you can think of as a single resample of that data.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>sisters_select <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"../Data/sisters.csv"</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>sister)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>sisters_splits <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(sisters_select, <span class="at">strata =</span> age)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>sisters_splits <span class="ot">&lt;-</span> <span class="fu">initial_validation_split</span>(sisters_select, <span class="at">strata =</span> age)</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>sisters_other <span class="ot">&lt;-</span> <span class="fu">training</span>(sisters_splits)</span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>sisters_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(sisters_splits)</span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>sisters_val <span class="ot">&lt;-</span> <span class="fu">validation_split</span>(sisters_other, <span class="at">strata =</span> age)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>sisters_val <span class="ot">&lt;-</span> <span class="fu">initial_validation_split</span>(sisters_other, <span class="at">strata =</span> age)</span>
 <span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>sisters_val</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># Validation Set Split (0.75/0.25)  using stratification 
-# A tibble: 1 × 2
-  splits               id        
-  &lt;list&gt;               &lt;chr&gt;     
-1 &lt;split [10841/3616]&gt; validation</code></pre>
+<pre><code>&lt;Training/Validation/Testing/Total&gt;
+&lt;6937/2313/2315/11565&gt;</code></pre>
 </div>
 </div>
 <p>Now it’s your turn to take your tidy dataset and practice exploring for yourself.</p>
@@ -423,7 +420,7 @@ $ rating   &lt;dbl&gt; 5, 2, 3, 1, 5, 1, 1, 2, 1, 4, 1, 1, 5, 1, 5, 3, 5, 2, 3, 
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(<span class="at">age =</span> <span class="fu">mean</span>(age, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))  <span class="sc">|&gt;</span> </span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(rating, age, <span class="at">color =</span> question)) <span class="sc">+</span></span>
 <span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>question, <span class="at">nrow =</span> <span class="dv">3</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="fu">vars</span>(question), <span class="at">nrow =</span> <span class="dv">3</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -460,14 +457,12 @@ $ rating   &lt;dbl&gt; 5, 2, 3, 1, 5, 1, 1, 2, 1, 4, 1, 1, 5, 1, 5, 3, 5, 2, 3, 
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the validation split</span></span>
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>sisters_val <span class="ot">&lt;-</span> <span class="fu">validation_split</span>(sisters_other, <span class="at">strata =</span> age)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>sisters_val <span class="ot">&lt;-</span> <span class="fu">initial_validation_split</span>(sisters_other, <span class="at">strata =</span> age)</span>
 <span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(sisters_val)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>sisters_val</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Rows: 1
-Columns: 2
-$ splits &lt;list&gt; [&lt;val_split[10841 x 3616 x 14457 x 66]&gt;]
-$ id     &lt;chr&gt; "validation"</code></pre>
+<pre><code>&lt;Training/Validation/Testing/Total&gt;
+&lt;8672/2892/2893/14457&gt;</code></pre>
 </div>
 </div>
 </section>
@@ -538,17 +533,21 @@ $ id     &lt;chr&gt; "validation"</code></pre>
 <p>To get a reliable estimate from tuning, for example, you need to use another heldout dataset for assessing the models, either a validation set or a set of simulated datasets created through resampling.</p>
 <p>Why three data partitions? Don’t overestimate how well your model is performing! 🙅</p>
 </section>
-<section id="tune-model-hyperparameters-1" class="level3">
-<h3 class="anchored" data-anchor-id="tune-model-hyperparameters-1">Tune model hyperparameters</h3>
-<p>This dataset of extensive survey responses from Catholic nuns in the 1960s is a great demonstration of all of these issues. You will use your validation set to find which values of the parameters (cost complexity, tree depth, and number of principal components) result in the highest R-squared and lowest RMSE. Notice here that we get the best results with a tree depth of 4 and 5 principal components.</p>
+</section>
+<section id="next-lets-build-our-model-specification-with-tuning." class="level2">
+<h2 class="anchored" data-anchor-id="next-lets-build-our-model-specification-with-tuning.">Next let’s build our model specification with tuning.</h2>
+<section id="instructions-5" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-5">Instructions</h3>
+<p>Start by specifying that we want to train a <code>decision_tree()</code> model. Add the two parameters we want to tune, cost complexity and tree depth. Tune model hyperparameters.</p>
+<p>This dataset of extensive survey responses from Catholic nuns in the 1960s is a great demonstration of all of these issues. You will use your validation set to find which values of the parameters (cost complexity, tree depth, and number of principal components) result in the highest R-squared and lowest RMSE. Notice here that we get the best results with a tree depth of 8 and 5 principal components.</p>
 <p>As you work through the final set of exercises, you will see all of this come together, along with all the other practical predictive modeling skills we’ve explored in this course.</p>
 </section>
 </section>
 <section id="identify-tuning-parameters" class="level2">
 <h2 class="anchored" data-anchor-id="identify-tuning-parameters">Identify tuning parameters</h2>
 <p>It’s time to build a modeling <code>workflow()</code> for this last dataset. We aren’t going to fit this dataset just once, but instead many times! We are going to use this <code>workflow()</code> to tune hyperparameters both in our model specification and our preprocessing recipe.</p>
-<section id="instructions-5" class="level3">
-<h3 class="anchored" data-anchor-id="instructions-5">Instructions</h3>
+<section id="instructions-6" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-6">Instructions</h3>
 <p>Let’s start with our preprocessing tuning.</p>
 <ul>
 <li><p>Add two preprocessing steps to this recipe, first to normalize and them to implement PCA.</p></li>
@@ -590,6 +589,353 @@ predictor: 65</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>• PCA extraction with: all_predictors()</code></pre>
+</div>
+</div>
+<p>Next let’s build our model specification with tuning.</p>
+</section>
+<section id="instructions-7" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-7">Instructions</h3>
+<ul>
+<li><p>Start by specifying that we want to train a <code>decision_tree()</code>model.</p></li>
+<li><p>Add the two parameters we want to tune, cost complexity and tree depth.</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>tree_spec <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>(</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">cost_complexity =</span> <span class="fu">tune</span>(),</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">tree_depth =</span> <span class="fu">tune</span>()</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>)  <span class="sc">|&gt;</span>  </span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_engine</span>(<span class="st">"rpart"</span>)  <span class="sc">|&gt;</span>  </span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a>tree_spec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Decision Tree Model Specification (regression)
+
+Main Arguments:
+  cost_complexity = tune()
+  tree_depth = tune()
+
+Computational engine: rpart </code></pre>
+</div>
+</div>
+<p>Finally, let’s put our recipe and model specification together in a <code>workflow()</code>, for ease of use.</p>
+</section>
+<section id="instructions-8" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-8">Instructions</h3>
+<ul>
+<li>First set up a <code>workflow()</code> object.</li>
+<li>Add the recipe to the <code>workflow()</code>.</li>
+<li>Add the model to the <code>workflow()</code>.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>sisters_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(age <span class="sc">~</span> ., <span class="at">data =</span> sisters_other) <span class="sc">|&gt;</span> </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">step_normalize</span>(<span class="fu">all_predictors</span>())  <span class="sc">|&gt;</span> </span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">step_pca</span>(<span class="fu">all_predictors</span>(), <span class="at">num_comp =</span> <span class="fu">tune</span>())</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>tree_spec <span class="ot">&lt;-</span> <span class="fu">decision_tree</span>(</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">cost_complexity =</span> <span class="fu">tune</span>(),</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">tree_depth =</span> <span class="fu">tune</span>()</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>) <span class="sc">|&gt;</span> </span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_engine</span>(<span class="st">"rpart"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>tree_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>()  <span class="sc">|&gt;</span> </span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_recipe</span>(sisters_recipe)  <span class="sc">|&gt;</span> </span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_model</span>(tree_spec)</span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>tree_wf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>══ Workflow ════════════════════════════════════════════════════════════════════
+Preprocessor: Recipe
+Model: decision_tree()
+
+── Preprocessor ────────────────────────────────────────────────────────────────
+2 Recipe Steps
+
+• step_normalize()
+• step_pca()
+
+── Model ───────────────────────────────────────────────────────────────────────
+Decision Tree Model Specification (regression)
+
+Main Arguments:
+  cost_complexity = tune()
+  tree_depth = tune()
+
+Computational engine: rpart </code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="create-a-tuning-grid" class="level2">
+<h2 class="anchored" data-anchor-id="create-a-tuning-grid">Create a tuning grid</h2>
+<p>Let’s create a grid! 💃To tune our hyperparameters, we need a set of possible values for each parameter to try. In this case study, we’ll work through a regular grid of hyperparameter values.</p>
+<section id="instructions-9" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-9">Instructions</h3>
+<ul>
+<li>Use the function <code>grid_regular()</code> to create a grid of tuning parameters.</li>
+<li>Add the function for the tree depth tuning parameter, after the cost complexity tuning parameter function.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>tree_grid <span class="ot">&lt;-</span> <span class="fu">grid_regular</span>(<span class="fu">num_comp</span>(<span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">12</span>)),</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">cost_complexity</span>(),</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">tree_depth</span>(),</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">levels =</span> <span class="dv">5</span>)</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>tree_grid <span class="sc">|&gt;</span> </span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">num_comp</th>
+<th style="text-align: right;">cost_complexity</th>
+<th style="text-align: right;">tree_depth</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>tree_grid <span class="sc">|&gt;</span> </span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tail</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: right;">num_comp</th>
+<th style="text-align: right;">cost_complexity</th>
+<th style="text-align: right;">tree_depth</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">0.0005623</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">0.1000000</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">0.1000000</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">7</td>
+<td style="text-align: right;">0.1000000</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">0.1000000</td>
+<td style="text-align: right;">15</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">0.1000000</td>
+<td style="text-align: right;">15</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+<section id="time-to-tune" class="level2">
+<h2 class="anchored" data-anchor-id="time-to-tune">Time to tune</h2>
+<div class="cell" data-layout-align="center" data-hash="nuns_cache/html/unnamed-chunk-21_c36b6e26b802af1c6af7ee5a753c299b">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>sisters_res <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(sisters_other, <span class="at">v=</span> <span class="dv">10</span>, <span class="at">repeats =</span> <span class="dv">5</span>)</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>tree_res <span class="ot">&lt;-</span> <span class="fu">tune_grid</span>(</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    tree_wf,</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">resamples =</span> sisters_res,</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">grid =</span> tree_grid</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>tree_res</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Tuning results
+# 10-fold cross-validation repeated 5 times 
+# A tibble: 50 × 5
+   splits               id      id2    .metrics           .notes          
+   &lt;list&gt;               &lt;chr&gt;   &lt;chr&gt;  &lt;list&gt;             &lt;list&gt;          
+ 1 &lt;split [13011/1446]&gt; Repeat1 Fold01 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 3]&gt;
+ 2 &lt;split [13011/1446]&gt; Repeat1 Fold02 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 3]&gt;
+ 3 &lt;split [13011/1446]&gt; Repeat1 Fold03 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 3]&gt;
+ 4 &lt;split [13011/1446]&gt; Repeat1 Fold04 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 3]&gt;
+ 5 &lt;split [13011/1446]&gt; Repeat1 Fold05 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 3]&gt;
+ 6 &lt;split [13011/1446]&gt; Repeat1 Fold06 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 3]&gt;
+ 7 &lt;split [13011/1446]&gt; Repeat1 Fold07 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 3]&gt;
+ 8 &lt;split [13012/1445]&gt; Repeat1 Fold08 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 3]&gt;
+ 9 &lt;split [13012/1445]&gt; Repeat1 Fold09 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 3]&gt;
+10 &lt;split [13012/1445]&gt; Repeat1 Fold10 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 3]&gt;
+# ℹ 40 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="visualize-tuning-results" class="level2">
+<h2 class="anchored" data-anchor-id="visualize-tuning-results">Visualize tuning results</h2>
+<p>Now that you have trained models for many possible tuning parameters, let’s explore the results.</p>
+<section id="instructions-10" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-10">Instructions</h3>
+<ul>
+<li><p>As a first step, use the function <code>collect_metrics()</code> to extract the performance metrics from the tuning results and store the values in <code>tree_metrics</code>.</p></li>
+<li><p>Arrange the results in <code>tree_metrics</code> in ascending order of <code>rmse</code> values.</p></li>
+<li><p>Use <code>show_best()</code> on <code>tree_res</code> to verify the previous values.</p></li>
+<li><p>Use <code>autoplot()</code> on <code>tree_res</code>.</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>tree_metrics <span class="ot">&lt;-</span> tree_res <span class="sc">%&gt;%</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">collect_metrics</span>() </span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>tree_metrics <span class="sc">|&gt;</span> </span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(.metric <span class="sc">!=</span> <span class="st">"rsq"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(mean)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 125 × 9
+   cost_complexity tree_depth num_comp .metric .estimator  mean     n std_err
+             &lt;dbl&gt;      &lt;int&gt;    &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
+ 1    0.000562              8        5 rmse    standard    14.0    50  0.0340
+ 2    0.0000000001          4        5 rmse    standard    14.0    50  0.0316
+ 3    0.0000000178          4        5 rmse    standard    14.0    50  0.0316
+ 4    0.00000316            4        5 rmse    standard    14.0    50  0.0316
+ 5    0.000562              4        5 rmse    standard    14.0    50  0.0317
+ 6    0.0000000001          4        7 rmse    standard    14.0    50  0.0320
+ 7    0.0000000178          4        7 rmse    standard    14.0    50  0.0320
+ 8    0.00000316            4        7 rmse    standard    14.0    50  0.0320
+ 9    0.000562              4        7 rmse    standard    14.0    50  0.0320
+10    0.0000000001          4        9 rmse    standard    14.0    50  0.0319
+# ℹ 115 more rows
+# ℹ 1 more variable: .config &lt;chr&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show_best</span>(tree_res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5 × 9
+  cost_complexity tree_depth num_comp .metric .estimator  mean     n std_err
+            &lt;dbl&gt;      &lt;int&gt;    &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt;
+1    0.000562              8        5 rmse    standard    14.0    50  0.0340
+2    0.0000000001          4        5 rmse    standard    14.0    50  0.0316
+3    0.0000000178          4        5 rmse    standard    14.0    50  0.0316
+4    0.00000316            4        5 rmse    standard    14.0    50  0.0316
+5    0.000562              4        5 rmse    standard    14.0    50  0.0317
+# ℹ 1 more variable: .config &lt;chr&gt;</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(tree_res) <span class="sc">+</span> </span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="nuns_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Create a graph similar to the one created with <code>autoplot()</code> using <code>ggplot()</code>. Specifically, put <code>cost_complexity</code> on the x-axis, <code>mean</code> on the y-axis and map <code>tree_depth</code> to the <code>color</code> aesthetic.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>tree_metrics <span class="sc">|&gt;</span> </span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">tree_depth =</span> <span class="fu">factor</span>(tree_depth),</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">num_comp =</span> <span class="fu">paste</span>(<span class="st">"num_comp ="</span>, num_comp),</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">num_comp =</span> <span class="fu">fct_inorder</span>(num_comp)) <span class="sc">|&gt;</span> </span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> cost_complexity, <span class="at">y =</span> mean, <span class="at">color =</span> tree_depth)) <span class="sc">+</span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">size =</span> <span class="fl">0.5</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_log10</span>() <span class="sc">+</span></span>
+<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Cost Complexity Parameter"</span>,</span>
+<span id="cb47-10"><a href="#cb47-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">y =</span> <span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb47-11"><a href="#cb47-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_grid</span>(.metric <span class="sc">~</span> num_comp, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span> </span>
+<span id="cb47-12"><a href="#cb47-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_bw</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="nuns_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="864"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="find-the-best-parameters" class="level1">
+<h1>Find the best parameters</h1>
+<p>You just visualized the tuning results, but you can also select the best set of tuning parameters and update your <code>workflow()</code> with these values.</p>
+<section id="instructions-11" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-11">Instructions</h3>
+<ul>
+<li>Use the function <code>select_best()</code> to extract the hyperparameters with the lowest RMSE from the tuning results.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>best_tree <span class="ot">&lt;-</span> tree_res <span class="sc">|&gt;</span> </span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select_best</span>(<span class="at">metric =</span> <span class="st">"rmse"</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>best_tree</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 4
+  cost_complexity tree_depth num_comp .config              
+            &lt;dbl&gt;      &lt;int&gt;    &lt;int&gt; &lt;chr&gt;                
+1        0.000562          8        5 Preprocessor2_Model14</code></pre>
+</div>
+</div>
+<ul>
+<li>Pipe the original workflow object to <code>finalize_workflow()</code> with that best decision tree as an argument, to update it.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>final_wf <span class="ot">&lt;-</span> tree_wf  <span class="sc">|&gt;</span>  </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">finalize_workflow</span>(best_tree)</span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>final_wf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>══ Workflow ════════════════════════════════════════════════════════════════════
+Preprocessor: Recipe
+Model: decision_tree()
+
+── Preprocessor ────────────────────────────────────────────────────────────────
+2 Recipe Steps
+
+• step_normalize()
+• step_pca()
+
+── Model ───────────────────────────────────────────────────────────────────────
+Decision Tree Model Specification (regression)
+
+Main Arguments:
+  cost_complexity = 0.000562341325190349
+  tree_depth = 8
+
+Computational engine: rpart </code></pre>
 </div>
 </div>
 </section>

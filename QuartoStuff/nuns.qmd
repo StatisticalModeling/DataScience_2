@@ -157,7 +157,7 @@ tidy_sisters |>
     ggplot(aes(rating, age, color = question)) +
     geom_line(alpha = 0.5, size = 1.5) +
     geom_point(size = 2) +
-    facet_wrap(~question)
+    facet_wrap(vars(question))
 ```
 
 
@@ -185,19 +185,19 @@ In previous case studies, we used resampling to choose a model. Resampling lets 
 
 If you have enough data, you may not need resampling at all and instead can divide your data into a training set, a validation set, and a testing set. Instead of computing performance metrics on resampled datasets, you can compute them for the validation set. This survey of nuns is quite large so we can create a validation set to use for choosing a model. You can think of a validation set as a **single resample**.
 
-To split your data into three sets (training, validation, and testing), first make an `initial_split()` to split off your testing set from the rest. Then use the function `validation_split()` to create what you can think of as a single resample of that data.
+To split your data into three sets (training, validation, and testing), first make an `initial_split()` to split off your testing set from the rest. Then use the function `initial_validation_split()` to create what you can think of as a single resample of that data.
 
 ```{r}
 sisters_select <- read_csv("../Data/sisters.csv") |> 
     select(-sister)
 set.seed(123)
-sisters_splits <- initial_split(sisters_select, strata = age)
+sisters_splits <- initial_validation_split(sisters_select, strata = age)
 
 sisters_other <- training(sisters_splits)
 sisters_test <- testing(sisters_splits)
 
 set.seed(123)
-sisters_val <- validation_split(sisters_other, strata = age)
+sisters_val <- initial_validation_split(sisters_other, strata = age)
 
 sisters_val
 ```
@@ -226,7 +226,7 @@ tidy_sisters  |>
     summarize(age = mean(age, na.rm = TRUE))  |> 
     ggplot(aes(rating, age, color = question)) +
     geom_line(show.legend = FALSE) +
-    facet_wrap(~question, nrow = 3) 
+    facet_wrap(vars(question), nrow = 3) 
 ```
 
 ## Training, validation, and testing data
@@ -257,9 +257,9 @@ sisters_test <- testing(sisters_split)
 
 # Create the validation split
 set.seed(123)
-sisters_val <- validation_split(sisters_other, strata = age)
+sisters_val <- initial_validation_split(sisters_other, strata = age)
 
-glimpse(sisters_val)
+sisters_val
 ```
 
 ## Using your validation set
@@ -325,9 +325,14 @@ To get a reliable estimate from tuning, for example, you need to use another hel
 
 Why three data partitions? Don't overestimate how well your model is performing! 🙅
 
-### Tune model hyperparameters
+## Next let’s build our model specification with tuning.
 
-This dataset of extensive survey responses from Catholic nuns in the 1960s is a great demonstration of all of these issues. You will use your validation set to find which values of the parameters (cost complexity, tree depth, and number of principal components) result in the highest R-squared and lowest RMSE. Notice here that we get the best results with a tree depth of 4 and 5 principal components.
+### Instructions
+
+Start by specifying that we want to train a `decision_tree()` model.
+Add the two parameters we want to tune, cost complexity and tree depth. Tune model hyperparameters.
+
+This dataset of extensive survey responses from Catholic nuns in the 1960s is a great demonstration of all of these issues. You will use your validation set to find which values of the parameters (cost complexity, tree depth, and number of principal components) result in the highest R-squared and lowest RMSE. Notice here that we get the best results with a tree depth of 8 and 5 principal components.
 
 As you work through the final set of exercises, you will see all of this come together, along with all the other practical predictive modeling skills we've explored in this course.
 
@@ -350,4 +355,158 @@ sisters_recipe <- recipe(age ~ ., data = sisters_other)  |>
 
 sisters_recipe
 ```
+
+Next let’s build our model specification with tuning.
+
+### Instructions
+
+* Start by specifying that we want to train a `decision_tree() `model.
+
+* Add the two parameters we want to tune, cost complexity and tree depth.
+
+```{r}
+tree_spec <- decision_tree(
+    cost_complexity = tune(),
+    tree_depth = tune()
+)  |>  
+    set_engine("rpart")  |>  
+    set_mode("regression")
+
+tree_spec
+```
+
+Finally, let’s put our recipe and model specification together in a `workflow()`, for ease of use.
+
+### Instructions
+
+* First set up a `workflow()` object.
+* Add the recipe to the `workflow()`.
+* Add the model to the `workflow()`.
+
+```{r}
+sisters_recipe <- recipe(age ~ ., data = sisters_other) |> 
+    step_normalize(all_predictors())  |> 
+    step_pca(all_predictors(), num_comp = tune())
+
+tree_spec <- decision_tree(
+    cost_complexity = tune(),
+    tree_depth = tune()
+) |> 
+    set_engine("rpart") |> 
+    set_mode("regression")
+
+tree_wf <- workflow()  |> 
+    add_recipe(sisters_recipe)  |> 
+    add_model(tree_spec)
+
+tree_wf
+```
+
+## Create a tuning grid
+
+Let’s create a grid! 💃To tune our hyperparameters, we need a set of possible values for each parameter to try. In this case study, we’ll work through a regular grid of hyperparameter values.
+
+### Instructions
+
+* Use the function `grid_regular()` to create a grid of tuning parameters.
+* Add the function for the tree depth tuning parameter, after the cost complexity tuning parameter function.
+
+```{r}
+tree_grid <- grid_regular(num_comp(c(3, 12)),
+                          cost_complexity(),
+                          tree_depth(),
+                          levels = 5)
+tree_grid |> 
+  head() |> 
+  knitr::kable()
+tree_grid |> 
+  tail() |> 
+  knitr::kable()
+```
+
+## Time to tune
+
+```{r}
+#| cache: true
+set.seed(42)
+sisters_res <- vfold_cv(sisters_other, v= 10, repeats = 5)
+
+set.seed(123)
+tree_res <- tune_grid(
+    tree_wf,
+    resamples = sisters_res,
+    grid = tree_grid
+)
+tree_res
+```
+
+
+## Visualize tuning results
+
+Now that you have trained models for many possible tuning parameters, let’s explore the results.
+
+### Instructions
+
+* As a first step, use the function `collect_metrics()` to extract the performance metrics from the tuning results and store the values in `tree_metrics`.
+
+* Arrange the results in `tree_metrics` in ascending order of `rmse` values.
+
+* Use `show_best()` on `tree_res` to verify the previous values.
+
+* Use `autoplot()` on `tree_res`.
+
+
+
+
+```{r, fig.width = 9}
+tree_metrics <- tree_res %>%
+    collect_metrics() 
+tree_metrics |> 
+  filter(.metric != "rsq") |> 
+  arrange(mean)
+show_best(tree_res)
+autoplot(tree_res) + 
+  theme_bw()
+```
+
+* Create a graph similar to the one created with `autoplot()` using `ggplot()`.  Specifically, put `cost_complexity` on the x-axis, `mean` on the y-axis and map `tree_depth` to the `color` aesthetic.
+
+```{r, fig.width = 9}
+tree_metrics |> 
+    mutate(tree_depth = factor(tree_depth),
+           num_comp = paste("num_comp =", num_comp),
+           num_comp = fct_inorder(num_comp)) |> 
+    ggplot(aes(x = cost_complexity, y = mean, color = tree_depth)) +
+    geom_line(size = 0.5, alpha = 0.6) +
+    geom_point(size = 1) +
+    scale_x_log10() +
+    labs(x = "Cost Complexity Parameter",
+         y = "") +
+    facet_grid(.metric ~ num_comp, scales = "free") + 
+    theme_bw() 
+```
+
+# Find the best parameters
+
+You just visualized the tuning results, but you can also select the best set of tuning parameters and update your `workflow()` with these values.
+
+### Instructions
+
+* Use the function `select_best()` to extract the hyperparameters with the lowest RMSE from the tuning results.
+
+```{r}
+best_tree <- tree_res |> 
+    select_best(metric = "rmse")
+best_tree
+```
+
+
+* Pipe the original workflow object to `finalize_workflow()` with that best decision tree as an argument, to update it.
+
+```{r}
+final_wf <- tree_wf  |>  
+    finalize_workflow(best_tree)
+final_wf
+```
+
 
