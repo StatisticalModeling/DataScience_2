@@ -91,7 +91,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on March 05, 2025 11:57:04 Eastern Standard Time</p>
+      <p class="date">Last modified on March 05, 2025 14:05:23 Eastern Standard Time</p>
     </div>
   </div>
   
@@ -937,6 +937,138 @@ Main Arguments:
 
 Computational engine: rpart </code></pre>
 </div>
+</div>
+</section>
+<section id="use-the-testing-data" class="level2">
+<h2 class="anchored" data-anchor-id="use-the-testing-data">Use the <strong>testing</strong> data</h2>
+<p>We haven’t touched the testing data throughout this analysis, but here at the very end, we can come back to it and estimate how well our model will perform on new data. If all has gone well, our performance metrics such as RMSE will be about the same as from the validation set, indicating that we did not overfit during our tuning procedure. Let’s use the <code>last_fit()</code> function to fit to the entire training set and evaluate on the testing set.</p>
+<section id="instructions-12" class="level3">
+<h3 class="anchored" data-anchor-id="instructions-12">Instructions</h3>
+<ul>
+<li>Fit to the training set and evaluate on the testing set using <code>last_fit()</code>.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>final_tree <span class="ot">&lt;-</span> final_wf <span class="sc">|&gt;</span> </span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">last_fit</span>(sisters_split)</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>final_tree <span class="sc">|&gt;</span> </span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_fit_engine</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  rpart.plot<span class="sc">::</span><span class="fu">rpart.plot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div id="fig-tree" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="nuns_files/figure-html/fig-tree-1.png" class="img-fluid figure-img" width="1152"></p>
+<figcaption class="figure-caption">Figure&nbsp;2: Decision Tree for predicting <code>age</code></figcaption>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Access the performance metrics for the testing set using <code>collect_metrics()</code>.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>final_tree <span class="sc">|&gt;</span> </span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">collect_metrics</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+<th style="text-align: left;">.config</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">rmse</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">14.0111896</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rsq</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.2309714</td>
+<td style="text-align: left;">Preprocessor1_Model1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+</section>
+<section id="wrapping-up" class="level2">
+<h2 class="anchored" data-anchor-id="wrapping-up">Wrapping up</h2>
+<p>You tuned model hyperparameters for a decision tree (cost complexity and tree depth) along with the number of components to use in PCA for data preprocessing. The resulting decision tree (shown in <a href="#fig-tree">Figure&nbsp;2</a>) exhibits some sensible behavior, with the first principal component being the variable for the first split, etc.</p>
+<p>The performance metrics you achieved on the testing set indicate that you did not overfit during the tuning process.</p>
+<p>You divided your data into three subsets: a training set to train your model, a validation set to tune hyperparameters, and then a testing set to evaluate the performance of your model and estimate how it will do with new data.</p>
+<p>You can also use a validation set to choose between different models.</p>
+<p>This analysis was just the final example in the series of predictive projects you approached in this course.</p>
+<p>You learned how to go from raw data to exploring that data to training models to evaluating those models using the <code>tidymodels</code> metapackage and important tools for exploratory data analysis from the <code>tidyverse</code> ecosystem, like <code>dplyr</code> and <code>ggplot2</code>.</p>
+<section id="diverse-data-powerful-tools" class="level3">
+<h3 class="anchored" data-anchor-id="diverse-data-powerful-tools">Diverse data, powerful tools</h3>
+<ul>
+<li>Fuel efficiency of cars 🚗</li>
+<li>Developers working remotely in the Stack Overflow survey 💻</li>
+<li>Voter turnout in 2016 🗳</li>
+<li>Catholic nuns’ ages based on beliefs and attitudes ⛪</li>
+</ul>
+<p>In this course, I’ve chosen to spend our energy and time on some of the issues that I have found to be the most important and most impactful from my real world, practical predictive modeling experience. These include knowing what to do when you are faced with class imbalance, having some options in your toolkit for resampling approaches, and optimizing model hyperparametrs.</p>
+</section>
+<section id="practical-machine-learning" class="level3">
+<h3 class="anchored" data-anchor-id="practical-machine-learning">Practical machine learning</h3>
+<ul>
+<li>Dealing with class imbalance</li>
+<li>Measuring performance with resampling (bootstrap, cross-validation)</li>
+<li>Tuning hyperparameters</li>
+</ul>
+<p>To keep going in your machine learning journey, check out the resources at <a href="https://www.tidymodels.org/">tidymodels.org</a>. This site is a central location for resources and documentation for tidymodels packages, and there is a ton to explore and learn. 🚀</p>
+<p>There are five articles at <a href="https://www.tidymodels.org/start/">Get Started</a> that guide you through what you need to know to use tidymodels, and many more resources at <a href="https://www.tidymodels.org/learn/">Learn</a>.</p>
+<p>The high level takeaways that you should remember from this course are first, that each time you have a new predictive modeling problem you are working on, you need to try out <strong><em>multiple different kinds of models</em></strong>. You don’t know ahead of time which kind of model is going to perform best. This <a href="https://arxiv.org/abs/1708.05070v1">paper</a> uses some super interesting analysis to show that most often, the two kinds of models that perform best are gradient tree boosting and random forest.</p>
+<p>However, depending on how much data you have and the specifics of your problem, that may not be true, so you have to try it for yourself. Also, start with a simple model to compare to.</p>
+</section>
+</section>
+<section id="practical-machine-learning-1" class="level2">
+<h2 class="anchored" data-anchor-id="practical-machine-learning-1">Practical machine learning</h2>
+<ul>
+<li>Try out multiple modeling approaches for each new problem.</li>
+<li>Overall, gradient tree boosting and random forest 🌳 perform well.</li>
+</ul>
+<p>And perhaps most importantly, never skip exploratory data analysis when you build machine learning models. It is time well spent, because when you understand a data set better, you can do a better job of building accurate models that perform better.</p>
+<p>And that’s our ultimate goal here! Thanks for spending time with me on this course. Now it’s time for you to take what you’ve been practicing here and go apply it in the real world.</p>
+</section>
+<section id="can-a-random-forest-do-better" class="level2">
+<h2 class="anchored" data-anchor-id="can-a-random-forest-do-better">Can a random forest do better?</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>ranger_spec <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>(<span class="at">mtry =</span> <span class="fu">tune</span>(), </span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">min_n =</span> <span class="fu">tune</span>(), </span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>                           <span class="at">trees =</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)  <span class="sc">|&gt;</span>  </span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"ranger"</span>,</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>             <span class="at">importance =</span> <span class="st">"impurity"</span>)</span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>ranger_spec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Random Forest Model Specification (regression)
+
+Main Arguments:
+  mtry = tune()
+  trees = 1000
+  min_n = tune()
+
+Engine-Specific Arguments:
+  importance = impurity
+
+Computational engine: ranger </code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>ranger_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(<span class="at">formula =</span> age <span class="sc">~</span> ., <span class="at">data =</span> sisters_other) <span class="sc">|&gt;</span> </span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_predictors</span>())</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a>ranger_recipe</span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>ranger_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>()  <span class="sc">|&gt;</span>  </span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(ranger_recipe)  <span class="sc">|&gt;</span>  </span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(ranger_spec) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>

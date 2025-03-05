@@ -15,6 +15,7 @@ library(scales)
 knitr::opts_chunk$set(echo = TRUE, fig.align = "center", comment = NA, message = FALSE,  warning = FALSE)
 ```
 
+
 :::{.callout-note title="Crediting the materials" icon=false}
 The majority of the material in the first part of this document is taken from the free online course at [https://supervised-ml-course.netlify.app/](https://supervised-ml-course.netlify.app/) written by Julia Silge.
 :::
@@ -65,6 +66,7 @@ The first step before you start modeling is to explore your data, and we are goi
 
 ### Instructions
 
+
 ```{r}
 library(tidyverse)
 library(tidymodels)
@@ -72,14 +74,18 @@ sisters67 <- read_csv("../Data/sisters.csv")
 ```
 
 
+
 * Call `glimpse()` on `sisters67` to take a look at the structure of the data. Notice how many columns there are, and what their characteristics are.
+
 
 ```{r}
 # View sisters67
 glimpse(sisters67)
 ```
 
+
 * Plot a histogram of `age`.
+
 
 ```{r}
 # Plot the histogram
@@ -87,6 +93,7 @@ ggplot(sisters67, aes(x = age)) +
   geom_histogram(binwidth = 10, color = "black", fill = "purple") +
   theme_bw()
 ```
+
 
 ## Tidy the survey data
 
@@ -100,6 +107,7 @@ There is a column called sister in this dataset that is an identifier for each s
 
 * Use the `pivot_longer()` function to transform the wide data set with each survey question in a separate column to a narrow, tidy data set with each survey question in a separate row.
 
+
 ```{r}
 # Tidy the data set
 tidy_sisters <- sisters67 |> 
@@ -107,18 +115,22 @@ tidy_sisters <- sisters67 |>
     pivot_longer(-age, names_to = "question", values_to = "rating")
 ```
 
+
 * View the structure of this tidy data set using `glimpse()`.
+
 
 ```{r}
 # Print the structure of tidy_sisters
 glimpse(tidy_sisters)
 ```
 
+
 Next look at question agreement overall.
 
 ### Instructions
 
 Group by `age` and summarize the `rating` column to see how the overall agreement with all questions varied by `age`.
+
 
 ```{r}
 # Overall agreement with all questions varied by age
@@ -127,13 +139,16 @@ tidy_sisters  |>
     summarize(rating = mean(rating, na.rm = TRUE))
 ```
 
+
 * Count the `rating` column to check out how many respondents agreed or disagreed overall.
+
 
 ```{r}
 # Number of respondents agreed or disagreed overall
 tidy_sisters |> 
     count(rating)
 ```
+
 
 ## Exploratory data analysis with tidy data
 
@@ -147,6 +162,7 @@ You can also check out how the overall answers to all survey questions vary with
 
 We can go a few steps further and dig into how the answers to individual questions depend on age. The code below first filters to a subset of questions on the survey, groups by these survey questions and the possible answers to them, and then calculates the mean age for each possible answer to each of the questions we're considering.
 
+
 ```{r}
 #| label: "fig-sisters"
 #| fig-cap: "Trends for questions v153 - v170"
@@ -159,6 +175,7 @@ tidy_sisters |>
     geom_point(size = 2) +
     facet_wrap(vars(question))
 ```
+
 
 
 This is now getting closer to what we really care about and we can then pipe it to `ggplot2` to make an exploratory plot to visualize these relationships. 📊 @fig-sisters shows trends for a subset of the questions on the survey. Let's talk through a few of them.
@@ -187,6 +204,7 @@ If you have enough data, you may not need resampling at all and instead can divi
 
 To split your data into three sets (training, validation, and testing), first make an `initial_split()` to split off your testing set from the rest. Then use the function `initial_validation_split()` to create what you can think of as a single resample of that data.
 
+
 ```{r}
 sisters_select <- read_csv("../Data/sisters.csv") |> 
     select(-sister)
@@ -201,6 +219,7 @@ sisters_val <- initial_validation_split(sisters_other, strata = age)
 
 sisters_val
 ```
+
 
 Now it's your turn to take your tidy dataset and practice exploring for yourself.
 
@@ -218,6 +237,7 @@ The tidied version of the survey data that you constructed is available in your 
 * Choose the correct `geom` to make a line plot.
 
 
+
 ```{r}
 # Visualize agreement with age
 tidy_sisters  |> 
@@ -229,14 +249,17 @@ tidy_sisters  |>
     facet_wrap(vars(question), nrow = 3) 
 ```
 
+
 ## Training, validation, and testing data
 
 It’s time to split your data into different sets now. You’ve done this three times already in this course, but in this last case study we are also going to create a validation set. Using a validation set is a good option when you have enough data (otherwise, you can use resampling).
+
 
 ```{r}
 sisters_select <- read_csv("../Data/sisters.csv") |> 
     select(-sister)
 ```
+
 
 
 ### Instructions
@@ -246,6 +269,7 @@ sisters_select <- read_csv("../Data/sisters.csv") |>
     + Specify one to split between testing and everything else.
     
     + Specify another one to split between validation and training.
+
 
 ```{r}
 # Split off the testing set
@@ -261,6 +285,7 @@ sisters_val <- initial_validation_split(sisters_other, strata = age)
 
 sisters_val
 ```
+
 
 ## Using your validation set
 
@@ -278,6 +303,7 @@ You can identify which parameters to `tune()` in a model specification as shown 
 
 ### What is a model hyperparameter?
 
+
 ```{r}
 tree_spec <- decision_tree(
   cost_complexity = tune(),
@@ -288,17 +314,20 @@ tree_spec <- decision_tree(
 ```
 
 
+
 Model hyperparameters aren't the only things you can tune. You can also tune steps in your preprocessing pipeline. This recipe has two steps:
 
 * First, this recipe centers and scales all those numeric predictors we have in this dataset, cataloging the nuns' responses to the survey questions.
 
 * Second, this recipe implements principal component analysis on these same predictors. Except... this recipe identifies that we want to implement PCA and we aren't sure how many predictors we should use. We want to choose the best 🏆 number of predictors.
 
+
 ```{r}
 sisters_recipe <- recipe(age ~ ., data = sisters_other) |> 
   step_normalize(all_predictors())  |> 
   step_pca(all_predictors(), num_comp = tune())
 ```
+
 
 You have a couple of options for how to choose which possible values for the tuning parameters to try. One option is to set up a grid of possible parameter values.
 
@@ -308,12 +337,14 @@ You can use the function `tune_grid()` to fit all these models; you can tune eit
 
 ### Grid of tuning parameters
 
+
 ```{r}
 grid_regular(num_comp(c(3, 12)),
              cost_complexity(),
              tree_depth(),
              levels = 5)
 ```
+
 
 You train these 125 possible models on the training data and use the validation data to compare all the results in terms of performance. We won't use the testing data until the very end of our modeling process, when we use it to estimate how our model will perform on new data.
 
@@ -348,6 +379,7 @@ Let’s start with our preprocessing tuning.
 
 * Specify that we want to `tune()` the number of principal components.
 
+
 ```{r, warning = TRUE, message = TRUE}
 sisters_recipe <- recipe(age ~ ., data = sisters_other)  |>  
     step_normalize(all_predictors())  |> 
@@ -356,6 +388,7 @@ sisters_recipe <- recipe(age ~ ., data = sisters_other)  |>
 sisters_recipe
 ```
 
+
 Next let’s build our model specification with tuning.
 
 ### Instructions
@@ -363,6 +396,7 @@ Next let’s build our model specification with tuning.
 * Start by specifying that we want to train a `decision_tree() `model.
 
 * Add the two parameters we want to tune, cost complexity and tree depth.
+
 
 ```{r}
 tree_spec <- decision_tree(
@@ -375,6 +409,7 @@ tree_spec <- decision_tree(
 tree_spec
 ```
 
+
 Finally, let’s put our recipe and model specification together in a `workflow()`, for ease of use.
 
 ### Instructions
@@ -382,6 +417,7 @@ Finally, let’s put our recipe and model specification together in a `workflow(
 * First set up a `workflow()` object.
 * Add the recipe to the `workflow()`.
 * Add the model to the `workflow()`.
+
 
 ```{r}
 sisters_recipe <- recipe(age ~ ., data = sisters_other) |> 
@@ -402,6 +438,7 @@ tree_wf <- workflow()  |>
 tree_wf
 ```
 
+
 ## Create a tuning grid
 
 Let’s create a grid! 💃To tune our hyperparameters, we need a set of possible values for each parameter to try. In this case study, we’ll work through a regular grid of hyperparameter values.
@@ -410,6 +447,7 @@ Let’s create a grid! 💃To tune our hyperparameters, we need a set of possibl
 
 * Use the function `grid_regular()` to create a grid of tuning parameters.
 * Add the function for the tree depth tuning parameter, after the cost complexity tuning parameter function.
+
 
 ```{r}
 tree_grid <- grid_regular(num_comp(c(3, 12)),
@@ -424,7 +462,9 @@ tree_grid |>
   knitr::kable()
 ```
 
+
 ## Time to tune
+
 
 ```{r}
 #| cache: true
@@ -439,6 +479,7 @@ tree_res <- tune_grid(
 )
 tree_res
 ```
+
 
 
 ## Visualize tuning results
@@ -458,6 +499,7 @@ Now that you have trained models for many possible tuning parameters, let’s ex
 
 
 
+
 ```{r, fig.width = 9}
 tree_metrics <- tree_res %>%
     collect_metrics() 
@@ -469,7 +511,9 @@ autoplot(tree_res) +
   theme_bw()
 ```
 
+
 * Create a graph similar to the one created with `autoplot()` using `ggplot()`.  Specifically, put `cost_complexity` on the x-axis, `mean` on the y-axis and map `tree_depth` to the `color` aesthetic.
+
 
 ```{r, fig.width = 9}
 tree_metrics |> 
@@ -486,6 +530,7 @@ tree_metrics |>
     theme_bw() 
 ```
 
+
 # Find the best parameters
 
 You just visualized the tuning results, but you can also select the best set of tuning parameters and update your `workflow()` with these values.
@@ -494,6 +539,7 @@ You just visualized the tuning results, but you can also select the best set of 
 
 * Use the function `select_best()` to extract the hyperparameters with the lowest RMSE from the tuning results.
 
+
 ```{r}
 best_tree <- tree_res |> 
     select_best(metric = "rmse")
@@ -501,13 +547,16 @@ best_tree
 ```
 
 
+
 * Pipe the original workflow object to `finalize_workflow()` with that best decision tree as an argument, to update it.
+
 
 ```{r}
 final_wf <- tree_wf  |>  
     finalize_workflow(best_tree)
 final_wf
 ```
+
 
 ## Use the **testing** data
 
@@ -516,6 +565,7 @@ We haven’t touched the testing data throughout this analysis, but here at the 
 ### Instructions
 
 * Fit to the training set and evaluate on the testing set using `last_fit()`.
+
 
 ```{r, fig.width = 12}
 #| label: "fig-tree"
@@ -528,13 +578,16 @@ final_tree |>
 ```
 
 
+
 * Access the performance metrics for the testing set using `collect_metrics()`.
+
 
 ```{r}
 final_tree |> 
     collect_metrics() |> 
     knitr::kable()
 ```
+
 
 ## Wrapping up
 
@@ -584,6 +637,7 @@ And that's our ultimate goal here! Thanks for spending time with me on this cour
 
 ## Can a random forest do better?
 
+
 ```{r}
 ranger_spec <- rand_forest(mtry = tune(), 
                            min_n = tune(), 
@@ -593,6 +647,7 @@ ranger_spec <- rand_forest(mtry = tune(),
              importance = "impurity")
 ranger_spec
 ```
+
 ```{r}
 ranger_recipe <- recipe(formula = age ~ ., data = sisters_other) |> 
   step_normalize(all_predictors())
@@ -609,28 +664,5 @@ ranger_tune <-
   tune_grid(ranger_workflow, resamples = sisters_res, grid = 32)
 ranger_tune
 
-```
-
-
-
-```{r}
-ranger_tune |> 
-  select_best(metric = "rmse") -> ranger_best
-ranger_best
-final_rwf <- ranger_workflow |> 
-  finalize_workflow(ranger_best)
-final_rwf
-final_ranger_fit <- final_rwf |> 
-  fit(data = sisters_test)
-augment(final_ranger_fit, new_data = sisters_test) |> 
-  metrics(truth = age, estimate = .pred) -> R1
-R1 |> 
-  knitr::kable()
-```
-
-## What variables were important in the random forest?
-
-```{r}
-vip::vip(final_ranger_fit)
 ```
 
