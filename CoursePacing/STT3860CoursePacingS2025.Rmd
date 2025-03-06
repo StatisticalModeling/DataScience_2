@@ -171,8 +171,7 @@ Optional Resources:
 
 + Work on reproduction of [_Modeling with Tidymodels in R_](https://classroom.github.com/a/4i3ONvjK) - Due Mar 24 NLT 5:00 PM
 
-
-    
++ [VOTERS](../QuartoStuff/VOTERS.html)    
     
 * * *
 
@@ -186,7 +185,9 @@ Optional Resources:
     
 + [Cross Validation starter code]()
 
-+ Pick data for group project #1 from `modeldata` package.  Data must have at least 8 variables and 1,000 or more rows.  Accept group project [here]().  Group presentations will be April 1.    
++ Pick data for group project #1 from `modeldata` package.  Data must have at least 8 variables and 1,000 or more rows.  Accept group project [here]().  Group presentations will be April 1.
+
++ [What do nuns think?](../QuartoStuff/nuns.html)  
 
 * * *
 

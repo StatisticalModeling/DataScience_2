@@ -91,7 +91,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on March 05, 2025 19:16:32 Eastern Standard Time</p>
+      <p class="date">Last modified on March 06, 2025 09:32:22 Eastern Standard Time</p>
     </div>
   </div>
   
@@ -350,9 +350,9 @@ $ rating   &lt;dbl&gt; 5, 2, 3, 1, 5, 1, 1, 2, 1, 4, 1, 1, 5, 1, 5, 3, 5, 2, 3, 
 <p>We can go a few steps further and dig into how the answers to individual questions depend on age. The code below first filters to a subset of questions on the survey, groups by these survey questions and the possible answers to them, and then calculates the mean age for each possible answer to each of the questions we’re considering.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>tidy_sisters <span class="sc">|&gt;</span> </span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(question <span class="sc">%in%</span> <span class="fu">paste0</span>(<span class="st">"v"</span>, <span class="dv">153</span><span class="sc">:</span><span class="dv">170</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(question, rating) <span class="sc">%&gt;%</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">age =</span> <span class="fu">mean</span>(age)) <span class="sc">%&gt;%</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(question <span class="sc">%in%</span> <span class="fu">paste0</span>(<span class="st">"v"</span>, <span class="dv">153</span><span class="sc">:</span><span class="dv">170</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(question, rating) <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">age =</span> <span class="fu">mean</span>(age)) <span class="sc">|&gt;</span></span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(rating, age, <span class="at">color =</span> question)) <span class="sc">+</span></span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>, <span class="at">size =</span> <span class="fl">1.5</span>) <span class="sc">+</span></span>
 <span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
@@ -822,7 +822,7 @@ Computational engine: rpart </code></pre>
 <li><p>Use <code>autoplot()</code> on <code>tree_res</code>.</p></li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>tree_metrics <span class="ot">&lt;-</span> tree_res <span class="sc">%&gt;%</span></span>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>tree_metrics <span class="ot">&lt;-</span> tree_res <span class="sc">|&gt;</span></span>
 <span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">collect_metrics</span>() </span>
 <span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>tree_metrics <span class="sc">|&gt;</span> </span>
 <span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(.metric <span class="sc">!=</span> <span class="st">"rsq"</span>) <span class="sc">|&gt;</span> </span>

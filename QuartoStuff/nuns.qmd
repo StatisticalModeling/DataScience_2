@@ -151,9 +151,9 @@ We can go a few steps further and dig into how the answers to individual questio
 #| label: "fig-sisters"
 #| fig-cap: "Trends for questions v153 - v170"
 tidy_sisters |> 
-    filter(question %in% paste0("v", 153:170)) %>%
-    group_by(question, rating) %>%
-    summarise(age = mean(age)) %>%
+    filter(question %in% paste0("v", 153:170)) |>
+    group_by(question, rating) |>
+    summarise(age = mean(age)) |>
     ggplot(aes(rating, age, color = question)) +
     geom_line(alpha = 0.5, size = 1.5) +
     geom_point(size = 2) +
@@ -459,7 +459,7 @@ Now that you have trained models for many possible tuning parameters, let’s ex
 
 
 ```{r, fig.width = 9}
-tree_metrics <- tree_res %>%
+tree_metrics <- tree_res |>
     collect_metrics() 
 tree_metrics |> 
   filter(.metric != "rsq") |> 
