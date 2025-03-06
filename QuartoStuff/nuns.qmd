@@ -429,7 +429,7 @@ tree_grid |>
 ```{r}
 #| cache: true
 set.seed(42)
-sisters_res <- vfold_cv(sisters_other, v= 10, repeats = 5)
+sisters_res <- vfold_cv(sisters_other, v= 6, repeats = 2)
 
 set.seed(123)
 tree_res <- tune_grid(
@@ -560,6 +560,7 @@ You learned how to go from raw data to exploring that data to training models to
 In this course, I've chosen to spend our energy and time on some of the issues that I have found to be the most important and most impactful from my real world, practical predictive modeling experience. These include knowing what to do when you are faced with class imbalance, having some options in your toolkit for resampling approaches, and optimizing model hyperparametrs.
 
 ### Practical machine learning
+
 * Dealing with class imbalance
 * Measuring performance with resampling (bootstrap, cross-validation)
 * Tuning hyperparameters
@@ -587,12 +588,14 @@ And that's our ultimate goal here! Thanks for spending time with me on this cour
 ```{r}
 ranger_spec <- rand_forest(mtry = tune(), 
                            min_n = tune(), 
-                           trees = 1000) |>  
+                           trees = 500) |>  
   set_mode("regression")  |>  
   set_engine("ranger",
              importance = "impurity")
 ranger_spec
 ```
+
+
 ```{r}
 ranger_recipe <- recipe(formula = age ~ ., data = sisters_other) |> 
   step_normalize(all_predictors())
@@ -606,9 +609,8 @@ ranger_workflow <- workflow()  |>
 #| cache: true
 set.seed(8675309)
 ranger_tune <-
-  tune_grid(ranger_workflow, resamples = sisters_res, grid = 32)
+  tune_grid(ranger_workflow, resamples = sisters_res, grid = 25)
 ranger_tune
-
 ```
 
 
