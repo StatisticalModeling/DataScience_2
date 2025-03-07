@@ -1,0 +1,24 @@
+---
+title: "Project Two Directions"
+date: last-modified
+date-format: "[Last modified on] MMMM DD, YYYY HH:mm:ss zzz"
+format: 
+  html: default
+  pdf: default
+editor: source
+---
+
+1. Form a group of no less than two and no greater than four class-mates.
+2. Select one of the following data sets from the `modeldata` package:
+
+```{r, echo = FALSE}
+DF <- data.frame(Data = c("credit_data", "attrition", "leaf_id_flavia", "mlc_churn", "taxi"),
+             Predict = c("Status", "Attrition", "species", "churn", "tip"))
+knitr::kable(DF)
+```
+
+3. Create at least three classification models using different specifications from the `parsnip` package.
+4. Create `train` and `test` sets.
+5. Use ten-fold cross-validation to tune all hyperparameters in your models.
+6. Report appropriate metrics (AUC, accuracy, etc.) for your trained models.
+7. Use Quarto slides to create a 10 minute or less presentation - hide code you to not want to show during your presentation; but, make sure all code to create the models is in the slides.
