@@ -8,7 +8,9 @@ format:
 editor: source
 ---
 
-1. Form a group of no less than two and no greater than four class-mates.
+The goal of this project is to create several different classification models and select the model that best predicts the response variable in a future data set the model has never seen.
+
+1. Form a group of no fewer than two and no greater than four classmates.
 2. Select one of the following data sets from the `modeldata` package:
 
 ```{r, echo = FALSE}
@@ -21,4 +23,10 @@ knitr::kable(DF)
 4. Create `train` and `test` sets.
 5. Use ten-fold cross-validation to tune all hyperparameters in your models.
 6. Report appropriate metrics (AUC, accuracy, etc.) for your trained models.
-7. Use Quarto slides to create a 10 minute or less presentation - hide code you to not want to show during your presentation; but, make sure all code to create the models is in the slides.
+7. Use the provided Quarto template as a start to creating a 6 to 10 minute presentation. Hide code you do not want to show during your presentation; but, make sure all the code you used to create the models is embedded in the slides.
+
+  * Your presentation should include:
+  
+    a. The models you evaluated and their performance metrics on the **test** set.
+    b. The steps you performed in your `recipe`.
+    c. An evaluation of the time versus benefit of each model’s creation.   
