@@ -61,10 +61,10 @@ names(Hitters)
 ```
 ```{r}
 ggplot(data = Hitters, aes(x = salary)) + 
-  geom_histogram(bins = 10) + 
+  geom_histogram(bins = 10, color = "black", fill = "purple") + 
   theme_bw() -> p1
 ggplot(data = Hitters, aes(x = log10(salary))) + 
-  geom_histogram(bins = 10) + 
+  geom_histogram(bins = 10, color = "black", fill = "purple") + 
   theme_bw() -> p2
 library(patchwork)
 p1/p2
@@ -102,13 +102,13 @@ Once the tree gets more than a couple of nodes, it can become hard to read the p
 #| fig-cap: "Tree Model for predicting `salary` based on `years` and `hits`"
 tree_fit |> 
   extract_fit_engine() |> 
-  rpart.plot::rpart.plot()
+  rpart.plot::rpart.plot(roundint = FALSE)
 ```
 ```{r}
 # Print Rules
 tree_fit |> 
   extract_fit_engine() |> 
-  rpart.plot::rpart.rules()
+  rpart.plot::rpart.rules(roundint = FALSE)
 ```
 
 
@@ -135,7 +135,7 @@ tree_fit2 <- tree_spec |>
 #| fig-cap: "Tree Model for predicting `salary` based on all predictors in `Hitters`"
 tree_fit2 |> 
   extract_fit_engine() |> 
-  rpart.plot::rpart.plot()
+  rpart.plot::rpart.plot(roundint = FALSE)
 ```
 
 ## Evaluating the Performance of your Model
@@ -179,16 +179,27 @@ set.seed(8675)
 tree_tune <-
   tune_grid(tree_wkfl, resamples = hitters_folds, grid = 10)
 tree_tune
+```
+
+```{r}
 autoplot(tree_tune)
-show_best(tree_tune, metric = "rmse")
-tree_param <- tibble(cost_complexity = 0.00340)
+T1 <- show_best(tree_tune, metric = "rmse")
+T1 |> 
+  knitr::kable()
+select_best(tree_tune, metric = "rmse") -> tree_param
+tree_param
+```
+
+
+```{r}
 final_tree_wkfl <- tree_wkfl |> 
   finalize_workflow(tree_param)
 final_tree_wkfl 
 final_tree_fit <- final_tree_wkfl |> 
   fit(hitters_train)
 ```
-We used 10 fold cross validation repeated 5 times to determine the best value of $\alpha = 0.0034$ (`cost_complexity`) based on the model with the smallest RMSE (0.210). Then we created the final model (`final_tree_fit`) using cost complexity pruning and show the model in @fig-tree3. 
+
+We used 10 fold cross validation repeated 5 times to determine the best value of $\alpha = `r T1$cost_complexity[1]`$ (`cost_complexity`) based on the model with the smallest RMSE (`r T1$mean[1]`). Then we created the final model (`final_tree_fit`) using cost complexity pruning and show the model in @fig-tree3. 
 
 ```{r}
 #| label: "fig-tree3"
@@ -251,7 +262,8 @@ bag_tune <-
 bag_tune
 autoplot(bag_tune)
 show_best(bag_tune, metric = "rmse")
-bag_param <- tibble(cost_complexity = 0.002470553, min_n = 28)
+bag_param <- select_best(bag_tune, metric = "rmse")
+# bag_param <- tibble(cost_complexity = 0.002470553, min_n = 28)
 final_bag_wkfl <- bag_wkfl |> 
   finalize_workflow(bag_param)
 final_bag_wkfl 
@@ -306,17 +318,19 @@ ranger_workflow <-
   add_model(ranger_spec) 
 ```
 ```{r}
+#| label: "rf"
 #| cache: true
-set.seed(8675309)
+set.seed(309)
 ranger_tune <-
-  tune_grid(ranger_workflow, resamples = hitters_folds, grid = 32)
+  tune_grid(ranger_workflow, resamples = hitters_folds, grid = 10)
 ranger_tune
 autoplot(ranger_tune)
 show_best(ranger_tune, metric = "rmse")
 ```
 
 ```{r}
-ranger_param <- tibble(mtry = 4, min_n = 15)
+# ranger_param <- tibble(mtry = 4, min_n = 15)
+ranger_param <- select_best(ranger_tune, metric = "rmse")
 final_ranger_wkfl <- ranger_workflow |> 
   finalize_workflow(ranger_param)
 final_ranger_wkfl 
@@ -410,9 +424,10 @@ xgboost_workflow
 
 ```{r}
 #| cache: true
-set.seed(8675309)
+#| #| label: "xgb"
+set.seed(753)
 xgboost_tune <-
-  tune_grid(xgboost_workflow, resamples = hitters_folds, grid = 64)
+  tune_grid(xgboost_workflow, resamples = hitters_folds, grid = 15)
 xgboost_tune
 ```
 
@@ -422,9 +437,10 @@ show_best(xgboost_tune, metric = "rmse")
 ```
 
 ```{r}
-xgboost_param <- tibble(trees = 1597, min_n = 12, tree_depth = 6, 
-                        learn_rate = 0.00444 ,loss_reduction = 0.000000282, 
-                        sample_size = 0.651)
+# xgboost_param <- tibble(trees = 1597, min_n = 12, tree_depth = 6, 
+#                         learn_rate = 0.00444 ,loss_reduction = 0.000000282, 
+#                        sample_size = 0.651)
+xgboost_param <- show_best(xgboost_tune, metric = "rmse")[2, ]
 final_xgboost_wkfl <- xgboost_workflow |> 
   finalize_workflow(xgboost_param)
 final_xgboost_wkfl 
