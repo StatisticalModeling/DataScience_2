@@ -177,7 +177,7 @@ tree_wkfl <- workflow() |>
 #| cache: true
 set.seed(8675)
 tree_tune <-
-  tune_grid(tree_wkfl, resamples = hitters_folds, grid = 10)
+  tune_grid(tree_wkfl, resamples = hitters_folds, grid = 15)
 tree_tune
 ```
 
@@ -258,7 +258,7 @@ bag_wkfl
 #| cache: true
 set.seed(8675)
 bag_tune <-
-  tune_grid(bag_wkfl, resamples = hitters_folds, grid = 32)
+  tune_grid(bag_wkfl, resamples = hitters_folds, grid = 15)
 bag_tune
 autoplot(bag_tune)
 show_best(bag_tune, metric = "rmse")
@@ -322,7 +322,7 @@ ranger_workflow <-
 #| cache: true
 set.seed(309)
 ranger_tune <-
-  tune_grid(ranger_workflow, resamples = hitters_folds, grid = 10)
+  tune_grid(ranger_workflow, resamples = hitters_folds, grid = 15)
 ranger_tune
 autoplot(ranger_tune)
 show_best(ranger_tune, metric = "rmse")

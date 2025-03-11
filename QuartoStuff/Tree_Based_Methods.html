@@ -93,7 +93,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on March 11, 2025 14:38:17 Eastern Daylight Time</p>
+      <p class="date">Last modified on March 11, 2025 14:43:39 Eastern Daylight Time</p>
     </div>
   </div>
   
@@ -374,10 +374,10 @@ Computational engine: rpart </code></pre>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(tree_recipe) <span class="sc">|&gt;</span> </span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(tree_spec) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-layout-align="center" data-hash="Tree_Based_Methods_cache/html/unnamed-chunk-14_2d8ad1689653816bbce421233c461ac3">
+<div class="cell" data-layout-align="center" data-hash="Tree_Based_Methods_cache/html/unnamed-chunk-14_2495bb9d51eb9bd7fdcf3e214d357a11">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">8675</span>)</span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>tree_tune <span class="ot">&lt;-</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tune_grid</span>(tree_wkfl, <span class="at">resamples =</span> hitters_folds, <span class="at">grid =</span> <span class="dv">10</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tune_grid</span>(tree_wkfl, <span class="at">resamples =</span> hitters_folds, <span class="at">grid =</span> <span class="dv">15</span>)</span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>tree_tune</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Tuning results
@@ -385,16 +385,16 @@ Computational engine: rpart </code></pre>
 # A tibble: 50 × 5
    splits           id      id2    .metrics          .notes          
    &lt;list&gt;           &lt;chr&gt;   &lt;chr&gt;  &lt;list&gt;            &lt;list&gt;          
- 1 &lt;split [177/20]&gt; Repeat1 Fold01 &lt;tibble [20 × 5]&gt; &lt;tibble [0 × 3]&gt;
- 2 &lt;split [177/20]&gt; Repeat1 Fold02 &lt;tibble [20 × 5]&gt; &lt;tibble [0 × 3]&gt;
- 3 &lt;split [177/20]&gt; Repeat1 Fold03 &lt;tibble [20 × 5]&gt; &lt;tibble [0 × 3]&gt;
- 4 &lt;split [177/20]&gt; Repeat1 Fold04 &lt;tibble [20 × 5]&gt; &lt;tibble [0 × 3]&gt;
- 5 &lt;split [177/20]&gt; Repeat1 Fold05 &lt;tibble [20 × 5]&gt; &lt;tibble [0 × 3]&gt;
- 6 &lt;split [177/20]&gt; Repeat1 Fold06 &lt;tibble [20 × 5]&gt; &lt;tibble [0 × 3]&gt;
- 7 &lt;split [177/20]&gt; Repeat1 Fold07 &lt;tibble [20 × 5]&gt; &lt;tibble [0 × 3]&gt;
- 8 &lt;split [178/19]&gt; Repeat1 Fold08 &lt;tibble [20 × 5]&gt; &lt;tibble [0 × 3]&gt;
- 9 &lt;split [178/19]&gt; Repeat1 Fold09 &lt;tibble [20 × 5]&gt; &lt;tibble [0 × 3]&gt;
-10 &lt;split [178/19]&gt; Repeat1 Fold10 &lt;tibble [20 × 5]&gt; &lt;tibble [0 × 3]&gt;
+ 1 &lt;split [177/20]&gt; Repeat1 Fold01 &lt;tibble [30 × 5]&gt; &lt;tibble [0 × 3]&gt;
+ 2 &lt;split [177/20]&gt; Repeat1 Fold02 &lt;tibble [30 × 5]&gt; &lt;tibble [0 × 3]&gt;
+ 3 &lt;split [177/20]&gt; Repeat1 Fold03 &lt;tibble [30 × 5]&gt; &lt;tibble [0 × 3]&gt;
+ 4 &lt;split [177/20]&gt; Repeat1 Fold04 &lt;tibble [30 × 5]&gt; &lt;tibble [0 × 3]&gt;
+ 5 &lt;split [177/20]&gt; Repeat1 Fold05 &lt;tibble [30 × 5]&gt; &lt;tibble [0 × 3]&gt;
+ 6 &lt;split [177/20]&gt; Repeat1 Fold06 &lt;tibble [30 × 5]&gt; &lt;tibble [0 × 3]&gt;
+ 7 &lt;split [177/20]&gt; Repeat1 Fold07 &lt;tibble [30 × 5]&gt; &lt;tibble [0 × 3]&gt;
+ 8 &lt;split [178/19]&gt; Repeat1 Fold08 &lt;tibble [30 × 5]&gt; &lt;tibble [0 × 3]&gt;
+ 9 &lt;split [178/19]&gt; Repeat1 Fold09 &lt;tibble [30 × 5]&gt; &lt;tibble [0 × 3]&gt;
+10 &lt;split [178/19]&gt; Repeat1 Fold10 &lt;tibble [30 × 5]&gt; &lt;tibble [0 × 3]&gt;
 # ℹ 40 more rows</code></pre>
 </div>
 </div>
@@ -434,16 +434,25 @@ Computational engine: rpart </code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: right;">0.0068770</td>
+<td style="text-align: right;">0.0072956</td>
 <td style="text-align: left;">rmse</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.2077248</td>
+<td style="text-align: right;">0.2071888</td>
 <td style="text-align: right;">50</td>
-<td style="text-align: right;">0.0075310</td>
-<td style="text-align: left;">Preprocessor1_Model05</td>
+<td style="text-align: right;">0.0074622</td>
+<td style="text-align: left;">Preprocessor1_Model15</td>
 </tr>
 <tr class="even">
-<td style="text-align: right;">0.0000289</td>
+<td style="text-align: right;">0.0014759</td>
+<td style="text-align: left;">rmse</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.2111109</td>
+<td style="text-align: right;">50</td>
+<td style="text-align: right;">0.0076167</td>
+<td style="text-align: left;">Preprocessor1_Model10</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">0.0000000</td>
 <td style="text-align: left;">rmse</td>
 <td style="text-align: left;">standard</td>
 <td style="text-align: right;">0.2111731</td>
@@ -451,8 +460,8 @@ Computational engine: rpart </code></pre>
 <td style="text-align: right;">0.0076002</td>
 <td style="text-align: left;">Preprocessor1_Model01</td>
 </tr>
-<tr class="odd">
-<td style="text-align: right;">0.0000026</td>
+<tr class="even">
+<td style="text-align: right;">0.0000024</td>
 <td style="text-align: left;">rmse</td>
 <td style="text-align: left;">standard</td>
 <td style="text-align: right;">0.2111731</td>
@@ -460,7 +469,7 @@ Computational engine: rpart </code></pre>
 <td style="text-align: right;">0.0076002</td>
 <td style="text-align: left;">Preprocessor1_Model02</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: right;">0.0000000</td>
 <td style="text-align: left;">rmse</td>
 <td style="text-align: left;">standard</td>
@@ -468,15 +477,6 @@ Computational engine: rpart </code></pre>
 <td style="text-align: right;">50</td>
 <td style="text-align: right;">0.0076002</td>
 <td style="text-align: left;">Preprocessor1_Model03</td>
-</tr>
-<tr class="odd">
-<td style="text-align: right;">0.0000002</td>
-<td style="text-align: left;">rmse</td>
-<td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.2111731</td>
-<td style="text-align: right;">50</td>
-<td style="text-align: right;">0.0076002</td>
-<td style="text-align: left;">Preprocessor1_Model04</td>
 </tr>
 </tbody>
 </table>
@@ -487,7 +487,7 @@ Computational engine: rpart </code></pre>
 <pre><code># A tibble: 1 × 2
   cost_complexity .config              
             &lt;dbl&gt; &lt;chr&gt;                
-1         0.00688 Preprocessor1_Model05</code></pre>
+1         0.00730 Preprocessor1_Model15</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
@@ -506,14 +506,14 @@ Model: decision_tree()
 Decision Tree Model Specification (regression)
 
 Main Arguments:
-  cost_complexity = 0.00687697423545057
+  cost_complexity = 0.00729563631837862
 
 Computational engine: rpart </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>final_tree_fit <span class="ot">&lt;-</span> final_tree_wkfl <span class="sc">|&gt;</span> </span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(hitters_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>We used 10 fold cross validation repeated 5 times to determine the best value of <span class="math inline">\(\alpha = 0.006877\)</span> (<code>cost_complexity</code>) based on the model with the smallest RMSE (0.2077248). Then we created the final model (<code>final_tree_fit</code>) using cost complexity pruning and show the model in <a href="#fig-tree3">Figure&nbsp;3</a>.</p>
+<p>We used 10 fold cross validation repeated 5 times to determine the best value of <span class="math inline">\(\alpha = 0.0072956\)</span> (<code>cost_complexity</code>) based on the model with the smallest RMSE (0.2071888). Then we created the final model (<code>final_tree_fit</code>) using cost complexity pruning and show the model in <a href="#fig-tree3">Figure&nbsp;3</a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>final_tree_fit <span class="sc">|&gt;</span> </span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_fit_engine</span>() <span class="sc">|&gt;</span> </span>
@@ -617,10 +617,10 @@ Main Arguments:
 Computational engine: rpart </code></pre>
 </div>
 </div>
-<div class="cell" data-layout-align="center" data-hash="Tree_Based_Methods_cache/html/bagging_0c97cd09dbad40afac0eafb768ab521a">
+<div class="cell" data-layout-align="center" data-hash="Tree_Based_Methods_cache/html/bagging_8919f86071677be0b5b70079aa096d86">
 <div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">8675</span>)</span>
 <span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>bag_tune <span class="ot">&lt;-</span></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tune_grid</span>(bag_wkfl, <span class="at">resamples =</span> hitters_folds, <span class="at">grid =</span> <span class="dv">32</span>)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tune_grid</span>(bag_wkfl, <span class="at">resamples =</span> hitters_folds, <span class="at">grid =</span> <span class="dv">15</span>)</span>
 <span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>bag_tune</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Tuning results
@@ -628,16 +628,16 @@ Computational engine: rpart </code></pre>
 # A tibble: 50 × 5
    splits           id      id2    .metrics          .notes          
    &lt;list&gt;           &lt;chr&gt;   &lt;chr&gt;  &lt;list&gt;            &lt;list&gt;          
- 1 &lt;split [177/20]&gt; Repeat1 Fold01 &lt;tibble [64 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 2 &lt;split [177/20]&gt; Repeat1 Fold02 &lt;tibble [64 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 3 &lt;split [177/20]&gt; Repeat1 Fold03 &lt;tibble [64 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 4 &lt;split [177/20]&gt; Repeat1 Fold04 &lt;tibble [64 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 5 &lt;split [177/20]&gt; Repeat1 Fold05 &lt;tibble [64 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 6 &lt;split [177/20]&gt; Repeat1 Fold06 &lt;tibble [64 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 7 &lt;split [177/20]&gt; Repeat1 Fold07 &lt;tibble [64 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 8 &lt;split [178/19]&gt; Repeat1 Fold08 &lt;tibble [64 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 9 &lt;split [178/19]&gt; Repeat1 Fold09 &lt;tibble [64 × 6]&gt; &lt;tibble [0 × 3]&gt;
-10 &lt;split [178/19]&gt; Repeat1 Fold10 &lt;tibble [64 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 1 &lt;split [177/20]&gt; Repeat1 Fold01 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 2 &lt;split [177/20]&gt; Repeat1 Fold02 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 3 &lt;split [177/20]&gt; Repeat1 Fold03 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 4 &lt;split [177/20]&gt; Repeat1 Fold04 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 5 &lt;split [177/20]&gt; Repeat1 Fold05 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 6 &lt;split [177/20]&gt; Repeat1 Fold06 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 7 &lt;split [177/20]&gt; Repeat1 Fold07 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 8 &lt;split [178/19]&gt; Repeat1 Fold08 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 9 &lt;split [178/19]&gt; Repeat1 Fold09 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 3]&gt;
+10 &lt;split [178/19]&gt; Repeat1 Fold10 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 3]&gt;
 # ℹ 40 more rows</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(bag_tune)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -653,11 +653,11 @@ Computational engine: rpart </code></pre>
 <pre><code># A tibble: 5 × 8
   cost_complexity min_n .metric .estimator  mean     n std_err .config          
             &lt;dbl&gt; &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;            
-1        2.10e- 8    17 rmse    standard   0.179    50 0.00787 Preprocessor1_Mo…
-2        4.10e- 8    25 rmse    standard   0.180    50 0.00782 Preprocessor1_Mo…
-3        3.53e- 3    26 rmse    standard   0.180    50 0.00773 Preprocessor1_Mo…
-4        6.40e- 5    24 rmse    standard   0.180    50 0.00790 Preprocessor1_Mo…
-5        7.43e-10    22 rmse    standard   0.180    50 0.00789 Preprocessor1_Mo…</code></pre>
+1   0.000000164      12 rmse    standard   0.181    50 0.00787 Preprocessor1_Mo…
+2   0.000000720      23 rmse    standard   0.181    50 0.00769 Preprocessor1_Mo…
+3   0.0000611        15 rmse    standard   0.181    50 0.00806 Preprocessor1_Mo…
+4   0.0000000001     29 rmse    standard   0.181    50 0.00754 Preprocessor1_Mo…
+5   0.00000000193    21 rmse    standard   0.182    50 0.00771 Preprocessor1_Mo…</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>bag_param <span class="ot">&lt;-</span> <span class="fu">select_best</span>(bag_tune, <span class="at">metric =</span> <span class="st">"rmse"</span>)</span>
 <span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a><span class="co"># bag_param &lt;- tibble(cost_complexity = 0.002470553, min_n = 28)</span></span>
@@ -676,8 +676,8 @@ Model: bag_tree()
 Bagged Decision Tree Model Specification (regression)
 
 Main Arguments:
-  cost_complexity = 2.10174801133249e-08
-  min_n = 17
+  cost_complexity = 1.63789370695406e-07
+  min_n = 12
 
 Computational engine: rpart </code></pre>
 </div>
@@ -702,17 +702,17 @@ Computational engine: rpart </code></pre>
 <tr class="odd">
 <td style="text-align: left;">rmse</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.2850248</td>
+<td style="text-align: right;">0.2870749</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">rsq</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.5446822</td>
+<td style="text-align: right;">0.5419787</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">mae</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.1631459</td>
+<td style="text-align: right;">0.1717095</td>
 </tr>
 </tbody>
 </table>
@@ -736,7 +736,7 @@ Computational engine: rpart </code></pre>
 </div>
 </div>
 </div>
-<p>The bagged model is an improvement over the decision tree model since the <span class="math inline">\(R^2\)</span> value increased to 54.47% and the mean absolute error decreased to $1,455.95. While bagging can improve predictions for many regression methods, it is particularly useful for decision trees. To apply bagging to regression trees, we simply construct <span class="math inline">\(B\)</span> regression trees using <span class="math inline">\(B\)</span> bootstrapped training sets, and average the resulting predictions. Each individual tree has high variance, but low bias. Averaging these <span class="math inline">\(B\)</span> trees reduces the variance. Bagging has been demonstrated to give impressive improvements in accuracy by combining together hundreds or even thousands of trees into a single procedure.</p>
+<p>The bagged model is an improvement over the decision tree model since the <span class="math inline">\(R^2\)</span> value increased to 54.2% and the mean absolute error decreased to $1,484.94. While bagging can improve predictions for many regression methods, it is particularly useful for decision trees. To apply bagging to regression trees, we simply construct <span class="math inline">\(B\)</span> regression trees using <span class="math inline">\(B\)</span> bootstrapped training sets, and average the resulting predictions. Each individual tree has high variance, but low bias. Averaging these <span class="math inline">\(B\)</span> trees reduces the variance. Bagging has been demonstrated to give impressive improvements in accuracy by combining together hundreds or even thousands of trees into a single procedure.</p>
 </section>
 <section id="random-forests" class="level2">
 <h2 class="anchored" data-anchor-id="random-forests">Random Forests</h2>
@@ -771,10 +771,10 @@ Computational engine: ranger </code></pre>
 <span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(ranger_recipe)  <span class="sc">|&gt;</span>  </span>
 <span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(ranger_spec) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-layout-align="center" data-hash="Tree_Based_Methods_cache/html/rf_c2796e8003066660d9d94652bd760344">
+<div class="cell" data-layout-align="center" data-hash="Tree_Based_Methods_cache/html/rf_bdb09017c6bf91dc14c9e6c25ab1e0ba">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">309</span>)</span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>ranger_tune <span class="ot">&lt;-</span></span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tune_grid</span>(ranger_workflow, <span class="at">resamples =</span> hitters_folds, <span class="at">grid =</span> <span class="dv">10</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tune_grid</span>(ranger_workflow, <span class="at">resamples =</span> hitters_folds, <span class="at">grid =</span> <span class="dv">15</span>)</span>
 <span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>ranger_tune</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Tuning results
@@ -782,16 +782,16 @@ Computational engine: ranger </code></pre>
 # A tibble: 50 × 5
    splits           id      id2    .metrics          .notes          
    &lt;list&gt;           &lt;chr&gt;   &lt;chr&gt;  &lt;list&gt;            &lt;list&gt;          
- 1 &lt;split [177/20]&gt; Repeat1 Fold01 &lt;tibble [20 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 2 &lt;split [177/20]&gt; Repeat1 Fold02 &lt;tibble [20 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 3 &lt;split [177/20]&gt; Repeat1 Fold03 &lt;tibble [20 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 4 &lt;split [177/20]&gt; Repeat1 Fold04 &lt;tibble [20 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 5 &lt;split [177/20]&gt; Repeat1 Fold05 &lt;tibble [20 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 6 &lt;split [177/20]&gt; Repeat1 Fold06 &lt;tibble [20 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 7 &lt;split [177/20]&gt; Repeat1 Fold07 &lt;tibble [20 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 8 &lt;split [178/19]&gt; Repeat1 Fold08 &lt;tibble [20 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 9 &lt;split [178/19]&gt; Repeat1 Fold09 &lt;tibble [20 × 6]&gt; &lt;tibble [0 × 3]&gt;
-10 &lt;split [178/19]&gt; Repeat1 Fold10 &lt;tibble [20 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 1 &lt;split [177/20]&gt; Repeat1 Fold01 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 2 &lt;split [177/20]&gt; Repeat1 Fold02 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 3 &lt;split [177/20]&gt; Repeat1 Fold03 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 4 &lt;split [177/20]&gt; Repeat1 Fold04 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 5 &lt;split [177/20]&gt; Repeat1 Fold05 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 6 &lt;split [177/20]&gt; Repeat1 Fold06 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 7 &lt;split [177/20]&gt; Repeat1 Fold07 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 8 &lt;split [178/19]&gt; Repeat1 Fold08 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 3]&gt;
+ 9 &lt;split [178/19]&gt; Repeat1 Fold09 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 3]&gt;
+10 &lt;split [178/19]&gt; Repeat1 Fold10 &lt;tibble [30 × 6]&gt; &lt;tibble [0 × 3]&gt;
 # ℹ 40 more rows</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(ranger_tune)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -807,11 +807,11 @@ Computational engine: ranger </code></pre>
 <pre><code># A tibble: 5 × 8
    mtry min_n .metric .estimator  mean     n std_err .config              
   &lt;int&gt; &lt;int&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;                
-1     5     2 rmse    standard   0.174    50 0.00748 Preprocessor1_Model03
-2     7    18 rmse    standard   0.177    50 0.00759 Preprocessor1_Model04
-3    11     6 rmse    standard   0.178    50 0.00774 Preprocessor1_Model06
-4     3    31 rmse    standard   0.179    50 0.00673 Preprocessor1_Model02
-5    17    10 rmse    standard   0.179    50 0.00803 Preprocessor1_Model09</code></pre>
+1     6     2 rmse    standard   0.175    50 0.00752 Preprocessor1_Model05
+2     2    10 rmse    standard   0.176    50 0.00677 Preprocessor1_Model02
+3     3    21 rmse    standard   0.176    50 0.00696 Preprocessor1_Model03
+4     7    12 rmse    standard   0.177    50 0.00763 Preprocessor1_Model06
+5    11     4 rmse    standard   0.178    50 0.00779 Preprocessor1_Model09</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
@@ -832,7 +832,7 @@ Model: rand_forest()
 Random Forest Model Specification (regression)
 
 Main Arguments:
-  mtry = 5
+  mtry = 6
   trees = 500
   min_n = 2
 
@@ -862,17 +862,17 @@ Computational engine: ranger </code></pre>
 <tr class="odd">
 <td style="text-align: left;">rmse</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.2648868</td>
+<td style="text-align: right;">0.2698067</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">rsq</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.5977606</td>
+<td style="text-align: right;">0.5850668</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">mae</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.1543397</td>
+<td style="text-align: right;">0.1575600</td>
 </tr>
 </tbody>
 </table>
@@ -896,7 +896,7 @@ Computational engine: ranger </code></pre>
 </div>
 </div>
 </div>
-<p>The random forest model is an improvement over the bagged tree model since the <span class="math inline">\(R^2\)</span> value increased to 59.78% and the mean absolute error decreased to $1,426.72.</p>
+<p>The random forest model is an improvement over the bagged tree model since the <span class="math inline">\(R^2\)</span> value increased to 58.51% and the mean absolute error decreased to $1,437.34.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>vip<span class="sc">::</span><span class="fu">vip</span>(final_ranger_fit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
