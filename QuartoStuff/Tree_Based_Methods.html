@@ -93,7 +93,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on March 11, 2025 14:43:39 Eastern Daylight Time</p>
+      <p class="date">Last modified on March 11, 2025 14:56:01 Eastern Daylight Time</p>
     </div>
   </div>
   
@@ -1071,7 +1071,7 @@ Run `show_notes(.Last.tune.result)` for more information.</code></pre>
 <div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co"># xgboost_param &lt;- tibble(trees = 1597, min_n = 12, tree_depth = 6, </span></span>
 <span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="co">#                         learn_rate = 0.00444 ,loss_reduction = 0.000000282, </span></span>
 <span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a><span class="co">#                        sample_size = 0.651)</span></span>
-<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>xgboost_param <span class="ot">&lt;-</span> <span class="fu">show_best</span>(xgboost_tune, <span class="at">metric =</span> <span class="st">"rmse"</span>)[<span class="dv">2</span>, ]</span>
+<span id="cb72-4"><a href="#cb72-4" aria-hidden="true" tabindex="-1"></a>xgboost_param <span class="ot">&lt;-</span> <span class="fu">show_best</span>(xgboost_tune, <span class="at">metric =</span> <span class="st">"rmse"</span>)[<span class="dv">1</span>, ]</span>
 <span id="cb72-5"><a href="#cb72-5" aria-hidden="true" tabindex="-1"></a>final_xgboost_wkfl <span class="ot">&lt;-</span> xgboost_workflow <span class="sc">|&gt;</span> </span>
 <span id="cb72-6"><a href="#cb72-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">finalize_workflow</span>(xgboost_param)</span>
 <span id="cb72-7"><a href="#cb72-7" aria-hidden="true" tabindex="-1"></a>final_xgboost_wkfl </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1091,12 +1091,12 @@ Model: boost_tree()
 Boosted Tree Model Specification (regression)
 
 Main Arguments:
-  trees = 2000
-  min_n = 18
-  tree_depth = 6
-  learn_rate = 0.00343332001828199
-  loss_reduction = 6.62870316182644e-10
-  sample_size = 0.357142857142857
+  trees = 572
+  min_n = 15
+  tree_depth = 12
+  learn_rate = 0.209617999245313
+  loss_reduction = 0.10857111194022
+  sample_size = 0.935714285714286
 
 Computational engine: xgboost </code></pre>
 </div>
@@ -1123,17 +1123,17 @@ Computational engine: xgboost </code></pre>
 <tr class="odd">
 <td style="text-align: left;">rmse</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.2623014</td>
+<td style="text-align: right;">0.2723555</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">rsq</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.6049872</td>
+<td style="text-align: right;">0.5793174</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">mae</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.1595810</td>
+<td style="text-align: right;">0.1595444</td>
 </tr>
 </tbody>
 </table>
@@ -1157,7 +1157,7 @@ Computational engine: xgboost </code></pre>
 </div>
 </div>
 </div>
-<p>The boosted model is very similar to the random forest model with an <span class="math inline">\(R^2\)</span> value of 60.5% and a mean absolute error of $1,444.05.</p>
+<p>The boosted model is very similar to the random forest model with an <span class="math inline">\(R^2\)</span> value of 57.93% and a mean absolute error of $1,443.92.</p>
 </section>
 </section>
 

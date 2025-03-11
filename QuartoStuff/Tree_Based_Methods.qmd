@@ -440,7 +440,7 @@ show_best(xgboost_tune, metric = "rmse")
 # xgboost_param <- tibble(trees = 1597, min_n = 12, tree_depth = 6, 
 #                         learn_rate = 0.00444 ,loss_reduction = 0.000000282, 
 #                        sample_size = 0.651)
-xgboost_param <- show_best(xgboost_tune, metric = "rmse")[2, ]
+xgboost_param <- show_best(xgboost_tune, metric = "rmse")[1, ]
 final_xgboost_wkfl <- xgboost_workflow |> 
   finalize_workflow(xgboost_param)
 final_xgboost_wkfl 
