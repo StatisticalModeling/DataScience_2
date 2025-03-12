@@ -182,7 +182,8 @@ tree_tune
 ```
 
 ```{r}
-autoplot(tree_tune)
+autoplot(tree_tune) + 
+  theme_bw()
 T1 <- show_best(tree_tune, metric = "rmse")
 T1 |> 
   knitr::kable()
@@ -206,12 +207,14 @@ We used 10 fold cross validation repeated 5 times to determine the best value of
 #| fig-cap: "Final tree model after tuning the cost complexity parameter"
 final_tree_fit |> 
   extract_fit_engine() |> 
-  rpart.plot::rpart.plot()
+  rpart.plot::rpart.plot(roundint = FALSE)
 ```
 
 ## Evaluating the Perfomance of your Final Tuned Model on the Test set
 
 ```{r}
+vip::vip(final_tree_fit) + 
+  theme_bw()
 augment(final_tree_fit, new_data = hitters_test) |> 
   metrics(truth = salary, estimate = .pred) -> R2
 R2 |> 
@@ -260,7 +263,11 @@ set.seed(8675)
 bag_tune <-
   tune_grid(bag_wkfl, resamples = hitters_folds, grid = 15)
 bag_tune
-autoplot(bag_tune)
+```
+
+```{r}
+autoplot(bag_tune) + 
+  theme_bw()
 show_best(bag_tune, metric = "rmse")
 bag_param <- select_best(bag_tune, metric = "rmse")
 # bag_param <- tibble(cost_complexity = 0.002470553, min_n = 28)
@@ -269,7 +276,23 @@ final_bag_wkfl <- bag_wkfl |>
 final_bag_wkfl 
 final_bag_fit <- final_bag_wkfl |> 
   fit(hitters_train)
+final_bag_fit
 ```
+
+### Plotting the variable importance from **bagging**{-}
+
+```{r}
+final_bag_fit |> extract_fit_engine() -> BFL
+BFL$imp 
+BFL$imp[1:10, ] |> 
+  mutate(term = fct_reorder(term, value)) |> 
+  ggplot(aes(x = term, y = value)) + 
+  geom_col() + 
+  coord_flip() + 
+  theme_bw()
+```
+
+
 
 ```{r}
 augment(final_bag_fit, new_data = hitters_test) |> 
@@ -277,6 +300,7 @@ augment(final_bag_fit, new_data = hitters_test) |>
 R3 |> 
   knitr::kable()
 ```
+
 ```{r}
 augment(final_bag_fit, new_data = hitters_test) |> 
   ggplot(aes(x = salary, y = .pred)) + 
@@ -424,7 +448,7 @@ xgboost_workflow
 
 ```{r}
 #| cache: true
-#| #| label: "xgb"
+#| label: "xgb"
 set.seed(753)
 xgboost_tune <-
   tune_grid(xgboost_workflow, resamples = hitters_folds, grid = 15)
@@ -440,7 +464,7 @@ show_best(xgboost_tune, metric = "rmse")
 # xgboost_param <- tibble(trees = 1597, min_n = 12, tree_depth = 6, 
 #                         learn_rate = 0.00444 ,loss_reduction = 0.000000282, 
 #                        sample_size = 0.651)
-xgboost_param <- show_best(xgboost_tune, metric = "rmse")[1, ]
+xgboost_param <- show_best(xgboost_tune, metric = "rmse")[2, ]
 final_xgboost_wkfl <- xgboost_workflow |> 
   finalize_workflow(xgboost_param)
 final_xgboost_wkfl 
@@ -450,6 +474,12 @@ final_xgboost_wkfl
 final_xgboost_fit <- final_xgboost_wkfl |> 
   fit(hitters_train)
 ```
+
+```{r}
+vip::vip(final_xgboost_fit) +
+  theme_bw()
+```
+
 
 ```{r}
 augment(final_xgboost_fit, new_data = hitters_test) |> 
