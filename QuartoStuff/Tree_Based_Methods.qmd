@@ -348,7 +348,11 @@ set.seed(309)
 ranger_tune <-
   tune_grid(ranger_workflow, resamples = hitters_folds, grid = 15)
 ranger_tune
-autoplot(ranger_tune)
+```
+
+```{r}
+autoplot(ranger_tune) + 
+  theme_bw()
 show_best(ranger_tune, metric = "rmse")
 ```
 
@@ -385,7 +389,8 @@ augment(final_ranger_fit, new_data = hitters_test) |>
 The random forest model is an improvement over the bagged tree model since the $R^2$ value increased to `r round(R4$.estimate[2]*100,2)`% and the mean absolute error decreased to `r scales::dollar(10^R4$.estimate[3]*1000)`. 
 
 ```{r}
-vip::vip(final_ranger_fit)
+vip::vip(final_ranger_fit) + 
+  theme_bw()
 ```
 
 ## Boosting
@@ -456,7 +461,8 @@ xgboost_tune
 ```
 
 ```{r}
-autoplot(xgboost_tune)
+autoplot(xgboost_tune) + 
+  theme_bw()
 show_best(xgboost_tune, metric = "rmse")
 ```
 
