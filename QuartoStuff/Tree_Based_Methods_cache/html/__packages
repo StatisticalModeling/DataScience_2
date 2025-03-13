@@ -29,3 +29,5 @@ rpart
 baguette
 ranger
 xgboost
+finetune
+rlang

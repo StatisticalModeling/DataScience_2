@@ -473,6 +473,26 @@ xgboost_tune <-
 xgboost_tune
 ```
 
+Consider using the `finetune` package for tuning with the `tune_race_anova()` function.
+
+```{r}
+#| cache: true
+#| label: "racing"
+set.seed(867)
+library(finetune)
+doParallel::registerDoParallel()
+xgb_tune <- 
+  tune_race_anova(xgboost_workflow, resamples = hitters_folds, grid = 15)
+xgb_tune
+```
+
+```{r}
+autoplot(xgb_tune) + 
+  theme_bw()
+show_best(xgb_tune, metric = "rmse")
+```
+
+
 ```{r}
 autoplot(xgboost_tune) + 
   theme_bw()
