@@ -43,7 +43,7 @@ By aggregating many decision trees, using methods like _bagging_, _random forest
 
 # The Basics of Decision Trees
 
-Decision trees can be applied to both **regression** and **classifcation** problems. We first consider regression problems, and then move on to classification problems.
+Decision trees can be applied to both **regression** and **classification** problems. We first consider regression problems, and then move on to classification problems.
 
 ## Predicting Baseball Players’ Salaries Using Regression Trees
 We use the `Hitters` data set to predict a baseball player’s `Salary` based on `Years` (the number of years that he has played in the major leagues) and `Hits` (the number of hits that he made in the previous year). We first remove observations that are missing `Salary` values, and log-transform `Salary` so that its distribution has more of a typical bell-shape. (Recall that Salary is measured in thousands of dollars.)
@@ -210,11 +210,15 @@ final_tree_fit |>
   rpart.plot::rpart.plot(roundint = FALSE)
 ```
 
-## Evaluating the Perfomance of your Final Tuned Model on the Test set
 
 ```{r}
 vip::vip(final_tree_fit) + 
   theme_bw()
+```
+
+## Evaluating the Perfomance of your Final Tuned Model on the Test set
+
+```{r}
 augment(final_tree_fit, new_data = hitters_test) |> 
   metrics(truth = salary, estimate = .pred) -> R2
 R2 |> 
@@ -292,7 +296,7 @@ BFL$imp[1:10, ] |>
   theme_bw()
 ```
 
-
+## Evaluating the Perfomance of your Final Tuned Model on the Test set
 
 ```{r}
 augment(final_bag_fit, new_data = hitters_test) |> 
@@ -321,9 +325,9 @@ The bagged model is an improvement over the decision tree model since the $R^2$ 
 
 Random forests provide an improvement over bagged trees by way of a small tweak that decorrelates the trees. As in bagging, we build a number of decision trees on bootstrapped training samples. But when building these decision trees, each time a split in a tree is considered, a random sample of $m$ predictors is chosen as split candidates from the full set of $p$ predictors. The split is allowed to use only one of those $m$ predictors. A fresh sample of $m$ predictors is taken at each split, and typically we choose $m = \sqrt{p}$ for classification problems and $p/3$ for regression problems—that is, the number of predictors considered at each split is approximately equal to the square root of the total number of predictors for classification problems or the number of predictors is roughly $p/3$ at each split for regression problems.
 
-In other words, in building a. random forest, at each split in the tree, the algorithm is not even allowed to consider a majority of the available predictors.  This may sound crazy, but it has a clever rationale.  Suppose that there is one very strong predictor in the data set, along with a number of other moderately stromg predictors.  Then in the collection of bagged trees, most or all of the trees will use this strong predictor in the top split.  Consequently, all of the bagged trees will look quite similar to each other.  Hence the predictions from the bagged trees will be highly correlated.  Unfortunately, averaging many highly correlated trees does not lead to as large of a reduction in variance as averaging many uncorrelated quantities.  In particular, this means that bagging will not lead to a substantial reduction in variance over a single tree in this setting.
+In other words, in building a random forest, at each split in the tree, the algorithm is not even allowed to consider a majority of the available predictors.  This may sound crazy, but it has a clever rationale.  Suppose that there is one very strong predictor in the data set, along with a number of other moderately strong predictors.  Then in the collection of bagged trees, most or all of the trees will use this strong predictor in the top split.  Consequently, all of the bagged trees will look quite similar to each other.  Hence the predictions from the bagged trees will be **highly correlated**.  Unfortunately, averaging many highly correlated trees does not lead to as large of a reduction in variance as averaging many uncorrelated quantities.  In particular, this means that bagging will not lead to a substantial reduction in variance over a single tree in this setting.
 
-Random forest overcome this problem by forcing each split to consider only a subset of the rpedictors.  There fore, on average $(p-m)/p$ of the splits will not even consider the strong predictor, and so other predictors will have more of a chance.  We can think of this process as **decorrelating** the trees, thereby making the average of the resulting trees less variable and hence more reliable.
+The random forest algorithm overcomes this problem by forcing each split to consider only a subset of the predictors.  There fore, on average $(p-m)/p$ of the splits will not even consider the strong predictor, and so other predictors will have more of a chance.  We can think of this process as **decorrelating** the trees, thereby making the average of the resulting trees less variable and hence more reliable.
 
 ```{r}
 ranger_spec <- rand_forest(mtry = tune(), 
@@ -366,6 +370,16 @@ final_ranger_fit <- final_ranger_wkfl |>
   fit(hitters_train)
 ```
 
+## Plotting the variable importance
+
+```{r}
+vip::vip(final_ranger_fit) + 
+  theme_bw()
+```
+
+
+## Evaluating the Perfomance of your Final Tuned Model on the Test set
+
 ```{r}
 augment(final_ranger_fit, new_data = hitters_test) |> 
   metrics(truth = salary, estimate = .pred) -> R4
@@ -388,14 +402,11 @@ augment(final_ranger_fit, new_data = hitters_test) |>
 
 The random forest model is an improvement over the bagged tree model since the $R^2$ value increased to `r round(R4$.estimate[2]*100,2)`% and the mean absolute error decreased to `r scales::dollar(10^R4$.estimate[3]*1000)`. 
 
-```{r}
-vip::vip(final_ranger_fit) + 
-  theme_bw()
-```
+
 
 ## Boosting
 
-Recall that baggin involves creating multiple copies of the original training data set using the bootstrap, fittin a separate decision tree to each copy, and then combining all of the trees in order to create a single predictive model.. Notably, each tree is built on a bootstrap data set, independent of the other trees.  Boosting works in a similar way, except that the trees are grown **sequentially**: each tree is grown using information from previously grown trees.  Boosting does not involve bootstrap sampling; instead each tree is fit on a modified version of the original data set.
+Recall that bagging involves creating multiple copies of the original training data set using the bootstrap, fitting a separate decision tree to each copy, and then combining all of the trees in order to create a single predictive model. Notably, each tree is built on a bootstrap data set, independent of the other trees.  Boosting works in a similar way, except that the trees are grown **sequentially**: each tree is grown using information from previously grown trees.  Boosting does not involve bootstrap sampling; instead each tree is fit on a modified version of the original data set.
 
 Like bagging, boosting involves combining a large number of decision trees $\hat{f}^1,\ldots, \hat{f}^B$.
 
@@ -414,14 +425,14 @@ $$\hat{f}(x) = \sum_{b=1}^{B}\lambda\hat{f}^b(x).$$
 :::
 
 
-What is the idea behind this procedure?  Unlike fitting a single large decision tree to the data, which amounts to **fitting the data hard** and potentially overfitting, the boosting approach instead **learns slowly**.  Given the current model, we fit a decision tree to the residuals from the model.  That is, we fir a tree using the current residuals, rather than the outcome $Y$, as the response.  We then add this new decision tree into the fitted function in order to update the residuals.  Each of these trees can be rather small, with just a few terminal nodes, determined by the parameter $d$ in the algorithm.  By fitting small trees to the residuals, we slowly improve $\hat{f}$ in areas where it does not perform well.  The shrinkage parameter $\lambda$ slows the process down even further, allowing more and different shaped trees to attack the residuals.  In general, statistical learning approaches the **learn slowly** tend to perform well.  Note that in boosting, unlike in bagging, the construction of each tree depends strongly on the trees that have already been grown.
+What is the idea behind this procedure?  Unlike fitting a single large decision tree to the data, which amounts to **fitting the data hard** and potentially overfitting, the boosting approach instead **learns slowly**.  Given the current model, we fit a decision tree to the residuals from the model.  That is, we fit a tree using the current residuals, rather than the outcome $Y$, as the response.  We then add this new decision tree into the fitted function in order to update the residuals.  Each of these trees can be rather small, with just a few terminal nodes, determined by the parameter $d$ in the algorithm.  By fitting small trees to the residuals, we slowly improve $\hat{f}$ in areas where it does not perform well.  The shrinkage parameter $\lambda$ slows the process down even further, allowing more and different shaped trees to attack the residuals.  In general, statistical learning approaches that **learn slowly** tend to perform well.  Note that in boosting, unlike in bagging, the construction of each tree depends strongly on the trees that have already been grown.
 
 :::{.callout-tip icon=false title="Boosting Tuning Parameters"}
 1. The number of trees $B$.  Unlike bagging and random forests, boosting can overfit if $B$ is too large, although this overfitting tends to occur slowly if at all.  We use cross-validation to select $B$.
 
 2. The shrinkage parameter $\lambda$, a small positive number.  This controls the rate at which boosting learns.  Typical values are 0.01 or 0.001, and the right choice can depend on the problem.  Very small $\lambda$ can require using a very large value of $B$ in order to achieve good performance.
 
-3.  The number $d$ of splits in each tree, which controls the complexity of the boosted ensemble.  Often $d = 1$ works well, in which case each tree is a stump, consisting of a single split.  In this case, the boosted ensembel is fitting and additive model, since each term involves only a single variable.  More generally $d$ is the **interaction depth**, and controls the interaction order of the boosted model, since $d$ splits can involve at most $d$ variables.
+3.  The number $d$ of splits in each tree, which controls the complexity of the boosted ensemble.  Often $d = 1$ works well, in which case each tree is a stump, consisting of a single split.  In this case, the boosted ensemble is fitting and additive model, since each term involves only a single variable.  More generally $d$ is the **interaction depth**, and controls the interaction order of the boosted model, since $d$ splits can involve at most $d$ variables.
 :::
 
 ```{r}
@@ -470,7 +481,7 @@ show_best(xgboost_tune, metric = "rmse")
 # xgboost_param <- tibble(trees = 1597, min_n = 12, tree_depth = 6, 
 #                         learn_rate = 0.00444 ,loss_reduction = 0.000000282, 
 #                        sample_size = 0.651)
-xgboost_param <- show_best(xgboost_tune, metric = "rmse")[2, ]
+xgboost_param <- show_best(xgboost_tune, metric = "rmse")[1, ]
 final_xgboost_wkfl <- xgboost_workflow |> 
   finalize_workflow(xgboost_param)
 final_xgboost_wkfl 
@@ -481,11 +492,14 @@ final_xgboost_fit <- final_xgboost_wkfl |>
   fit(hitters_train)
 ```
 
+## Plotting the variable importance
+
 ```{r}
 vip::vip(final_xgboost_fit) +
   theme_bw()
 ```
 
+## Evaluating the Perfomance of your Final Tuned Model on the Test set
 
 ```{r}
 augment(final_xgboost_fit, new_data = hitters_test) |> 

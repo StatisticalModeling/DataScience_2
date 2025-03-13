@@ -93,7 +93,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on March 12, 2025 11:40:27 Eastern Daylight Time</p>
+      <p class="date">Last modified on March 13, 2025 09:42:05 Eastern Daylight Time</p>
     </div>
   </div>
   
@@ -150,7 +150,7 @@ How do we improve on a single tree?
 </section>
 <section id="the-basics-of-decision-trees" class="level1">
 <h1>The Basics of Decision Trees</h1>
-<p>Decision trees can be applied to both <strong>regression</strong> and <strong>classifcation</strong> problems. We first consider regression problems, and then move on to classification problems.</p>
+<p>Decision trees can be applied to both <strong>regression</strong> and <strong>classification</strong> problems. We first consider regression problems, and then move on to classification problems.</p>
 <section id="predicting-baseball-players-salaries-using-regression-trees" class="level2">
 <h2 class="anchored" data-anchor-id="predicting-baseball-players-salaries-using-regression-trees">Predicting Baseball Players’ Salaries Using Regression Trees</h2>
 <p>We use the <code>Hitters</code> data set to predict a baseball player’s <code>Salary</code> based on <code>Years</code> (the number of years that he has played in the major leagues) and <code>Hits</code> (the number of hits that he made in the previous year). We first remove observations that are missing <code>Salary</code> values, and log-transform <code>Salary</code> so that its distribution has more of a typical bell-shape. (Recall that Salary is measured in thousands of dollars.)</p>
@@ -528,10 +528,6 @@ Computational engine: rpart </code></pre>
 </div>
 </div>
 </div>
-</section>
-</section>
-<section id="evaluating-the-perfomance-of-your-final-tuned-model-on-the-test-set" class="level2">
-<h2 class="anchored" data-anchor-id="evaluating-the-perfomance-of-your-final-tuned-model-on-the-test-set">Evaluating the Perfomance of your Final Tuned Model on the Test set</h2>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>vip<span class="sc">::</span><span class="fu">vip</span>(final_tree_fit) <span class="sc">+</span> </span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -542,6 +538,12 @@ Computational engine: rpart </code></pre>
 </figure>
 </div>
 </div>
+</div>
+</section>
+</section>
+<section id="evaluating-the-perfomance-of-your-final-tuned-model-on-the-test-set" class="level2">
+<h2 class="anchored" data-anchor-id="evaluating-the-perfomance-of-your-final-tuned-model-on-the-test-set">Evaluating the Perfomance of your Final Tuned Model on the Test set</h2>
+<div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(final_tree_fit, <span class="at">new_data =</span> hitters_test) <span class="sc">|&gt;</span> </span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> salary, <span class="at">estimate =</span> .pred) <span class="ot">-&gt;</span> R2</span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>R2 <span class="sc">|&gt;</span> </span>
@@ -588,7 +590,7 @@ Computational engine: rpart </code></pre>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Tree_Based_Methods_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Tree_Based_Methods_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -657,7 +659,7 @@ Computational engine: rpart </code></pre>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Tree_Based_Methods_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Tree_Based_Methods_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -772,11 +774,15 @@ Variable importance scores include:
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Tree_Based_Methods_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Tree_Based_Methods_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
+</section>
+</section>
+<section id="evaluating-the-perfomance-of-your-final-tuned-model-on-the-test-set-1" class="level2">
+<h2 class="anchored" data-anchor-id="evaluating-the-perfomance-of-your-final-tuned-model-on-the-test-set-1">Evaluating the Perfomance of your Final Tuned Model on the Test set</h2>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(final_bag_fit, <span class="at">new_data =</span> hitters_test) <span class="sc">|&gt;</span> </span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> salary, <span class="at">estimate =</span> .pred) <span class="ot">-&gt;</span> R3</span>
@@ -824,19 +830,18 @@ Variable importance scores include:
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Tree_Based_Methods_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Tree_Based_Methods_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>The bagged model is an improvement over the decision tree model since the <span class="math inline">\(R^2\)</span> value increased to 54.2% and the mean absolute error decreased to $1,484.94. While bagging can improve predictions for many regression methods, it is particularly useful for decision trees. To apply bagging to regression trees, we simply construct <span class="math inline">\(B\)</span> regression trees using <span class="math inline">\(B\)</span> bootstrapped training sets, and average the resulting predictions. Each individual tree has high variance, but low bias. Averaging these <span class="math inline">\(B\)</span> trees reduces the variance. Bagging has been demonstrated to give impressive improvements in accuracy by combining together hundreds or even thousands of trees into a single procedure.</p>
 </section>
-</section>
 <section id="random-forests" class="level2">
 <h2 class="anchored" data-anchor-id="random-forests">Random Forests</h2>
 <p>Random forests provide an improvement over bagged trees by way of a small tweak that decorrelates the trees. As in bagging, we build a number of decision trees on bootstrapped training samples. But when building these decision trees, each time a split in a tree is considered, a random sample of <span class="math inline">\(m\)</span> predictors is chosen as split candidates from the full set of <span class="math inline">\(p\)</span> predictors. The split is allowed to use only one of those <span class="math inline">\(m\)</span> predictors. A fresh sample of <span class="math inline">\(m\)</span> predictors is taken at each split, and typically we choose <span class="math inline">\(m = \sqrt{p}\)</span> for classification problems and <span class="math inline">\(p/3\)</span> for regression problems—that is, the number of predictors considered at each split is approximately equal to the square root of the total number of predictors for classification problems or the number of predictors is roughly <span class="math inline">\(p/3\)</span> at each split for regression problems.</p>
-<p>In other words, in building a. random forest, at each split in the tree, the algorithm is not even allowed to consider a majority of the available predictors. This may sound crazy, but it has a clever rationale. Suppose that there is one very strong predictor in the data set, along with a number of other moderately stromg predictors. Then in the collection of bagged trees, most or all of the trees will use this strong predictor in the top split. Consequently, all of the bagged trees will look quite similar to each other. Hence the predictions from the bagged trees will be highly correlated. Unfortunately, averaging many highly correlated trees does not lead to as large of a reduction in variance as averaging many uncorrelated quantities. In particular, this means that bagging will not lead to a substantial reduction in variance over a single tree in this setting.</p>
-<p>Random forest overcome this problem by forcing each split to consider only a subset of the rpedictors. There fore, on average <span class="math inline">\((p-m)/p\)</span> of the splits will not even consider the strong predictor, and so other predictors will have more of a chance. We can think of this process as <strong>decorrelating</strong> the trees, thereby making the average of the resulting trees less variable and hence more reliable.</p>
+<p>In other words, in building a random forest, at each split in the tree, the algorithm is not even allowed to consider a majority of the available predictors. This may sound crazy, but it has a clever rationale. Suppose that there is one very strong predictor in the data set, along with a number of other moderately strong predictors. Then in the collection of bagged trees, most or all of the trees will use this strong predictor in the top split. Consequently, all of the bagged trees will look quite similar to each other. Hence the predictions from the bagged trees will be <strong>highly correlated</strong>. Unfortunately, averaging many highly correlated trees does not lead to as large of a reduction in variance as averaging many uncorrelated quantities. In particular, this means that bagging will not lead to a substantial reduction in variance over a single tree in this setting.</p>
+<p>The random forest algorithm overcomes this problem by forcing each split to consider only a subset of the predictors. There fore, on average <span class="math inline">\((p-m)/p\)</span> of the splits will not even consider the strong predictor, and so other predictors will have more of a chance. We can think of this process as <strong>decorrelating</strong> the trees, thereby making the average of the resulting trees less variable and hence more reliable.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>ranger_spec <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>(<span class="at">mtry =</span> <span class="fu">tune</span>(), </span>
 <span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>                           <span class="at">min_n =</span> <span class="fu">tune</span>(), </span>
@@ -895,7 +900,7 @@ Computational engine: ranger </code></pre>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Tree_Based_Methods_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Tree_Based_Methods_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -941,11 +946,28 @@ Computational engine: ranger </code></pre>
 <div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>final_ranger_fit <span class="ot">&lt;-</span> final_ranger_wkfl <span class="sc">|&gt;</span> </span>
 <span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(hitters_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="plotting-the-variable-importance" class="level2">
+<h2 class="anchored" data-anchor-id="plotting-the-variable-importance">Plotting the variable importance</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(final_ranger_fit, <span class="at">new_data =</span> hitters_test) <span class="sc">|&gt;</span> </span>
-<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> salary, <span class="at">estimate =</span> .pred) <span class="ot">-&gt;</span> R4</span>
-<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>R4 <span class="sc">|&gt;</span> </span>
-<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>vip<span class="sc">::</span><span class="fu">vip</span>(final_ranger_fit) <span class="sc">+</span> </span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Tree_Based_Methods_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="evaluating-the-perfomance-of-your-final-tuned-model-on-the-test-set-2" class="level2">
+<h2 class="anchored" data-anchor-id="evaluating-the-perfomance-of-your-final-tuned-model-on-the-test-set-2">Evaluating the Perfomance of your Final Tuned Model on the Test set</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(final_ranger_fit, <span class="at">new_data =</span> hitters_test) <span class="sc">|&gt;</span> </span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> salary, <span class="at">estimate =</span> .pred) <span class="ot">-&gt;</span> R4</span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>R4 <span class="sc">|&gt;</span> </span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
 <thead>
@@ -976,39 +998,28 @@ Computational engine: ranger </code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(final_ranger_fit, <span class="at">new_data =</span> hitters_test) <span class="sc">|&gt;</span> </span>
-<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> salary, <span class="at">y =</span> .pred)) <span class="sc">+</span> </span>
-<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">lty =</span> <span class="st">"dashed"</span>) <span class="sc">+</span> </span>
-<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_obs_pred</span>() <span class="sc">+</span> </span>
-<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
-<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Salary (log10) dollars"</span>,</span>
-<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted Salary (log10) dollars"</span>,</span>
-<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"R-squared Plot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(final_ranger_fit, <span class="at">new_data =</span> hitters_test) <span class="sc">|&gt;</span> </span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> salary, <span class="at">y =</span> .pred)) <span class="sc">+</span> </span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">lty =</span> <span class="st">"dashed"</span>) <span class="sc">+</span> </span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_obs_pred</span>() <span class="sc">+</span> </span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Salary (log10) dollars"</span>,</span>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted Salary (log10) dollars"</span>,</span>
+<span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"R-squared Plot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Tree_Based_Methods_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Tree_Based_Methods_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
 <p>The random forest model is an improvement over the bagged tree model since the <span class="math inline">\(R^2\)</span> value increased to 58.51% and the mean absolute error decreased to $1,437.34.</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>vip<span class="sc">::</span><span class="fu">vip</span>(final_ranger_fit) <span class="sc">+</span> </span>
-<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Tree_Based_Methods_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
 </section>
 <section id="boosting" class="level2">
 <h2 class="anchored" data-anchor-id="boosting">Boosting</h2>
-<p>Recall that baggin involves creating multiple copies of the original training data set using the bootstrap, fittin a separate decision tree to each copy, and then combining all of the trees in order to create a single predictive model.. Notably, each tree is built on a bootstrap data set, independent of the other trees. Boosting works in a similar way, except that the trees are grown <strong>sequentially</strong>: each tree is grown using information from previously grown trees. Boosting does not involve bootstrap sampling; instead each tree is fit on a modified version of the original data set.</p>
+<p>Recall that bagging involves creating multiple copies of the original training data set using the bootstrap, fitting a separate decision tree to each copy, and then combining all of the trees in order to create a single predictive model. Notably, each tree is built on a bootstrap data set, independent of the other trees. Boosting works in a similar way, except that the trees are grown <strong>sequentially</strong>: each tree is grown using information from previously grown trees. Boosting does not involve bootstrap sampling; instead each tree is fit on a modified version of the original data set.</p>
 <p>Like bagging, boosting involves combining a large number of decision trees <span class="math inline">\(\hat{f}^1,\ldots, \hat{f}^B\)</span>.</p>
 <div class="callout callout-style-default callout-tip no-icon callout-titled" title="Boosting for Regression Trees Algorithm">
 <div class="callout-header d-flex align-content-center">
@@ -1032,7 +1043,7 @@ Boosting for Regression Trees Algorithm
 </ol>
 </div>
 </div>
-<p>What is the idea behind this procedure? Unlike fitting a single large decision tree to the data, which amounts to <strong>fitting the data hard</strong> and potentially overfitting, the boosting approach instead <strong>learns slowly</strong>. Given the current model, we fit a decision tree to the residuals from the model. That is, we fir a tree using the current residuals, rather than the outcome <span class="math inline">\(Y\)</span>, as the response. We then add this new decision tree into the fitted function in order to update the residuals. Each of these trees can be rather small, with just a few terminal nodes, determined by the parameter <span class="math inline">\(d\)</span> in the algorithm. By fitting small trees to the residuals, we slowly improve <span class="math inline">\(\hat{f}\)</span> in areas where it does not perform well. The shrinkage parameter <span class="math inline">\(\lambda\)</span> slows the process down even further, allowing more and different shaped trees to attack the residuals. In general, statistical learning approaches the <strong>learn slowly</strong> tend to perform well. Note that in boosting, unlike in bagging, the construction of each tree depends strongly on the trees that have already been grown.</p>
+<p>What is the idea behind this procedure? Unlike fitting a single large decision tree to the data, which amounts to <strong>fitting the data hard</strong> and potentially overfitting, the boosting approach instead <strong>learns slowly</strong>. Given the current model, we fit a decision tree to the residuals from the model. That is, we fit a tree using the current residuals, rather than the outcome <span class="math inline">\(Y\)</span>, as the response. We then add this new decision tree into the fitted function in order to update the residuals. Each of these trees can be rather small, with just a few terminal nodes, determined by the parameter <span class="math inline">\(d\)</span> in the algorithm. By fitting small trees to the residuals, we slowly improve <span class="math inline">\(\hat{f}\)</span> in areas where it does not perform well. The shrinkage parameter <span class="math inline">\(\lambda\)</span> slows the process down even further, allowing more and different shaped trees to attack the residuals. In general, statistical learning approaches that <strong>learn slowly</strong> tend to perform well. Note that in boosting, unlike in bagging, the construction of each tree depends strongly on the trees that have already been grown.</p>
 <div class="callout callout-style-default callout-tip no-icon callout-titled" title="Boosting Tuning Parameters">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1046,7 +1057,7 @@ Boosting Tuning Parameters
 <ol type="1">
 <li><p>The number of trees <span class="math inline">\(B\)</span>. Unlike bagging and random forests, boosting can overfit if <span class="math inline">\(B\)</span> is too large, although this overfitting tends to occur slowly if at all. We use cross-validation to select <span class="math inline">\(B\)</span>.</p></li>
 <li><p>The shrinkage parameter <span class="math inline">\(\lambda\)</span>, a small positive number. This controls the rate at which boosting learns. Typical values are 0.01 or 0.001, and the right choice can depend on the problem. Very small <span class="math inline">\(\lambda\)</span> can require using a very large value of <span class="math inline">\(B\)</span> in order to achieve good performance.</p></li>
-<li><p>The number <span class="math inline">\(d\)</span> of splits in each tree, which controls the complexity of the boosted ensemble. Often <span class="math inline">\(d = 1\)</span> works well, in which case each tree is a stump, consisting of a single split. In this case, the boosted ensembel is fitting and additive model, since each term involves only a single variable. More generally <span class="math inline">\(d\)</span> is the <strong>interaction depth</strong>, and controls the interaction order of the boosted model, since <span class="math inline">\(d\)</span> splits can involve at most <span class="math inline">\(d\)</span> variables.</p></li>
+<li><p>The number <span class="math inline">\(d\)</span> of splits in each tree, which controls the complexity of the boosted ensemble. Often <span class="math inline">\(d = 1\)</span> works well, in which case each tree is a stump, consisting of a single split. In this case, the boosted ensemble is fitting and additive model, since each term involves only a single variable. More generally <span class="math inline">\(d\)</span> is the <strong>interaction depth</strong>, and controls the interaction order of the boosted model, since <span class="math inline">\(d\)</span> splits can involve at most <span class="math inline">\(d\)</span> variables.</p></li>
 </ol>
 </div>
 </div>
@@ -1148,7 +1159,7 @@ Run `show_notes(.Last.tune.result)` for more information.</code></pre>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Tree_Based_Methods_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Tree_Based_Methods_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1170,7 +1181,7 @@ Run `show_notes(.Last.tune.result)` for more information.</code></pre>
 <div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="co"># xgboost_param &lt;- tibble(trees = 1597, min_n = 12, tree_depth = 6, </span></span>
 <span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="co">#                         learn_rate = 0.00444 ,loss_reduction = 0.000000282, </span></span>
 <span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a><span class="co">#                        sample_size = 0.651)</span></span>
-<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>xgboost_param <span class="ot">&lt;-</span> <span class="fu">show_best</span>(xgboost_tune, <span class="at">metric =</span> <span class="st">"rmse"</span>)[<span class="dv">2</span>, ]</span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>xgboost_param <span class="ot">&lt;-</span> <span class="fu">show_best</span>(xgboost_tune, <span class="at">metric =</span> <span class="st">"rmse"</span>)[<span class="dv">1</span>, ]</span>
 <span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>final_xgboost_wkfl <span class="ot">&lt;-</span> xgboost_workflow <span class="sc">|&gt;</span> </span>
 <span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">finalize_workflow</span>(xgboost_param)</span>
 <span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a>final_xgboost_wkfl </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1190,12 +1201,12 @@ Model: boost_tree()
 Boosted Tree Model Specification (regression)
 
 Main Arguments:
-  trees = 2000
-  min_n = 18
-  tree_depth = 6
-  learn_rate = 0.00343332001828199
-  loss_reduction = 6.62870316182644e-10
-  sample_size = 0.357142857142857
+  trees = 572
+  min_n = 15
+  tree_depth = 12
+  learn_rate = 0.209617999245313
+  loss_reduction = 0.10857111194022
+  sample_size = 0.935714285714286
 
 Computational engine: xgboost </code></pre>
 </div>
@@ -1204,17 +1215,23 @@ Computational engine: xgboost </code></pre>
 <div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>final_xgboost_fit <span class="ot">&lt;-</span> final_xgboost_wkfl <span class="sc">|&gt;</span> </span>
 <span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(hitters_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="plotting-the-variable-importance-1" class="level2">
+<h2 class="anchored" data-anchor-id="plotting-the-variable-importance-1">Plotting the variable importance</h2>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>vip<span class="sc">::</span><span class="fu">vip</span>(final_xgboost_fit) <span class="sc">+</span></span>
 <span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Tree_Based_Methods_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Tree_Based_Methods_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
+</section>
+<section id="evaluating-the-perfomance-of-your-final-tuned-model-on-the-test-set-3" class="level2">
+<h2 class="anchored" data-anchor-id="evaluating-the-perfomance-of-your-final-tuned-model-on-the-test-set-3">Evaluating the Perfomance of your Final Tuned Model on the Test set</h2>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(final_xgboost_fit, <span class="at">new_data =</span> hitters_test) <span class="sc">|&gt;</span> </span>
 <span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> salary, <span class="at">estimate =</span> .pred) <span class="ot">-&gt;</span> R5</span>
@@ -1233,17 +1250,17 @@ Computational engine: xgboost </code></pre>
 <tr class="odd">
 <td style="text-align: left;">rmse</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.2623014</td>
+<td style="text-align: right;">0.2723555</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">rsq</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.6049872</td>
+<td style="text-align: right;">0.5793174</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">mae</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.1595810</td>
+<td style="text-align: right;">0.1595444</td>
 </tr>
 </tbody>
 </table>
@@ -1262,12 +1279,12 @@ Computational engine: xgboost </code></pre>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Tree_Based_Methods_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Tree_Based_Methods_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>The boosted model is very similar to the random forest model with an <span class="math inline">\(R^2\)</span> value of 60.5% and a mean absolute error of $1,444.05.</p>
+<p>The boosted model is very similar to the random forest model with an <span class="math inline">\(R^2\)</span> value of 57.93% and a mean absolute error of $1,443.92.</p>
 </section>
 </section>
 
