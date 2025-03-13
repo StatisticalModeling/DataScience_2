@@ -15,6 +15,7 @@ library(scales)
 knitr::opts_chunk$set(echo = TRUE, fig.align = "center", comment = NA, message = FALSE,  warning = FALSE)
 ```
 
+
 :::{.callout-note title="Crediting the materials" icon=false}
 The majority of the material in the first part of this document is taken from the free online course at [https://supervised-ml-course.netlify.app/](https://supervised-ml-course.netlify.app/) written by Julia Silge.
 :::
@@ -28,20 +29,25 @@ In this case study, you will predict the fuel efficiency ⛽ of modern cars from
 
 The first step before you start modeling is to explore your data. In this course we'll practice using tidyverse functions for exploratory data analysis. Start off this case study by examining your data set and visualizing the distribution of fuel efficiency. The `ggplot2` package, with functions like `ggplot()` and `geom_histogram()`, is included in the `tidyverse`.  The `tidyverse` metapackage is loaded for you, so you can use `readr` and `ggplot2`.
 
+
 ```{r}
 library(tidyverse)
 cars2018 <- read_csv("../Data/cars2018.csv")
 ```
 
 
+
 * Take a look at the `cars2018` object using `glimpse()`.
+
 
 ```{r}
 # Print the cars2018 object
 glimpse(cars2018)
 ```
 
+
 * Use the appropriate column from `cars2018` in the call to `aes()` so you can plot a histogram of fuel efficiency (miles per gallon, mpg).  Set the correct `x` and `y` labels.
+
 
 ```{r}
 # Plot the histogram
@@ -65,6 +71,7 @@ ggplot(cars2018, aes(x = log_mpg)) +
 
 
 
+
 ## Build a simple linear model
 
 Before embarking on more complex machine learning models, it’s a good idea to build the simplest possible model to get an idea of what is going on. In this case, that means fitting a simple linear model using base R's `lm()` function.
@@ -73,13 +80,16 @@ Before embarking on more complex machine learning models, it’s a good idea to 
 
 * Use `select()` to deselect the two columns `model` and `model_index` from `cars2018`; these columns tell us the individual identifiers for each car and it would not make sense to include them in modeling.  Store the results in `car_vars`.
 
+
 ```{r}
 # Deselect the 2 columns to create cars_vars
 car_vars <- cars2018 |> 
     select(-model, -model_index)
 ```
 
+
 * Fit `mpg` as the predicted quantity, explained by all the predictors, i.e., `.` in the R formula input to `lm()`. Store the linear model object in `fit_all`. (You may have noticed the log distribution of MPG in the last exercise, but don’t worry about fitting the logarithm of fuel efficiency yet.)
+
 
 ```{r}
 # Fit a linear model
@@ -87,7 +97,9 @@ fit_all <- lm(mpg ~ . - log_mpg, data = car_vars)
 ```
 
 
+
 * Print the `summary()` of the `model`fit_all`.
+
 
 ```{r}
 # Print the summary of the model
@@ -99,6 +111,7 @@ broom::tidy(fit_all) |>
 broom::glance(fit_all) |> 
   knitr::kable()
 ```
+
 
 You just performed some exploratory data analysis and built a simple linear model using base R's `lm()` function.
 
@@ -114,12 +127,15 @@ Creating training/testing splits reduces **overfitting**. When you evaluate your
 
 * Load the `tidymodels` metapackage, which also includes `dplyr` for data manipulation.
 
+
 ```{r}
 # Load tidymodels
 library(tidymodels)
 ```
 
+
 * Create a data split that divides the original data into 80%/20% sections and (roughly) evenly divides the partitions between the different types of `transmission`.  Assign the 80% partition to `car_train` and the 20% partition to `car_test`.
+
 
 ```{r}
 # Split the data into training and test sets
@@ -135,6 +151,7 @@ glimpse(car_train)
 glimpse(car_test)
 ```
 
+
 ## Train models with `tidymodels`
 
 Now that your `car_train` data is ready, you can fit a set of models with `tidymodels`. When we model data, we deal with model type (such as linear regression or random forest), mode (regression or classification), and model engine (how the models are actually fit). In `tidymodels`, we capture that modeling information in a model **specification**, so setting up your model specification can be a good place to start. In these exercises, fit one linear regression model and one random forest model, without any resampling of your data.
@@ -142,6 +159,7 @@ Now that your `car_train` data is ready, you can fit a set of models with `tidym
 ### Instructions
 
 * Fit a basic linear regression model to your `car_train` data.  (Notice that we are fitting to `log(mpg)` since the fuel efficiency had a log normal distribution.)
+
 
 ```{r}
 # Build a linear regression model specification
@@ -160,7 +178,9 @@ broom::glance(fit_lm) |>
   knitr::kable()
 ```
 
+
 * Fit a random forest model to your `car_train` data.
+
 
 ```{r}
 # Build a random forest model specification
@@ -176,6 +196,7 @@ fit_rf <- rf_spec |>
 fit_rf
 ```
 
+
 ## Evaluate model performance
 
 The `fit_lm` and `fit_rf` models you just trained are in your environment. It's time to see how they did! 🤩 How are we doing do this, though?! 🤔 There are several things to consider, including both what metrics and what data to use.
@@ -188,6 +209,7 @@ Note: The `yardstick` package is loaded since it is one of the packages in `tidy
 
 * Create new columns for model predictions from each of the models you have trained, first linear regression and then random forest.
 
+
 ```{r}
 # Create the new columns
 results <- car_train |> 
@@ -199,7 +221,9 @@ head(results) |>
   knitr::kable()
 ```
 
+
 * Evaluate the performance of these models using [`metrics()`](https://yardstick.tidymodels.org/reference/metrics.html) by specifying the column that contains the real fuel efficiency.
+
 
 ```{r}
 # Evaluate the performance
@@ -207,11 +231,13 @@ metrics(results, truth = log_mpg, estimate = .pred_lm)
 metrics(results, truth = log_mpg, estimate = .pred_rf)
 ```
 
+
 ## Use the testing data
 
 “But wait!” you say, because you have been paying attention. 🤔 “That is how these models perform on the **training** data, the data that we used to build these models in the first place.” This is not a good idea because when you evaluate on the same data you used to train a model, the performance you estimate is too optimistic.
 
 Let’s evaluate how these simple models perform on the **testing** data instead.
+
 
 ```{r}
 # Create the new columns
@@ -225,6 +251,7 @@ results <- car_test  |>
 metrics(results, truth = log_mpg, estimate = .pred_lm)
 metrics(results, truth = log_mpg, estimate = .pred_rf)
 ```
+
 
 
 You just trained models one time on the whole training set and then evaluated them on the testing set. Statisticians have come up with a slew of approaches to evaluate models in better ways than this; many important ones fall under the category of **resampling**.
@@ -245,13 +272,16 @@ Let's try bootstrap resampling, which means creating data sets the same size as 
 
 * Create bootstrap resamples to evaluate these models. The function to create this kind of resample is `bootstraps()`.
 
+
 ```{r}
 ## Create bootstrap resamples
 set.seed(444)
 car_boot <- bootstraps(data = car_train, times = 25)
 ```
 
+
 * Evaluate both kinds of models, the linear regression model and the random forest model.
+
 
 ```{r}
 # Evaluate the models with bootstrap resampling
@@ -270,6 +300,7 @@ rf_res <- rf_spec |>
     )
 ```
 
+
 ## Plot modeling results
 
 You just trained models on bootstrap resamples of the training set and now have the results in `lm_res` and `rf_res`. These results are available in your environment, trained using the training set. Now let's compare them.
@@ -277,6 +308,7 @@ You just trained models on bootstrap resamples of the training set and now have 
 Notice in this code how we use `bind_rows()` from `dplyr` to combine the results from both models, along with `collect_predictions()` to obtain and format predictions from each resample.
 
 * First use `collect_predictions()` for the linear model.  Then use  `collect_predictions()` for the random forest model.
+
 
 ```{r}
 results <-  bind_rows(lm_res |> 
@@ -288,7 +320,9 @@ results <-  bind_rows(lm_res |>
 
 glimpse(results)
 ```
+
 * Show the bootstrapped results:
+
 
 ```{r}
 results |> 
@@ -298,7 +332,9 @@ results |>
 ```
 
 
+
 * Visualize the results:
+
 
 ```{r}
 results |> 
@@ -313,7 +349,9 @@ results |>
        x = "Actual (log_mpg)")
 ```
 
+
 ## Tune the Random Forest model
+
 
 ```{r}
 # Build a random forest model specification
@@ -325,7 +363,9 @@ rf_spec <- rand_forest(mtry = tune(),
 rf_spec
 ```
 
+
 ### Cross Validation
+
 
 ```{r}
 set.seed(42)
@@ -341,11 +381,13 @@ rf_wkfl
 ```
 
 
+
 ### Tune the model
 
 :::{.callout-tip}
 The next code chunk will take 20 minutes or so to run.  Make sure to cache the chunk so that you can rebuild your document without having the code chunk run each time the document is rendered.
 :::
+
 
 ```{r}
 #| cache: true
@@ -397,7 +439,9 @@ augment(final_rf_fit, new_data = car_test) |>
        title = "R-squared Plot")
 ```
 
+
 ## Using Boosting
+
 
 ```{r}
 xgboost_spec <- 
@@ -418,7 +462,6 @@ xgboost_recipe <-
   step_corr(all_numeric_predictors(), threshold = 0.9)
 ```
 
-
 ```{r}
 xgboost_workflow <- 
   workflow() |>  
@@ -427,9 +470,11 @@ xgboost_workflow <-
 xgboost_workflow
 ```
 
+
 :::{.callout-tip}
 Use `cache: true` as the next chunk takes almost an hour
 :::
+
 
 ```{r}
 #| cache: true
@@ -443,11 +488,9 @@ xgboost_tune <-
 xgboost_tune
 ```
 
-
 ```{r}
 show_best(xgboost_tune, metric = "rmse")
 ```
-
 
 ```{r}
 # xgboost_param <- tibble(trees = 2000, 
@@ -471,7 +514,4 @@ augment(final_xgboost_fit, new_data = car_test) |>
 R5 |> 
   knitr::kable()
 ```
-
-
-
 
