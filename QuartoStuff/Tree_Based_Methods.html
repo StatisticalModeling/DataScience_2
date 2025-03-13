@@ -93,7 +93,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on March 13, 2025 09:42:05 Eastern Daylight Time</p>
+      <p class="date">Last modified on March 13, 2025 12:03:44 Eastern Daylight Time</p>
     </div>
   </div>
   
@@ -514,7 +514,7 @@ Computational engine: rpart </code></pre>
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>final_tree_fit <span class="ot">&lt;-</span> final_tree_wkfl <span class="sc">|&gt;</span> </span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(hitters_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>We used 10 fold cross validation repeated 5 times to determine the best value of <span class="math inline">\(\alpha = 0.0072956\)</span> (<code>cost_complexity</code>) based on the model with the smallest RMSE (0.2071888). Then we created the final model (<code>final_tree_fit</code>) using cost complexity pruning and show the model in <a href="#fig-tree3">Figure&nbsp;3</a>.</p>
+<p>We used 10 fold cross validation repeated 5 times to determine the best value of <span class="math inline">\(\alpha = 0.0072956\)</span> (<code>cost_complexity</code>) based on the model with the smallest <span class="math inline">\(RMSE\)</span> (0.2071888). Then we created the final model (<code>final_tree_fit</code>) using cost complexity pruning and show the model in <a href="#fig-tree3">Figure&nbsp;3</a>.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>final_tree_fit <span class="sc">|&gt;</span> </span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_fit_engine</span>() <span class="sc">|&gt;</span> </span>
@@ -595,7 +595,7 @@ Computational engine: rpart </code></pre>
 </div>
 </div>
 </div>
-<p>Unfortunately, the model does not perform that well on the test set. The final tuned model has an <span class="math inline">\(R^2\)</span> value of 53.88% and a mean absolute error of $1,529.11.</p>
+<p>Unfortunately, the model does not perform that well on the test set. The final tuned model has an <span class="math inline">\(RMSE\)</span> value of $1,937.23, an <span class="math inline">\(R^2\)</span> value of 53.88% and a mean absolute error of $1,529.11.</p>
 </section>
 <section id="bagging" class="level2">
 <h2 class="anchored" data-anchor-id="bagging">Bagging</h2>
@@ -835,7 +835,8 @@ Variable importance scores include:
 </div>
 </div>
 </div>
-<p>The bagged model is an improvement over the decision tree model since the <span class="math inline">\(R^2\)</span> value increased to 54.2% and the mean absolute error decreased to $1,484.94. While bagging can improve predictions for many regression methods, it is particularly useful for decision trees. To apply bagging to regression trees, we simply construct <span class="math inline">\(B\)</span> regression trees using <span class="math inline">\(B\)</span> bootstrapped training sets, and average the resulting predictions. Each individual tree has high variance, but low bias. Averaging these <span class="math inline">\(B\)</span> trees reduces the variance. Bagging has been demonstrated to give impressive improvements in accuracy by combining together hundreds or even thousands of trees into a single procedure.</p>
+<p>The bagged model is an improvement over the decision tree model since the <span class="math inline">\(RMSE\)</span> decreased to $1,936.76, the <span class="math inline">\(R^2\)</span> value increased to 54.2%, and the mean absolute error decreased to $1,484.94. Recall that the final tuned single decision tree an <span class="math inline">\(RMSE\)</span> value of $1,937.23, an <span class="math inline">\(R^2\)</span> value of 53.88% and a mean absolute error of $1,529.11.</p>
+<p>While bagging can improve predictions for many regression methods, it is particularly useful for <strong>decision trees</strong>. To apply bagging to regression trees, we simply construct <span class="math inline">\(B\)</span> regression trees using <span class="math inline">\(B\)</span> bootstrapped training sets, and average the resulting predictions. Each individual tree has high variance, but low bias. Averaging these <span class="math inline">\(B\)</span> trees reduces the variance. Bagging has been demonstrated to give impressive improvements in accuracy by combining together hundreds or even thousands of trees into a single procedure.</p>
 </section>
 <section id="random-forests" class="level2">
 <h2 class="anchored" data-anchor-id="random-forests">Random Forests</h2>
@@ -1015,7 +1016,7 @@ Computational engine: ranger </code></pre>
 </div>
 </div>
 </div>
-<p>The random forest model is an improvement over the bagged tree model since the <span class="math inline">\(R^2\)</span> value increased to 58.51% and the mean absolute error decreased to $1,437.34.</p>
+<p>The random forest model is an improvement over the bagged tree model since the <span class="math inline">\(RMSE\)</span> value decreased to $1,861.26 <span class="math inline">\(R^2\)</span> value increased to 58.51% and the mean absolute error decreased to $1,437.34. Recall that the final bagged model had an <span class="math inline">\(RMSE\)</span> of $1,936.76, an <span class="math inline">\(R^2\)</span> value of 54.2%, and a mean absolute error of $1,484.94.</p>
 </section>
 <section id="boosting" class="level2">
 <h2 class="anchored" data-anchor-id="boosting">Boosting</h2>
@@ -1284,7 +1285,7 @@ Computational engine: xgboost </code></pre>
 </div>
 </div>
 </div>
-<p>The boosted model is very similar to the random forest model with an <span class="math inline">\(R^2\)</span> value of 57.93% and a mean absolute error of $1,443.92.</p>
+<p>The boosted model is very similar to the random forest model with an <span class="math inline">\(RMSE\)</span> value of $1,872.21, an <span class="math inline">\(R^2\)</span> value of 57.93% and a mean absolute error of $1,443.92. Recall that the random forest had an <span class="math inline">\(RMSE\)</span> value of $1,861.26, an <span class="math inline">\(R^2\)</span> value of 58.51% and a mean absolute error of $1,437.34.</p>
 </section>
 </section>
 

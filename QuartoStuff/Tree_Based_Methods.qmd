@@ -200,7 +200,7 @@ final_tree_fit <- final_tree_wkfl |>
   fit(hitters_train)
 ```
 
-We used 10 fold cross validation repeated 5 times to determine the best value of $\alpha = `r T1$cost_complexity[1]`$ (`cost_complexity`) based on the model with the smallest RMSE (`r T1$mean[1]`). Then we created the final model (`final_tree_fit`) using cost complexity pruning and show the model in @fig-tree3. 
+We used 10 fold cross validation repeated 5 times to determine the best value of $\alpha = `r T1$cost_complexity[1]`$ (`cost_complexity`) based on the model with the smallest $RMSE$ (`r T1$mean[1]`). Then we created the final model (`final_tree_fit`) using cost complexity pruning and show the model in @fig-tree3. 
 
 ```{r}
 #| label: "fig-tree3"
@@ -238,7 +238,7 @@ augment(final_tree_fit, new_data = hitters_test) |>
 ```
 
 
-Unfortunately, the model does not perform that well on the test set.  The final tuned model has an $R^2$ value of `r round(R2$.estimate[2]*100,2)`% and a mean absolute error of `r scales::dollar(10^R2$.estimate[3]*1000)`.
+Unfortunately, the model does not perform that well on the test set.  The final tuned model has an $RMSE$ value of `r scales::dollar(10^R2$.estimate[1]*1000)`, an $R^2$ value of `r round(R2$.estimate[2]*100, 2)`% and a mean absolute error of `r scales::dollar(10^R2$.estimate[3]*1000)`.
 
 
 ## Bagging
@@ -318,7 +318,9 @@ augment(final_bag_fit, new_data = hitters_test) |>
 ```
 
 
-The bagged model is an improvement over the decision tree model since the $R^2$ value increased to `r round(R3$.estimate[2]*100,2)`% and the mean absolute error decreased to `r scales::dollar(10^R3$.estimate[3]*1000)`.  While bagging can improve predictions for many regression methods, it is particularly useful for decision trees. To apply bagging to regression trees, we simply construct $B$ regression trees using $B$ bootstrapped training sets, and average the resulting predictions.  Each individual tree has high variance, but low bias. Averaging these $B$ trees reduces the variance. Bagging has been demonstrated to give impressive improvements in accuracy by combining together hundreds or even thousands of trees into a single procedure.
+The bagged model is an improvement over the decision tree model since the $RMSE$ decreased to `r scales::dollar(10^R3$.estimate[1]*1000)`, the $R^2$ value increased to `r round(R3$.estimate[2]*100,2)`%, and the mean absolute error decreased to `r scales::dollar(10^R3$.estimate[3]*1000)`.  Recall that the final tuned single decision tree an $RMSE$ value of `r scales::dollar(10^R2$.estimate[1]*1000)`, an $R^2$ value of `r round(R2$.estimate[2]*100, 2)`% and a mean absolute error of `r scales::dollar(10^R2$.estimate[3]*1000)`.  
+
+While bagging can improve predictions for many regression methods, it is particularly useful for **decision trees**. To apply bagging to regression trees, we simply construct $B$ regression trees using $B$ bootstrapped training sets, and average the resulting predictions.  Each individual tree has high variance, but low bias. Averaging these $B$ trees reduces the variance. Bagging has been demonstrated to give impressive improvements in accuracy by combining together hundreds or even thousands of trees into a single procedure.
 
 
 ## Random Forests
@@ -400,7 +402,7 @@ augment(final_ranger_fit, new_data = hitters_test) |>
 ```
 
 
-The random forest model is an improvement over the bagged tree model since the $R^2$ value increased to `r round(R4$.estimate[2]*100,2)`% and the mean absolute error decreased to `r scales::dollar(10^R4$.estimate[3]*1000)`. 
+The random forest model is an improvement over the bagged tree model since the $RMSE$ value decreased to `r scales::dollar(10^R4$.estimate[1]*1000)` $R^2$ value increased to `r round(R4$.estimate[2]*100,2)`% and the mean absolute error decreased to `r scales::dollar(10^R4$.estimate[3]*1000)`.  Recall that the final bagged model had an $RMSE$ of `r scales::dollar(10^R3$.estimate[1]*1000)`, an $R^2$ value of `r round(R3$.estimate[2]*100,2)`%, and a mean absolute error of `r scales::dollar(10^R3$.estimate[3]*1000)`. 
 
 
 
@@ -521,5 +523,5 @@ augment(final_xgboost_fit, new_data = hitters_test) |>
 ```
 
 
-The boosted model is very similar to the random forest model with an $R^2$ value of `r round(R5$.estimate[2]*100,2)`% and a mean absolute error of `r scales::dollar(10^R5$.estimate[3]*1000)`. 
-
+The boosted model is very similar to the random forest model with an $RMSE$ value of `r scales::dollar(10^R5$.estimate[1]*1000)`, an $R^2$ value of `r round(R5$.estimate[2]*100,2)`% and a mean absolute error of `r scales::dollar(10^R5$.estimate[3]*1000)`.  Recall that the random forest had an
+$RMSE$ value of `r scales::dollar(10^R4$.estimate[1]*1000)`, an $R^2$ value of `r round(R4$.estimate[2]*100,2)`% and a mean absolute error of `r scales::dollar(10^R4$.estimate[3]*1000)`.
