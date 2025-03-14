@@ -435,7 +435,6 @@ Use `cache: true` as the next chunk takes almost an hour
 #| cache: true
 #| label: "xgb_tune"
 library(finetune)
-doParallel::registerDoParallel()
 
 set.seed(49)
 xgboost_tune <-

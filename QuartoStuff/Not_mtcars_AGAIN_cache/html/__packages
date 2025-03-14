@@ -24,3 +24,5 @@ workflowsets
 yardstick
 ranger
 xgboost
+finetune
+rlang
