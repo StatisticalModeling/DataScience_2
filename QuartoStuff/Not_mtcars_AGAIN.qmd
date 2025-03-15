@@ -560,8 +560,7 @@ lm_spec <- linear_reg() |>
   set_engine("lm")
 ns_recipe <- recipe(log_mpg ~ ., data = car_train) |> 
   step_ns(displacement, cylinders, gears, deg_free = 6) |> 
-  step_interact(~drive:transmission) |> 
-  step_interact(~drive:recommended_fuel)
+  step_interact(~drive:transmission + drive:recommended_fuel)
 ns_wkfl <- workflow() |> 
   add_recipe(ns_recipe) |> 
   add_model(lm_spec)

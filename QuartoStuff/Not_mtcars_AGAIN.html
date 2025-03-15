@@ -91,7 +91,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on March 15, 2025 09:33:05 Eastern Daylight Time</p>
+      <p class="date">Last modified on March 15, 2025 12:16:39 Eastern Daylight Time</p>
     </div>
   </div>
   
@@ -1944,22 +1944,20 @@ Computational engine: glmnet </code></pre>
 <span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>)</span>
 <span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>ns_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(log_mpg <span class="sc">~</span> ., <span class="at">data =</span> car_train) <span class="sc">|&gt;</span> </span>
 <span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_ns</span>(displacement, cylinders, gears, <span class="at">deg_free =</span> <span class="dv">6</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_interact</span>(<span class="sc">~</span>drive<span class="sc">:</span>transmission) <span class="sc">|&gt;</span> </span>
-<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_interact</span>(<span class="sc">~</span>drive<span class="sc">:</span>recommended_fuel)</span>
-<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a>ns_wkfl <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(ns_recipe) <span class="sc">|&gt;</span> </span>
-<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(lm_spec)</span>
-<span id="cb75-10"><a href="#cb75-10" aria-hidden="true" tabindex="-1"></a>ns_wkfl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_interact</span>(<span class="sc">~</span>drive<span class="sc">:</span>transmission <span class="sc">+</span> drive<span class="sc">:</span>recommended_fuel)</span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>ns_wkfl <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(ns_recipe) <span class="sc">|&gt;</span> </span>
+<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(lm_spec)</span>
+<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a>ns_wkfl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>══ Workflow ════════════════════════════════════════════════════════════════════
 Preprocessor: Recipe
 Model: linear_reg()
 
 ── Preprocessor ────────────────────────────────────────────────────────────────
-3 Recipe Steps
+2 Recipe Steps
 
 • step_ns()
-• step_interact()
 • step_interact()
 
 ── Model ───────────────────────────────────────────────────────────────────────
