@@ -405,6 +405,7 @@ RF |>
 augment(final_rf_fit, new_data = car_test) |> 
   ggplot(aes(x = log_mpg, y = .pred)) + 
   geom_point() +
+  geom_smooth(method = "gam") +
   geom_abline(lty = "dashed") +
   coord_obs_pred() + 
   theme_bw() + 
@@ -412,6 +413,14 @@ augment(final_rf_fit, new_data = car_test) |>
        y = "Predicted log_mpg",
        title = "R-squared Plot")
 ```
+
+```{r}
+library(probably)
+augment(final_rf_fit, new_data = car_test) |>
+cal_plot_regression(truth = log_mpg, estimate = .pred) + 
+  theme_bw()
+```
+
 
 ## Using Boosting
 
