@@ -229,6 +229,7 @@ R2 |>
 augment(final_tree_fit, new_data = hitters_test) |> 
   ggplot(aes(x = salary, y = .pred)) + 
   geom_abline(lty = "dashed") + 
+  geom_smooth(method = "gam", se = FALSE) +
   coord_obs_pred() + 
   geom_point(alpha = 0.5) +
   theme_bw() + 
@@ -237,8 +238,18 @@ augment(final_tree_fit, new_data = hitters_test) |>
        title = "R-squared Plot")
 ```
 
+```{r}
+library(probably)
+augment(final_tree_fit, new_data = hitters_test) |>
+cal_plot_regression(truth = salary, estimate = .pred) + 
+  theme_bw()
+```
+
 
 Unfortunately, the model does not perform that well on the test set.  The final tuned model has an $RMSE$ value of `r scales::dollar(10^R2$.estimate[1]*1000)`, an $R^2$ value of `r round(R2$.estimate[2]*100, 2)`% and a mean absolute error of `r scales::dollar(10^R2$.estimate[3]*1000)`.
+
+
+
 
 
 ## Bagging
