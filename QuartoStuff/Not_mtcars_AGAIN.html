@@ -91,7 +91,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on March 13, 2025 19:46:15 Eastern Daylight Time</p>
+      <p class="date">Last modified on March 15, 2025 09:23:12 Eastern Daylight Time</p>
     </div>
   </div>
   
@@ -754,7 +754,7 @@ $ log_mpg                 &lt;dbl&gt; 2.397895, 2.944439, 2.890372, 2.564949, 3.
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a random forest model specification</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>rf_spec <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_engine</span>(<span class="st">"ranger"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_engine</span>(<span class="st">"ranger"</span>, <span class="at">importance =</span> <span class="st">"impurity"</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Train a random forest model</span></span>
@@ -769,7 +769,7 @@ $ log_mpg                 &lt;dbl&gt; 2.397895, 2.944439, 2.890372, 2.564949, 3.
 Ranger result
 
 Call:
- ranger::ranger(x = maybe_data_frame(x), y = y, num.threads = 1,      verbose = FALSE, seed = sample.int(10^5, 1)) 
+ ranger::ranger(x = maybe_data_frame(x), y = y, importance = ~"impurity",      num.threads = 1, verbose = FALSE, seed = sample.int(10^5,          1)) 
 
 Type:                             Regression 
 Number of trees:                  500 
@@ -777,10 +777,21 @@ Sample size:                      915
 Number of independent variables:  12 
 Mtry:                             3 
 Target node size:                 5 
-Variable importance mode:         none 
+Variable importance mode:         impurity 
 Splitrule:                        variance 
 OOB prediction error (MSE):       0.007038903 
 R squared (OOB):                  0.8650538 </code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>vip<span class="sc">::</span><span class="fu">vip</span>(fit_rf) <span class="sc">+</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Not_mtcars_AGAIN_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
 </div>
 </div>
 </section>
@@ -796,17 +807,21 @@ R squared (OOB):                  0.8650538 </code></pre>
 <li>Create new columns for model predictions from each of the models you have trained, first linear regression and then random forest.</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the new columns</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> car_train <span class="sc">|&gt;</span> </span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(<span class="fu">predict</span>(fit_lm, car_train) <span class="sc">|&gt;</span> </span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rename</span>(<span class="at">.pred_lm =</span> .pred)) <span class="sc">|&gt;</span> </span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(<span class="fu">predict</span>(fit_rf, car_train) <span class="sc">|&gt;</span> </span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rename</span>(<span class="at">.pred_rf =</span> .pred))</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(results) <span class="sc">|&gt;</span> </span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the new columns</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> car_train <span class="sc">|&gt;</span> </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(<span class="fu">predict</span>(fit_lm, car_train) <span class="sc">|&gt;</span> </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rename</span>(<span class="at">.pred_lm =</span> .pred)) <span class="sc">|&gt;</span> </span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(<span class="fu">predict</span>(fit_rf, car_train) <span class="sc">|&gt;</span> </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rename</span>(<span class="at">.pred_rf =</span> .pred)) <span class="sc">|&gt;</span> </span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(log_mpg, .pred_lm, .pred_rf, <span class="at">.before =</span> displacement)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(results) <span class="sc">|&gt;</span> </span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
 <colgroup>
+<col style="width: 3%">
+<col style="width: 3%">
+<col style="width: 3%">
 <col style="width: 5%">
 <col style="width: 3%">
 <col style="width: 2%">
@@ -819,12 +834,12 @@ R squared (OOB):                  0.8650538 </code></pre>
 <col style="width: 8%">
 <col style="width: 8%">
 <col style="width: 12%">
-<col style="width: 3%">
-<col style="width: 3%">
-<col style="width: 3%">
 </colgroup>
 <thead>
 <tr class="header">
+<th style="text-align: right;">log_mpg</th>
+<th style="text-align: right;">.pred_lm</th>
+<th style="text-align: right;">.pred_rf</th>
 <th style="text-align: right;">displacement</th>
 <th style="text-align: right;">cylinders</th>
 <th style="text-align: right;">gears</th>
@@ -837,13 +852,13 @@ R squared (OOB):                  0.8650538 </code></pre>
 <th style="text-align: right;">intake_valves_per_cyl</th>
 <th style="text-align: right;">exhaust_valves_per_cyl</th>
 <th style="text-align: left;">fuel_injection</th>
-<th style="text-align: right;">log_mpg</th>
-<th style="text-align: right;">.pred_lm</th>
-<th style="text-align: right;">.pred_rf</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
+<td style="text-align: right;">2.890372</td>
+<td style="text-align: right;">2.843856</td>
+<td style="text-align: right;">2.868826</td>
 <td style="text-align: right;">6.2</td>
 <td style="text-align: right;">8</td>
 <td style="text-align: right;">8</td>
@@ -856,11 +871,11 @@ R squared (OOB):                  0.8650538 </code></pre>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: left;">Direct ignition</td>
-<td style="text-align: right;">2.890372</td>
-<td style="text-align: right;">2.843856</td>
-<td style="text-align: right;">2.868826</td>
 </tr>
 <tr class="even">
+<td style="text-align: right;">2.772589</td>
+<td style="text-align: right;">2.745411</td>
+<td style="text-align: right;">2.821072</td>
 <td style="text-align: right;">6.2</td>
 <td style="text-align: right;">8</td>
 <td style="text-align: right;">8</td>
@@ -873,11 +888,11 @@ R squared (OOB):                  0.8650538 </code></pre>
 <td style="text-align: right;">1</td>
 <td style="text-align: right;">1</td>
 <td style="text-align: left;">Direct ignition</td>
-<td style="text-align: right;">2.772589</td>
-<td style="text-align: right;">2.745411</td>
-<td style="text-align: right;">2.821072</td>
 </tr>
 <tr class="odd">
+<td style="text-align: right;">3.367296</td>
+<td style="text-align: right;">3.270770</td>
+<td style="text-align: right;">3.317601</td>
 <td style="text-align: right;">1.4</td>
 <td style="text-align: right;">4</td>
 <td style="text-align: right;">6</td>
@@ -890,11 +905,11 @@ R squared (OOB):                  0.8650538 </code></pre>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: left;">Multipoint/sequential ignition</td>
-<td style="text-align: right;">3.367296</td>
-<td style="text-align: right;">3.270770</td>
-<td style="text-align: right;">3.317601</td>
 </tr>
 <tr class="even">
+<td style="text-align: right;">3.258097</td>
+<td style="text-align: right;">3.229902</td>
+<td style="text-align: right;">3.254968</td>
 <td style="text-align: right;">2.0</td>
 <td style="text-align: right;">4</td>
 <td style="text-align: right;">8</td>
@@ -907,11 +922,11 @@ R squared (OOB):                  0.8650538 </code></pre>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: left;">Direct ignition</td>
-<td style="text-align: right;">3.258097</td>
-<td style="text-align: right;">3.229902</td>
-<td style="text-align: right;">3.254968</td>
 </tr>
 <tr class="odd">
+<td style="text-align: right;">3.258097</td>
+<td style="text-align: right;">3.229902</td>
+<td style="text-align: right;">3.254968</td>
 <td style="text-align: right;">2.0</td>
 <td style="text-align: right;">4</td>
 <td style="text-align: right;">8</td>
@@ -924,11 +939,11 @@ R squared (OOB):                  0.8650538 </code></pre>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: left;">Direct ignition</td>
-<td style="text-align: right;">3.258097</td>
-<td style="text-align: right;">3.229902</td>
-<td style="text-align: right;">3.254968</td>
 </tr>
 <tr class="even">
+<td style="text-align: right;">3.135494</td>
+<td style="text-align: right;">3.089145</td>
+<td style="text-align: right;">3.089431</td>
 <td style="text-align: right;">3.0</td>
 <td style="text-align: right;">6</td>
 <td style="text-align: right;">8</td>
@@ -941,9 +956,6 @@ R squared (OOB):                  0.8650538 </code></pre>
 <td style="text-align: right;">2</td>
 <td style="text-align: right;">2</td>
 <td style="text-align: left;">Direct ignition</td>
-<td style="text-align: right;">3.135494</td>
-<td style="text-align: right;">3.089145</td>
-<td style="text-align: right;">3.089431</td>
 </tr>
 </tbody>
 </table>
@@ -953,24 +965,66 @@ R squared (OOB):                  0.8650538 </code></pre>
 <li>Evaluate the performance of these models using <a href="https://yardstick.tidymodels.org/reference/metrics.html"><code>metrics()</code></a> by specifying the column that contains the real fuel efficiency.</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate the performance</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">metrics</span>(results, <span class="at">truth =</span> log_mpg, <span class="at">estimate =</span> .pred_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 3
-  .metric .estimator .estimate
-  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
-1 rmse    standard      0.101 
-2 rsq     standard      0.806 
-3 mae     standard      0.0747</code></pre>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate the performance</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">metrics</span>(results, <span class="at">truth =</span> log_mpg, <span class="at">estimate =</span> .pred_lm) <span class="sc">|&gt;</span> </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">rmse</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.1005084</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rsq</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.8061189</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">mae</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.0746879</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">metrics</span>(results, <span class="at">truth =</span> log_mpg, <span class="at">estimate =</span> .pred_rf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 3
-  .metric .estimator .estimate
-  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
-1 rmse    standard      0.0682
-2 rsq     standard      0.914 
-3 mae     standard      0.0494</code></pre>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">metrics</span>(results, <span class="at">truth =</span> log_mpg, <span class="at">estimate =</span> .pred_rf) <span class="sc">|&gt;</span> </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">rmse</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.0681861</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rsq</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.9140019</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">mae</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.0493565</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </section>
@@ -980,31 +1034,74 @@ R squared (OOB):                  0.8650538 </code></pre>
 <p>“But wait!” you say, because you have been paying attention. 🤔 “That is how these models perform on the <strong>training</strong> data, the data that we used to build these models in the first place.” This is not a good idea because when you evaluate on the same data you used to train a model, the performance you estimate is too optimistic.</p>
 <p>Let’s evaluate how these simple models perform on the <strong>testing</strong> data instead.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the new columns</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> car_test  <span class="sc">|&gt;</span> </span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(<span class="fu">predict</span>(fit_lm, car_test)  <span class="sc">|&gt;</span> </span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rename</span>(<span class="at">.pred_lm =</span> .pred))  <span class="sc">|&gt;</span> </span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(<span class="fu">predict</span>(fit_rf, car_test)  <span class="sc">|&gt;</span> </span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rename</span>(<span class="at">.pred_rf =</span> .pred))</span>
-<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate the performance</span></span>
-<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="fu">metrics</span>(results, <span class="at">truth =</span> log_mpg, <span class="at">estimate =</span> .pred_lm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 3
-  .metric .estimator .estimate
-  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
-1 rmse    standard      0.0969
-2 rsq     standard      0.804 
-3 mae     standard      0.0727</code></pre>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the new columns</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> car_test  <span class="sc">|&gt;</span> </span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(<span class="fu">predict</span>(fit_lm, car_test)  <span class="sc">|&gt;</span> </span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rename</span>(<span class="at">.pred_lm =</span> .pred))  <span class="sc">|&gt;</span> </span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">bind_cols</span>(<span class="fu">predict</span>(fit_rf, car_test)  <span class="sc">|&gt;</span> </span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>                  <span class="fu">rename</span>(<span class="at">.pred_rf =</span> .pred)) <span class="sc">|&gt;</span> </span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">relocate</span>(log_mpg, .pred_lm, .pred_rf, <span class="at">.before =</span> displacement)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate the performance</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="fu">metrics</span>(results, <span class="at">truth =</span> log_mpg, <span class="at">estimate =</span> .pred_lm) <span class="sc">|&gt;</span> </span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">rmse</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.0969079</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rsq</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.8036351</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">mae</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.0727383</td>
+</tr>
+</tbody>
+</table>
 </div>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">metrics</span>(results, <span class="at">truth =</span> log_mpg, <span class="at">estimate =</span> .pred_rf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 3 × 3
-  .metric .estimator .estimate
-  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
-1 rmse    standard      0.0792
-2 rsq     standard      0.874 
-3 mae     standard      0.0584</code></pre>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">metrics</span>(results, <span class="at">truth =</span> log_mpg, <span class="at">estimate =</span> .pred_rf) <span class="sc">|&gt;</span> </span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">rmse</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.0791940</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rsq</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.8743060</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">mae</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.0583998</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 <p>You just trained models one time on the whole training set and then evaluated them on the testing set. Statisticians have come up with a slew of approaches to evaluate models in better ways than this; many important ones fall under the category of <strong>resampling</strong>.</p>
@@ -1022,28 +1119,28 @@ R squared (OOB):                  0.8650538 </code></pre>
 <li>Create bootstrap resamples to evaluate these models. The function to create this kind of resample is <code>bootstraps()</code>.</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Create bootstrap resamples</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">444</span>)</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>car_boot <span class="ot">&lt;-</span> <span class="fu">bootstraps</span>(<span class="at">data =</span> car_train, <span class="at">times =</span> <span class="dv">25</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Create bootstrap resamples</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">444</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>car_boot <span class="ot">&lt;-</span> <span class="fu">bootstraps</span>(<span class="at">data =</span> car_train, <span class="at">times =</span> <span class="dv">25</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ul>
 <li>Evaluate both kinds of models, the linear regression model and the random forest model.</li>
 </ul>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate the models with bootstrap resampling</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>lm_res <span class="ot">&lt;-</span> lm_spec <span class="sc">|&gt;</span> </span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fit_resamples</span>(</span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>        log_mpg <span class="sc">~</span> .,</span>
-<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">resamples =</span> car_boot,</span>
-<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">control =</span> <span class="fu">control_resamples</span>(<span class="at">save_pred =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>rf_res <span class="ot">&lt;-</span> rf_spec <span class="sc">|&gt;</span> </span>
-<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fit_resamples</span>(</span>
-<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>        log_mpg <span class="sc">~</span> .,</span>
-<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">resamples =</span> car_boot,</span>
-<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">control =</span> <span class="fu">control_resamples</span>(<span class="at">save_pred =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-layout-align="center" data-hash="Not_mtcars_AGAIN_cache/html/bothmodels_4c83ec6d9ec04cf0d45adc5915dc1dfe">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluate the models with bootstrap resampling</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>lm_res <span class="ot">&lt;-</span> lm_spec <span class="sc">|&gt;</span> </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fit_resamples</span>(</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>        log_mpg <span class="sc">~</span> .,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">resamples =</span> car_boot,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">control =</span> <span class="fu">control_resamples</span>(<span class="at">save_pred =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>rf_res <span class="ot">&lt;-</span> rf_spec <span class="sc">|&gt;</span> </span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fit_resamples</span>(</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>        log_mpg <span class="sc">~</span> .,</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">resamples =</span> car_boot,</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">control =</span> <span class="fu">control_resamples</span>(<span class="at">save_pred =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 </section>
@@ -1055,14 +1152,14 @@ R squared (OOB):                  0.8650538 </code></pre>
 <li>First use <code>collect_predictions()</code> for the linear model. Then use <code>collect_predictions()</code> for the random forest model.</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span>  <span class="fu">bind_rows</span>(lm_res <span class="sc">|&gt;</span> </span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">collect_predictions</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"lm"</span>),</span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>                      rf_res <span class="sc">|&gt;</span> </span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">collect_predictions</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"rf"</span>))</span>
-<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(results)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span>  <span class="fu">bind_rows</span>(lm_res <span class="sc">|&gt;</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">collect_predictions</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"lm"</span>),</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>                      rf_res <span class="sc">|&gt;</span> </span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">collect_predictions</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>                          <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"rf"</span>))</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(results)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Rows: 16,798
 Columns: 6
@@ -1078,10 +1175,10 @@ $ model   &lt;chr&gt; "lm", "lm", "lm", "lm", "lm", "lm", "lm", "lm", "lm", "lm"
 <li>Show the bootstrapped results:</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>results <span class="sc">|&gt;</span> </span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(model) <span class="sc">|&gt;</span> </span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> log_mpg, <span class="at">estimate =</span> .pred) <span class="sc">|&gt;</span> </span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>results <span class="sc">|&gt;</span> </span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(model) <span class="sc">|&gt;</span> </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> log_mpg, <span class="at">estimate =</span> .pred) <span class="sc">|&gt;</span> </span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
 <thead>
@@ -1137,20 +1234,20 @@ $ model   &lt;chr&gt; "lm", "lm", "lm", "lm", "lm", "lm", "lm", "lm", "lm", "lm"
 <li>Visualize the results:</li>
 </ul>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>results <span class="sc">|&gt;</span> </span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> log_mpg, <span class="at">y =</span> .pred)) <span class="sc">+</span></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">lty =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"gray50"</span>) <span class="sc">+</span></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> id), <span class="at">size =</span> <span class="fl">1.5</span>, <span class="at">alpha =</span> <span class="fl">0.1</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> model) <span class="sc">+</span> </span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_obs_pred</span>() <span class="sc">+</span> </span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Predicted (log_mpg)"</span>,</span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Actual (log_mpg)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>results <span class="sc">|&gt;</span> </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> log_mpg, <span class="at">y =</span> .pred)) <span class="sc">+</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">lty =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"gray50"</span>) <span class="sc">+</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> id), <span class="at">size =</span> <span class="fl">1.5</span>, <span class="at">alpha =</span> <span class="fl">0.1</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>) <span class="sc">+</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> model) <span class="sc">+</span> </span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_obs_pred</span>() <span class="sc">+</span> </span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"Predicted (log_mpg)"</span>,</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Actual (log_mpg)"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Not_mtcars_AGAIN_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Not_mtcars_AGAIN_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1159,13 +1256,13 @@ $ model   &lt;chr&gt; "lm", "lm", "lm", "lm", "lm", "lm", "lm", "lm", "lm", "lm"
 <section id="tune-the-random-forest-model" class="level2">
 <h2 class="anchored" data-anchor-id="tune-the-random-forest-model">Tune the Random Forest model</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a random forest model specification</span></span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>rf_spec <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>(<span class="at">mtry =</span> <span class="fu">tune</span>(),</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">min_n =</span> <span class="fu">tune</span>(),</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">trees =</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_engine</span>(<span class="st">"ranger"</span>, <span class="at">importance =</span> <span class="st">"impurity"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>rf_spec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a random forest model specification</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>rf_spec <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>(<span class="at">mtry =</span> <span class="fu">tune</span>(),</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>                       <span class="at">min_n =</span> <span class="fu">tune</span>(),</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">trees =</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_engine</span>(<span class="st">"ranger"</span>, <span class="at">importance =</span> <span class="st">"impurity"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>rf_spec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Random Forest Model Specification (regression)
 
@@ -1183,15 +1280,15 @@ Computational engine: ranger </code></pre>
 <section id="cross-validation" class="level3">
 <h3 class="anchored" data-anchor-id="cross-validation">Cross Validation</h3>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>car_folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(car_train, <span class="at">v =</span> <span class="dv">10</span>, <span class="at">repeats =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>car_folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(car_train, <span class="at">v =</span> <span class="dv">10</span>, <span class="at">repeats =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>rf_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(log_mpg <span class="sc">~</span>.,  <span class="at">data =</span> car_train) </span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>rf_wkfl <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(rf_recipe) <span class="sc">|&gt;</span> </span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(rf_spec)</span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>rf_wkfl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>rf_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(log_mpg <span class="sc">~</span>.,  <span class="at">data =</span> car_train) </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>rf_wkfl <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(rf_recipe) <span class="sc">|&gt;</span> </span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(rf_spec)</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>rf_wkfl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>══ Workflow ════════════════════════════════════════════════════════════════════
 Preprocessor: Recipe
@@ -1231,10 +1328,10 @@ Tip
 </div>
 </div>
 <div class="cell" data-layout-align="center" data-hash="Not_mtcars_AGAIN_cache/html/rf_tune_ea67b220577b338b5f0095d75707d685">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">registerDoParallel</span>()</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">321</span>)</span>
-<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>rf_tune <span class="ot">&lt;-</span> <span class="fu">tune_grid</span>(rf_wkfl, <span class="at">resample =</span> car_folds, <span class="at">grid =</span> <span class="dv">15</span>)</span>
-<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>rf_tune</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>doParallel<span class="sc">::</span><span class="fu">registerDoParallel</span>()</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">321</span>)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>rf_tune <span class="ot">&lt;-</span> <span class="fu">tune_grid</span>(rf_wkfl, <span class="at">resample =</span> car_folds, <span class="at">grid =</span> <span class="dv">15</span>)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>rf_tune</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Tuning results
 # 10-fold cross-validation repeated 5 times 
@@ -1255,7 +1352,7 @@ Tip
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show_best</span>(rf_tune, <span class="at">metric =</span> <span class="st">"rmse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show_best</span>(rf_tune, <span class="at">metric =</span> <span class="st">"rmse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 8
    mtry min_n .metric .estimator   mean     n std_err .config              
@@ -1268,18 +1365,18 @@ Tip
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># rf_param &lt;- tibble(mtry = 6, min_n = 2)</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>rf_param <span class="ot">&lt;-</span> <span class="fu">select_best</span>(rf_tune, <span class="at">metric =</span> <span class="st">"rmse"</span>)</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>rf_param</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># rf_param &lt;- tibble(mtry = 6, min_n = 2)</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>rf_param <span class="ot">&lt;-</span> <span class="fu">select_best</span>(rf_tune, <span class="at">metric =</span> <span class="st">"rmse"</span>)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>rf_param</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
    mtry min_n .config              
   &lt;int&gt; &lt;int&gt; &lt;chr&gt;                
 1     6     4 Preprocessor1_Model09</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>final_rf_wkfl <span class="ot">&lt;-</span> rf_wkfl <span class="sc">|&gt;</span> </span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">finalize_workflow</span>(rf_param)</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>final_rf_wkfl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>final_rf_wkfl <span class="ot">&lt;-</span> rf_wkfl <span class="sc">|&gt;</span> </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">finalize_workflow</span>(rf_param)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>final_rf_wkfl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>══ Workflow ════════════════════════════════════════════════════════════════════
 Preprocessor: Recipe
@@ -1303,12 +1400,24 @@ Computational engine: ranger </code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>final_rf_fit <span class="ot">&lt;-</span> final_rf_wkfl <span class="sc">|&gt;</span> </span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(car_train)</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(final_rf_fit, <span class="at">new_data =</span> car_test) <span class="sc">|&gt;</span> </span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> log_mpg, <span class="at">estimate =</span> .pred) <span class="ot">-&gt;</span> RF</span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>RF <span class="sc">|&gt;</span> </span>
-<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>final_rf_fit <span class="ot">&lt;-</span> final_rf_wkfl <span class="sc">|&gt;</span> </span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(car_train)</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Variable importance plot</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>vip<span class="sc">::</span><span class="fu">vip</span>(final_rf_fit) <span class="sc">+</span> </span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Not_mtcars_AGAIN_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(final_rf_fit, <span class="at">new_data =</span> car_test) <span class="sc">|&gt;</span> </span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> log_mpg, <span class="at">estimate =</span> .pred) <span class="ot">-&gt;</span> RF</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>RF <span class="sc">|&gt;</span> </span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
 <thead>
@@ -1339,32 +1448,20 @@ Computational engine: ranger </code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Variable importance plot</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>vip<span class="sc">::</span><span class="fu">vip</span>(final_rf_fit) <span class="sc">+</span></span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R-squared plot</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(final_rf_fit, <span class="at">new_data =</span> car_test) <span class="sc">|&gt;</span> </span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> log_mpg, <span class="at">y =</span> .pred)) <span class="sc">+</span> </span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">lty =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_obs_pred</span>() <span class="sc">+</span> </span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Observed log_mpg"</span>,</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted log_mpg"</span>,</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"R-squared Plot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="Not_mtcars_AGAIN_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="co"># R-squared plot</span></span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(final_rf_fit, <span class="at">new_data =</span> car_test) <span class="sc">|&gt;</span> </span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> log_mpg, <span class="at">y =</span> .pred)) <span class="sc">+</span> </span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">lty =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_obs_pred</span>() <span class="sc">+</span> </span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span> </span>
-<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Observed log_mpg"</span>,</span>
-<span id="cb51-9"><a href="#cb51-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"Predicted log_mpg"</span>,</span>
-<span id="cb51-10"><a href="#cb51-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"R-squared Plot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="Not_mtcars_AGAIN_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Not_mtcars_AGAIN_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -1374,13 +1471,13 @@ Computational engine: ranger </code></pre>
 <section id="using-boosting" class="level2">
 <h2 class="anchored" data-anchor-id="using-boosting">Using Boosting</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>xgboost_spec <span class="ot">&lt;-</span> </span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">boost_tree</span>(<span class="at">trees =</span> <span class="fu">tune</span>(), <span class="at">min_n =</span> <span class="fu">tune</span>(), <span class="at">tree_depth =</span> <span class="fu">tune</span>(), </span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">learn_rate =</span> <span class="fu">tune</span>(), <span class="at">loss_reduction =</span> <span class="fu">tune</span>(), </span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">sample_size =</span> <span class="fu">tune</span>()) <span class="sc">|&gt;</span>  </span>
-<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>) <span class="sc">|&gt;</span>  </span>
-<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"xgboost"</span>) </span>
-<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>xgboost_spec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>xgboost_spec <span class="ot">&lt;-</span> </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">boost_tree</span>(<span class="at">trees =</span> <span class="fu">tune</span>(), <span class="at">min_n =</span> <span class="fu">tune</span>(), <span class="at">tree_depth =</span> <span class="fu">tune</span>(), </span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">learn_rate =</span> <span class="fu">tune</span>(), <span class="at">loss_reduction =</span> <span class="fu">tune</span>(), </span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">sample_size =</span> <span class="fu">tune</span>()) <span class="sc">|&gt;</span>  </span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"xgboost"</span>) </span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a>xgboost_spec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Boosted Tree Model Specification (regression)
 
@@ -1396,19 +1493,19 @@ Computational engine: xgboost </code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>xgboost_recipe <span class="ot">&lt;-</span> </span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(<span class="at">formula =</span> log_mpg <span class="sc">~</span>  . , <span class="at">data =</span> car_train) <span class="sc">|&gt;</span> </span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>(), <span class="at">one_hot =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_zv</span>(<span class="fu">all_predictors</span>())  <span class="sc">|&gt;</span> </span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_numeric_predictors</span>()) <span class="sc">|&gt;</span> </span>
-<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_corr</span>(<span class="fu">all_numeric_predictors</span>(), <span class="at">threshold =</span> <span class="fl">0.9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>xgboost_recipe <span class="ot">&lt;-</span> </span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(<span class="at">formula =</span> log_mpg <span class="sc">~</span>  . , <span class="at">data =</span> car_train) <span class="sc">|&gt;</span> </span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>(), <span class="at">one_hot =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_zv</span>(<span class="fu">all_predictors</span>())  <span class="sc">|&gt;</span> </span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_numeric_predictors</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_corr</span>(<span class="fu">all_numeric_predictors</span>(), <span class="at">threshold =</span> <span class="fl">0.9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>xgboost_workflow <span class="ot">&lt;-</span> </span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">workflow</span>() <span class="sc">|&gt;</span>  </span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(xgboost_recipe) <span class="sc">|&gt;</span>  </span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(xgboost_spec) </span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>xgboost_workflow</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>xgboost_workflow <span class="ot">&lt;-</span> </span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">workflow</span>() <span class="sc">|&gt;</span>  </span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(xgboost_recipe) <span class="sc">|&gt;</span>  </span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(xgboost_spec) </span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>xgboost_workflow</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>══ Workflow ════════════════════════════════════════════════════════════════════
 Preprocessor: Recipe
@@ -1446,16 +1543,20 @@ Tip
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>Use <code>cache: true</code> as the next chunk takes almost an hour</p>
+<p>Use <code>cache: true</code> as the next chunk takes a hot minute.</p>
 </div>
 </div>
-<div class="cell" data-layout-align="center" data-hash="Not_mtcars_AGAIN_cache/html/xgb_tune_cd8616a4df36b0589bb52b816bdd7167">
-<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(finetune)</span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">49</span>)</span>
-<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>xgboost_tune <span class="ot">&lt;-</span></span>
-<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tune_race_anova</span>(xgboost_workflow, <span class="at">resamples =</span> car_folds, <span class="at">grid =</span> <span class="dv">15</span>)</span>
-<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>xgboost_tune</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-layout-align="center" data-hash="Not_mtcars_AGAIN_cache/html/xgb_tune_bdc70bae620f81c78e1479350b937f11">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(finetune) </span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="co"># used for tune_race_anova() which...</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="co"># after an initial number of resamples have been evaluated, </span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="co"># the process eliminates tuning parameter combinations that </span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="co"># are unlikely to be the best results using a repeated </span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a><span class="co"># measure ANOVA model.</span></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">49</span>)</span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>xgboost_tune <span class="ot">&lt;-</span></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tune_race_anova</span>(xgboost_workflow, <span class="at">resamples =</span> car_folds, <span class="at">grid =</span> <span class="dv">15</span>)</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a>xgboost_tune</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Tuning results
 # 10-fold cross-validation repeated 5 times 
@@ -1482,27 +1583,31 @@ Run `show_notes(.Last.tune.result)` for more information.</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb59"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show_best</span>(xgboost_tune, <span class="at">metric =</span> <span class="st">"rmse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show_best</span>(xgboost_tune, <span class="at">metric =</span> <span class="st">"rmse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 12
+<pre><code># A tibble: 5 × 12
   trees min_n tree_depth learn_rate loss_reduction sample_size .metric
   &lt;int&gt; &lt;int&gt;      &lt;int&gt;      &lt;dbl&gt;          &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;  
-1  1714     7         14     0.0405   0.0000000291       0.743 rmse   
+1  1857    31          2     0.0921   0.0164             0.679 rmse   
+2  1571    40         13     0.0611   0.000373           0.421 rmse   
+3  1714     7         14     0.0405   0.0000000291       0.743 rmse   
+4   429    21          4     0.139    0.0000000001       0.614 rmse   
+5   572    15         12     0.210    0.109              0.936 rmse   
 # ℹ 5 more variables: .estimator &lt;chr&gt;, mean &lt;dbl&gt;, n &lt;int&gt;, std_err &lt;dbl&gt;,
 #   .config &lt;chr&gt;</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="co"># xgboost_param &lt;- tibble(trees = 2000, </span></span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a><span class="co">#                        min_n = 9, </span></span>
-<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a><span class="co">#                        tree_depth = 6, </span></span>
-<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a><span class="co">#                        learn_rate = 0.00681,</span></span>
-<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a><span class="co">#                        loss_reduction = 0.0000000155, </span></span>
-<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a><span class="co">#                        sample_size = 0.771)</span></span>
-<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>xgboost_param <span class="ot">&lt;-</span> <span class="fu">select_best</span>(xgboost_tune)</span>
-<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>final_xgboost_wkfl <span class="ot">&lt;-</span> xgboost_workflow <span class="sc">|&gt;</span> </span>
-<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">finalize_workflow</span>(xgboost_param)</span>
-<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a>final_xgboost_wkfl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># xgboost_param &lt;- tibble(trees = 2000, </span></span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="co">#                        min_n = 9, </span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="co">#                        tree_depth = 6, </span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="co">#                        learn_rate = 0.00681,</span></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="co">#                        loss_reduction = 0.0000000155, </span></span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="co">#                        sample_size = 0.771)</span></span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>xgboost_param <span class="ot">&lt;-</span> <span class="fu">select_best</span>(xgboost_tune)</span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a>final_xgboost_wkfl <span class="ot">&lt;-</span> xgboost_workflow <span class="sc">|&gt;</span> </span>
+<span id="cb58-9"><a href="#cb58-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">finalize_workflow</span>(xgboost_param)</span>
+<span id="cb58-10"><a href="#cb58-10" aria-hidden="true" tabindex="-1"></a>final_xgboost_wkfl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>══ Workflow ════════════════════════════════════════════════════════════════════
 Preprocessor: Recipe
@@ -1520,24 +1625,24 @@ Model: boost_tree()
 Boosted Tree Model Specification (regression)
 
 Main Arguments:
-  trees = 1714
-  min_n = 7
-  tree_depth = 14
-  learn_rate = 0.0404708995075976
-  loss_reduction = 2.91263265490874e-08
-  sample_size = 0.742857142857143
+  trees = 1857
+  min_n = 31
+  tree_depth = 2
+  learn_rate = 0.0921055317689482
+  loss_reduction = 0.0163789370695406
+  sample_size = 0.678571428571429
 
 Computational engine: xgboost </code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>final_xgboost_fit <span class="ot">&lt;-</span> final_xgboost_wkfl <span class="sc">|&gt;</span> </span>
-<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(car_train)</span>
-<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(final_xgboost_fit, <span class="at">new_data =</span> car_test) <span class="sc">|&gt;</span> </span>
-<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> log_mpg, <span class="at">estimate =</span> .pred) <span class="ot">-&gt;</span> R5</span>
-<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>R5 <span class="sc">|&gt;</span> </span>
-<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>final_xgboost_fit <span class="ot">&lt;-</span> final_xgboost_wkfl <span class="sc">|&gt;</span> </span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(car_train)</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(final_xgboost_fit, <span class="at">new_data =</span> car_test) <span class="sc">|&gt;</span> </span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> log_mpg, <span class="at">estimate =</span> .pred) <span class="ot">-&gt;</span> R5</span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>R5 <span class="sc">|&gt;</span> </span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="table table-sm table-striped small">
 <thead>
@@ -1551,17 +1656,664 @@ Computational engine: xgboost </code></pre>
 <tr class="odd">
 <td style="text-align: left;">rmse</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.0918570</td>
+<td style="text-align: right;">0.0940729</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">rsq</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.8259708</td>
+<td style="text-align: right;">0.8154165</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">mae</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.0610113</td>
+<td style="text-align: right;">0.0708401</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="elastic-net" class="level2">
+<h2 class="anchored" data-anchor-id="elastic-net">Elastic net</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>enet_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>(<span class="at">penalty =</span> <span class="fu">tune</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"glmnet"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>)</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>enet_spec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear Regression Model Specification (regression)
+
+Main Arguments:
+  penalty = tune()
+
+Computational engine: glmnet </code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>enet_recipe <span class="ot">&lt;-</span> </span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(<span class="at">formula =</span> log_mpg <span class="sc">~</span>  . , <span class="at">data =</span> car_train) <span class="sc">|&gt;</span> </span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>(), <span class="at">one_hot =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_zv</span>(<span class="fu">all_predictors</span>())  <span class="sc">|&gt;</span> </span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_numeric_predictors</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_corr</span>(<span class="fu">all_numeric_predictors</span>(), <span class="at">threshold =</span> <span class="fl">0.9</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>enet_workflow <span class="ot">&lt;-</span> </span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">workflow</span>() <span class="sc">|&gt;</span>  </span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(enet_recipe) <span class="sc">|&gt;</span>  </span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(enet_spec) </span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>enet_workflow</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>══ Workflow ════════════════════════════════════════════════════════════════════
+Preprocessor: Recipe
+Model: linear_reg()
+
+── Preprocessor ────────────────────────────────────────────────────────────────
+4 Recipe Steps
+
+• step_dummy()
+• step_zv()
+• step_normalize()
+• step_corr()
+
+── Model ───────────────────────────────────────────────────────────────────────
+Linear Regression Model Specification (regression)
+
+Main Arguments:
+  penalty = tune()
+
+Computational engine: glmnet </code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(finetune)</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">49</span>)</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>enet_tune <span class="ot">&lt;-</span></span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tune_race_anova</span>(enet_workflow, <span class="at">resamples =</span> car_folds, <span class="at">grid =</span> <span class="dv">15</span>)</span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>enet_tune</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Tuning results
+# 10-fold cross-validation repeated 5 times 
+# A tibble: 50 × 6
+   splits           id      id2    .order .metrics          .notes          
+   &lt;list&gt;           &lt;chr&gt;   &lt;chr&gt;   &lt;int&gt; &lt;list&gt;            &lt;list&gt;          
+ 1 &lt;split [823/92]&gt; Repeat1 Fold03      3 &lt;tibble [30 × 5]&gt; &lt;tibble [1 × 3]&gt;
+ 2 &lt;split [823/92]&gt; Repeat1 Fold05      1 &lt;tibble [30 × 5]&gt; &lt;tibble [1 × 3]&gt;
+ 3 &lt;split [824/91]&gt; Repeat1 Fold08      2 &lt;tibble [30 × 5]&gt; &lt;tibble [1 × 3]&gt;
+ 4 &lt;split [824/91]&gt; Repeat1 Fold07      4 &lt;tibble [24 × 5]&gt; &lt;tibble [0 × 3]&gt;
+ 5 &lt;split [824/91]&gt; Repeat1 Fold06      5 &lt;tibble [22 × 5]&gt; &lt;tibble [0 × 3]&gt;
+ 6 &lt;split [823/92]&gt; Repeat1 Fold01      6 &lt;tibble [22 × 5]&gt; &lt;tibble [0 × 3]&gt;
+ 7 &lt;split [823/92]&gt; Repeat1 Fold02      7 &lt;tibble [22 × 5]&gt; &lt;tibble [0 × 3]&gt;
+ 8 &lt;split [824/91]&gt; Repeat1 Fold09      8 &lt;tibble [22 × 5]&gt; &lt;tibble [0 × 3]&gt;
+ 9 &lt;split [823/92]&gt; Repeat1 Fold04      9 &lt;tibble [22 × 5]&gt; &lt;tibble [0 × 3]&gt;
+10 &lt;split [824/91]&gt; Repeat1 Fold10     10 &lt;tibble [22 × 5]&gt; &lt;tibble [0 × 3]&gt;
+# ℹ 40 more rows
+
+There were issues with some computations:
+
+  - Warning(s) x3: A correlation computation is required, but `estimate` is constant...
+
+Run `show_notes(.Last.tune.result)` for more information.</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show_best</span>(enet_tune, <span class="at">metric =</span> <span class="st">"rmse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 7
+   penalty .metric .estimator  mean     n std_err .config              
+     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;                
+1 0.000996 rmse    standard   0.115    50 0.00171 Preprocessor1_Model11</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>enet_param <span class="ot">&lt;-</span> <span class="fu">select_best</span>(enet_tune, <span class="at">metric =</span> <span class="st">"rmse"</span>)</span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a>final_enet_wkfl <span class="ot">&lt;-</span> enet_workflow <span class="sc">|&gt;</span> </span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">finalize_workflow</span>(enet_param)</span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a>final_enet_wkfl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>══ Workflow ════════════════════════════════════════════════════════════════════
+Preprocessor: Recipe
+Model: linear_reg()
+
+── Preprocessor ────────────────────────────────────────────────────────────────
+4 Recipe Steps
+
+• step_dummy()
+• step_zv()
+• step_normalize()
+• step_corr()
+
+── Model ───────────────────────────────────────────────────────────────────────
+Linear Regression Model Specification (regression)
+
+Main Arguments:
+  penalty = 0.000996222685531374
+
+Computational engine: glmnet </code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>final_enet_fit <span class="ot">&lt;-</span> final_enet_wkfl <span class="sc">|&gt;</span> </span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(car_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(final_enet_fit, <span class="at">new_data =</span> car_test) <span class="sc">|&gt;</span> </span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> log_mpg, <span class="at">estimate =</span> .pred) <span class="ot">-&gt;</span> R6</span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>R6 <span class="sc">|&gt;</span> </span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">rmse</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.1064473</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rsq</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.7633985</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">mae</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.0809508</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Print the model object</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>broom<span class="sc">::</span><span class="fu">tidy</span>(final_enet_fit) <span class="sc">|&gt;</span> </span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">term</th>
+<th style="text-align: right;">estimate</th>
+<th style="text-align: right;">penalty</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">3.1121513</td>
+<td style="text-align: right;">0.0009962</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">cylinders</td>
+<td style="text-align: right;">-0.1444559</td>
+<td style="text-align: right;">0.0009962</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">gears</td>
+<td style="text-align: right;">0.0084966</td>
+<td style="text-align: right;">0.0009962</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">max_ethanol</td>
+<td style="text-align: right;">-0.0042378</td>
+<td style="text-align: right;">0.0009962</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">intake_valves_per_cyl</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0009962</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">transmission_Automatic</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0009962</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">transmission_CVT</td>
+<td style="text-align: right;">0.0481164</td>
+<td style="text-align: right;">0.0009962</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">transmission_Manual</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0009962</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">aspiration_Turbocharged.Supercharged</td>
+<td style="text-align: right;">-0.0103688</td>
+<td style="text-align: right;">0.0009962</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lockup_torque_converter_Y</td>
+<td style="text-align: right;">-0.0257989</td>
+<td style="text-align: right;">0.0009962</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">drive_X2.Wheel.Drive..Front</td>
+<td style="text-align: right;">0.0539045</td>
+<td style="text-align: right;">0.0009962</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">drive_X2.Wheel.Drive..Rear</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0009962</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">drive_X4.Wheel.Drive</td>
+<td style="text-align: right;">-0.0145382</td>
+<td style="text-align: right;">0.0009962</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">drive_All.Wheel.Drive</td>
+<td style="text-align: right;">-0.0034592</td>
+<td style="text-align: right;">0.0009962</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">recommended_fuel_Premium.Unleaded.Recommended</td>
+<td style="text-align: right;">0.0137782</td>
+<td style="text-align: right;">0.0009962</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">recommended_fuel_Premium.Unleaded.Required</td>
+<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">0.0009962</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">recommended_fuel_Regular.Unleaded.Recommended</td>
+<td style="text-align: right;">-0.0008115</td>
+<td style="text-align: right;">0.0009962</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">fuel_injection_Multipoint.sequential.ignition</td>
+<td style="text-align: right;">-0.0142389</td>
+<td style="text-align: right;">0.0009962</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="natural-splines-and-interactions" class="level2">
+<h2 class="anchored" data-anchor-id="natural-splines-and-interactions">Natural Splines and Interactions</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>lm_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>)</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>ns_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(log_mpg <span class="sc">~</span> ., <span class="at">data =</span> car_train) <span class="sc">|&gt;</span> </span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_ns</span>(displacement, cylinders, gears, <span class="at">deg_free =</span> <span class="dv">5</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_interact</span>(<span class="sc">~</span>drive<span class="sc">:</span>transmission) <span class="sc">|&gt;</span> </span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_interact</span>(<span class="sc">~</span>drive<span class="sc">:</span>recommended_fuel)</span>
+<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a>ns_wkfl <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(ns_recipe) <span class="sc">|&gt;</span> </span>
+<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(lm_spec)</span>
+<span id="cb75-10"><a href="#cb75-10" aria-hidden="true" tabindex="-1"></a>ns_wkfl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>══ Workflow ════════════════════════════════════════════════════════════════════
+Preprocessor: Recipe
+Model: linear_reg()
+
+── Preprocessor ────────────────────────────────────────────────────────────────
+3 Recipe Steps
+
+• step_ns()
+• step_interact()
+• step_interact()
+
+── Model ───────────────────────────────────────────────────────────────────────
+Linear Regression Model Specification (regression)
+
+Computational engine: lm </code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a>final_lm_fit <span class="ot">&lt;-</span> ns_wkfl <span class="sc">|&gt;</span> </span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(car_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(final_lm_fit, <span class="at">new_data =</span> car_test) <span class="sc">|&gt;</span> </span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> log_mpg, <span class="at">estimate =</span> .pred) <span class="ot">-&gt;</span> R7</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>R7 <span class="sc">|&gt;</span> </span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">rmse</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.0939062</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rsq</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.8187231</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">mae</td>
+<td style="text-align: left;">standard</td>
+<td style="text-align: right;">0.0699807</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>broom<span class="sc">::</span><span class="fu">tidy</span>(final_lm_fit) <span class="sc">|&gt;</span> </span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>  knitr<span class="sc">::</span><span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 63%">
+<col style="width: 9%">
+<col style="width: 8%">
+<col style="width: 10%">
+<col style="width: 8%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">term</th>
+<th style="text-align: right;">estimate</th>
+<th style="text-align: right;">std.error</th>
+<th style="text-align: right;">statistic</th>
+<th style="text-align: right;">p.value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">3.8592417</td>
+<td style="text-align: right;">0.0637191</td>
+<td style="text-align: right;">60.5665164</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">transmissionCVT</td>
+<td style="text-align: right;">0.1124038</td>
+<td style="text-align: right;">0.0252141</td>
+<td style="text-align: right;">4.4579822</td>
+<td style="text-align: right;">0.0000094</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">transmissionManual</td>
+<td style="text-align: right;">0.0117744</td>
+<td style="text-align: right;">0.0209467</td>
+<td style="text-align: right;">0.5621115</td>
+<td style="text-align: right;">0.5741842</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">aspirationTurbocharged/Supercharged</td>
+<td style="text-align: right;">-0.1112815</td>
+<td style="text-align: right;">0.0102350</td>
+<td style="text-align: right;">-10.8726246</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">lockup_torque_converterY</td>
+<td style="text-align: right;">-0.0848036</td>
+<td style="text-align: right;">0.0159267</td>
+<td style="text-align: right;">-5.3246176</td>
+<td style="text-align: right;">0.0000001</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">drive2-Wheel Drive, Rear</td>
+<td style="text-align: right;">0.0286435</td>
+<td style="text-align: right;">0.0229709</td>
+<td style="text-align: right;">1.2469466</td>
+<td style="text-align: right;">0.2127511</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">drive4-Wheel Drive</td>
+<td style="text-align: right;">-0.0922069</td>
+<td style="text-align: right;">0.0694116</td>
+<td style="text-align: right;">-1.3284069</td>
+<td style="text-align: right;">0.1843905</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">driveAll Wheel Drive</td>
+<td style="text-align: right;">-0.0246236</td>
+<td style="text-align: right;">0.0216698</td>
+<td style="text-align: right;">-1.1363094</td>
+<td style="text-align: right;">0.2561386</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">max_ethanol</td>
+<td style="text-align: right;">-0.0000688</td>
+<td style="text-align: right;">0.0002151</td>
+<td style="text-align: right;">-0.3197970</td>
+<td style="text-align: right;">0.7491986</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">recommended_fuelPremium Unleaded Required</td>
+<td style="text-align: right;">-0.0146173</td>
+<td style="text-align: right;">0.0396871</td>
+<td style="text-align: right;">-0.3683146</td>
+<td style="text-align: right;">0.7127279</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">recommended_fuelRegular Unleaded Recommended</td>
+<td style="text-align: right;">0.0222313</td>
+<td style="text-align: right;">0.0185759</td>
+<td style="text-align: right;">1.1967769</td>
+<td style="text-align: right;">0.2317180</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">intake_valves_per_cyl</td>
+<td style="text-align: right;">-0.0158802</td>
+<td style="text-align: right;">0.0666364</td>
+<td style="text-align: right;">-0.2383109</td>
+<td style="text-align: right;">0.8116958</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">exhaust_valves_per_cyl</td>
+<td style="text-align: right;">-0.0756612</td>
+<td style="text-align: right;">0.0612320</td>
+<td style="text-align: right;">-1.2356483</td>
+<td style="text-align: right;">0.2169213</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">fuel_injectionMultipoint/sequential ignition</td>
+<td style="text-align: right;">-0.0376369</td>
+<td style="text-align: right;">0.0092654</td>
+<td style="text-align: right;">-4.0620962</td>
+<td style="text-align: right;">0.0000530</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">displacement_ns_1</td>
+<td style="text-align: right;">-0.3960991</td>
+<td style="text-align: right;">0.0331383</td>
+<td style="text-align: right;">-11.9529223</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">displacement_ns_2</td>
+<td style="text-align: right;">-0.5661637</td>
+<td style="text-align: right;">0.0513578</td>
+<td style="text-align: right;">-11.0239058</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">displacement_ns_3</td>
+<td style="text-align: right;">-0.5197136</td>
+<td style="text-align: right;">0.0505905</td>
+<td style="text-align: right;">-10.2729462</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">displacement_ns_4</td>
+<td style="text-align: right;">-1.0310594</td>
+<td style="text-align: right;">0.0783548</td>
+<td style="text-align: right;">-13.1588518</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">displacement_ns_5</td>
+<td style="text-align: right;">-0.7492017</td>
+<td style="text-align: right;">0.0552533</td>
+<td style="text-align: right;">-13.5593978</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">cylinders_ns_1</td>
+<td style="text-align: right;">-0.0328730</td>
+<td style="text-align: right;">0.1390468</td>
+<td style="text-align: right;">-0.2364170</td>
+<td style="text-align: right;">0.8131645</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cylinders_ns_2</td>
+<td style="text-align: right;">0.1394950</td>
+<td style="text-align: right;">0.0819253</td>
+<td style="text-align: right;">1.7027102</td>
+<td style="text-align: right;">0.0889779</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">cylinders_ns_3</td>
+<td style="text-align: right;">-0.0618675</td>
+<td style="text-align: right;">0.0774107</td>
+<td style="text-align: right;">-0.7992114</td>
+<td style="text-align: right;">0.4243850</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">cylinders_ns_4</td>
+<td style="text-align: right;">0.0549902</td>
+<td style="text-align: right;">0.0870957</td>
+<td style="text-align: right;">0.6313770</td>
+<td style="text-align: right;">0.5279591</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">cylinders_ns_5</td>
+<td style="text-align: right;">-0.0897536</td>
+<td style="text-align: right;">0.0638198</td>
+<td style="text-align: right;">-1.4063586</td>
+<td style="text-align: right;">0.1599731</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">gears_ns_1</td>
+<td style="text-align: right;">-0.0092980</td>
+<td style="text-align: right;">0.0274428</td>
+<td style="text-align: right;">-0.3388131</td>
+<td style="text-align: right;">0.7348319</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">gears_ns_2</td>
+<td style="text-align: right;">0.0251825</td>
+<td style="text-align: right;">0.0281656</td>
+<td style="text-align: right;">0.8940887</td>
+<td style="text-align: right;">0.3715206</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">gears_ns_3</td>
+<td style="text-align: right;">0.0830474</td>
+<td style="text-align: right;">0.0300417</td>
+<td style="text-align: right;">2.7644052</td>
+<td style="text-align: right;">0.0058227</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">gears_ns_4</td>
+<td style="text-align: right;">-0.1216043</td>
+<td style="text-align: right;">0.0686768</td>
+<td style="text-align: right;">-1.7706738</td>
+<td style="text-align: right;">0.0769635</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">gears_ns_5</td>
+<td style="text-align: right;">0.0991632</td>
+<td style="text-align: right;">0.0306434</td>
+<td style="text-align: right;">3.2360352</td>
+<td style="text-align: right;">0.0012576</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>drive2-Wheel Drive, Rear_x_transmissionCVT</code></td>
+<td style="text-align: right;">0.0992069</td>
+<td style="text-align: right;">0.0732241</td>
+<td style="text-align: right;">1.3548397</td>
+<td style="text-align: right;">0.1758187</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>drive4-Wheel Drive_x_transmissionCVT</code></td>
+<td style="text-align: right;">-0.0018008</td>
+<td style="text-align: right;">0.0480367</td>
+<td style="text-align: right;">-0.0374879</td>
+<td style="text-align: right;">0.9701046</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>driveAll Wheel Drive_x_transmissionCVT</code></td>
+<td style="text-align: right;">-0.0128221</td>
+<td style="text-align: right;">0.0305568</td>
+<td style="text-align: right;">-0.4196140</td>
+<td style="text-align: right;">0.6748706</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>drive2-Wheel Drive, Rear_x_transmissionManual</code></td>
+<td style="text-align: right;">-0.1176156</td>
+<td style="text-align: right;">0.0207591</td>
+<td style="text-align: right;">-5.6657338</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>drive4-Wheel Drive_x_transmissionManual</code></td>
+<td style="text-align: right;">-0.0056999</td>
+<td style="text-align: right;">0.0286541</td>
+<td style="text-align: right;">-0.1989214</td>
+<td style="text-align: right;">0.8423705</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>driveAll Wheel Drive_x_transmissionManual</code></td>
+<td style="text-align: right;">-0.0295975</td>
+<td style="text-align: right;">0.0219413</td>
+<td style="text-align: right;">-1.3489416</td>
+<td style="text-align: right;">0.1777051</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>drive2-Wheel Drive, Rear_x_recommended_fuelPremium Unleaded Required</code></td>
+<td style="text-align: right;">-0.0097167</td>
+<td style="text-align: right;">0.0427882</td>
+<td style="text-align: right;">-0.2270885</td>
+<td style="text-align: right;">0.8204080</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>drive4-Wheel Drive_x_recommended_fuelPremium Unleaded Required</code></td>
+<td style="text-align: right;">0.0458686</td>
+<td style="text-align: right;">0.0787657</td>
+<td style="text-align: right;">0.5823417</td>
+<td style="text-align: right;">0.5604867</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>driveAll Wheel Drive_x_recommended_fuelPremium Unleaded Required</code></td>
+<td style="text-align: right;">-0.0238039</td>
+<td style="text-align: right;">0.0428858</td>
+<td style="text-align: right;">-0.5550537</td>
+<td style="text-align: right;">0.5789999</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>drive2-Wheel Drive, Rear_x_recommended_fuelRegular Unleaded Recommended</code></td>
+<td style="text-align: right;">-0.0991718</td>
+<td style="text-align: right;">0.0253686</td>
+<td style="text-align: right;">-3.9092297</td>
+<td style="text-align: right;">0.0000998</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>drive4-Wheel Drive_x_recommended_fuelRegular Unleaded Recommended</code></td>
+<td style="text-align: right;">-0.0399189</td>
+<td style="text-align: right;">0.0704926</td>
+<td style="text-align: right;">-0.5662851</td>
+<td style="text-align: right;">0.5713454</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>driveAll Wheel Drive_x_recommended_fuelRegular Unleaded Recommended</code></td>
+<td style="text-align: right;">-0.0642701</td>
+<td style="text-align: right;">0.0229673</td>
+<td style="text-align: right;">-2.7983298</td>
+<td style="text-align: right;">0.0052498</td>
 </tr>
 </tbody>
 </table>

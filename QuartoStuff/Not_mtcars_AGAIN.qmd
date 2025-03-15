@@ -165,7 +165,7 @@ broom::glance(fit_lm) |>
 ```{r}
 # Build a random forest model specification
 rf_spec <- rand_forest() |> 
-    set_engine("ranger") |> 
+    set_engine("ranger", importance = "impurity") |> 
     set_mode("regression")
 
 # Train a random forest model
@@ -175,6 +175,12 @@ fit_rf <- rf_spec |>
 # Print the model object
 fit_rf
 ```
+```{r}
+vip::vip(fit_rf) +
+  theme_bw()
+```
+
+
 
 ## Evaluate model performance
 
@@ -194,7 +200,8 @@ results <- car_train |>
     bind_cols(predict(fit_lm, car_train) |> 
                   rename(.pred_lm = .pred)) |> 
     bind_cols(predict(fit_rf, car_train) |> 
-                  rename(.pred_rf = .pred))
+                  rename(.pred_rf = .pred)) |> 
+    relocate(log_mpg, .pred_lm, .pred_rf, .before = displacement)
 head(results) |> 
   knitr::kable()
 ```
@@ -203,8 +210,10 @@ head(results) |>
 
 ```{r}
 # Evaluate the performance
-metrics(results, truth = log_mpg, estimate = .pred_lm)
-metrics(results, truth = log_mpg, estimate = .pred_rf)
+metrics(results, truth = log_mpg, estimate = .pred_lm) |> 
+  knitr::kable()
+metrics(results, truth = log_mpg, estimate = .pred_rf) |> 
+  knitr::kable()
 ```
 
 ## Use the testing data
@@ -219,11 +228,14 @@ results <- car_test  |>
     bind_cols(predict(fit_lm, car_test)  |> 
                   rename(.pred_lm = .pred))  |> 
     bind_cols(predict(fit_rf, car_test)  |> 
-                  rename(.pred_rf = .pred))
+                  rename(.pred_rf = .pred)) |> 
+    relocate(log_mpg, .pred_lm, .pred_rf, .before = displacement)
 
 # Evaluate the performance
-metrics(results, truth = log_mpg, estimate = .pred_lm)
-metrics(results, truth = log_mpg, estimate = .pred_rf)
+metrics(results, truth = log_mpg, estimate = .pred_lm) |> 
+  knitr::kable()
+metrics(results, truth = log_mpg, estimate = .pred_rf) |> 
+  knitr::kable()
 ```
 
 
@@ -254,6 +266,8 @@ car_boot <- bootstraps(data = car_train, times = 25)
 * Evaluate both kinds of models, the linear regression model and the random forest model.
 
 ```{r}
+#| label: "bothmodels"
+#| cache: true
 # Evaluate the models with bootstrap resampling
 lm_res <- lm_spec |> 
     fit_resamples(
@@ -369,20 +383,22 @@ final_rf_wkfl <- rf_wkfl |>
 final_rf_wkfl
 ```
 
+
 ```{r}
 final_rf_fit <- final_rf_wkfl |> 
   fit(car_train)
+# Variable importance plot
+vip::vip(final_rf_fit) + 
+  theme_bw()
+```
+
+```{r}
 augment(final_rf_fit, new_data = car_test) |> 
   metrics(truth = log_mpg, estimate = .pred) -> RF
 RF |> 
   knitr::kable()
 ```
 
-```{r}
-# Variable importance plot
-vip::vip(final_rf_fit) +
-  theme_bw()
-```
 
 ```{r}
 # R-squared plot
@@ -428,14 +444,18 @@ xgboost_workflow
 ```
 
 :::{.callout-tip}
-Use `cache: true` as the next chunk takes almost an hour
+Use `cache: true` as the next chunk takes a hot minute.
 :::
 
 ```{r}
 #| cache: true
 #| label: "xgb_tune"
-library(finetune)
-
+library(finetune) 
+# used for tune_race_anova() which...
+# after an initial number of resamples have been evaluated, 
+# the process eliminates tuning parameter combinations that 
+# are unlikely to be the best results using a repeated 
+# measure ANOVA model.
 set.seed(49)
 xgboost_tune <-
   tune_race_anova(xgboost_workflow, resamples = car_folds, grid = 15)
@@ -471,6 +491,99 @@ R5 |>
   knitr::kable()
 ```
 
+
+## Elastic net
+
+```{r}
+enet_spec <- linear_reg(penalty = tune()) |> 
+  set_engine("glmnet") |> 
+  set_mode("regression")
+enet_spec
+```
+
+
+```{r}
+enet_recipe <- 
+  recipe(formula = log_mpg ~  . , data = car_train) |> 
+  step_dummy(all_nominal_predictors(), one_hot = TRUE) |> 
+  step_zv(all_predictors())  |> 
+  step_normalize(all_numeric_predictors()) |> 
+  step_corr(all_numeric_predictors(), threshold = 0.9)
+```
+
+```{r}
+enet_workflow <- 
+  workflow() |>  
+  add_recipe(enet_recipe) |>  
+  add_model(enet_spec) 
+enet_workflow
+```
+
+```{r}
+library(finetune)
+set.seed(49)
+enet_tune <-
+  tune_race_anova(enet_workflow, resamples = car_folds, grid = 15)
+enet_tune
+```
+
+```{r}
+show_best(enet_tune, metric = "rmse")
+enet_param <- select_best(enet_tune, metric = "rmse")
+final_enet_wkfl <- enet_workflow |> 
+  finalize_workflow(enet_param)
+final_enet_wkfl
+```
+
+```{r}
+final_enet_fit <- final_enet_wkfl |> 
+  fit(car_train)
+```
+
+```{r}
+augment(final_enet_fit, new_data = car_test) |> 
+  metrics(truth = log_mpg, estimate = .pred) -> R6
+R6 |> 
+  knitr::kable()
+```
+
+```{r}
+# Print the model object
+broom::tidy(final_enet_fit) |> 
+  knitr::kable()
+```
+
+## Natural Splines and Interactions
+
+```{r}
+lm_spec <- linear_reg() |> 
+  set_engine("lm")
+ns_recipe <- recipe(log_mpg ~ ., data = car_train) |> 
+  step_ns(displacement, cylinders, gears, deg_free = 5) |> 
+  step_interact(~drive:transmission) |> 
+  step_interact(~drive:recommended_fuel)
+ns_wkfl <- workflow() |> 
+  add_recipe(ns_recipe) |> 
+  add_model(lm_spec)
+ns_wkfl
+```
+
+```{r}
+final_lm_fit <- ns_wkfl |> 
+  fit(car_train)
+```
+
+```{r}
+augment(final_lm_fit, new_data = car_test) |> 
+  metrics(truth = log_mpg, estimate = .pred) -> R7
+R7 |> 
+  knitr::kable()
+```
+
+```{r}
+broom::tidy(final_lm_fit) |> 
+  knitr::kable()
+```
 
 
 
