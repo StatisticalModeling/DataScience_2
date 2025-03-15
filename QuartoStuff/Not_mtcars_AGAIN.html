@@ -91,7 +91,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on March 15, 2025 09:23:12 Eastern Daylight Time</p>
+      <p class="date">Last modified on March 15, 2025 09:33:05 Eastern Daylight Time</p>
     </div>
   </div>
   
@@ -1943,7 +1943,7 @@ Computational engine: glmnet </code></pre>
 <div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>lm_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">|&gt;</span> </span>
 <span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>)</span>
 <span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>ns_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(log_mpg <span class="sc">~</span> ., <span class="at">data =</span> car_train) <span class="sc">|&gt;</span> </span>
-<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_ns</span>(displacement, cylinders, gears, <span class="at">deg_free =</span> <span class="dv">5</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_ns</span>(displacement, cylinders, gears, <span class="at">deg_free =</span> <span class="dv">6</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_interact</span>(<span class="sc">~</span>drive<span class="sc">:</span>transmission) <span class="sc">|&gt;</span> </span>
 <span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_interact</span>(<span class="sc">~</span>drive<span class="sc">:</span>recommended_fuel)</span>
 <span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a>ns_wkfl <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span> </span>
@@ -1990,17 +1990,17 @@ Computational engine: lm </code></pre>
 <tr class="odd">
 <td style="text-align: left;">rmse</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.0939062</td>
+<td style="text-align: right;">0.0935618</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">rsq</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.8187231</td>
+<td style="text-align: right;">0.8197666</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">mae</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.0699807</td>
+<td style="text-align: right;">0.0694639</td>
 </tr>
 </tbody>
 </table>
@@ -2030,290 +2030,311 @@ Computational engine: lm </code></pre>
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">(Intercept)</td>
-<td style="text-align: right;">3.8592417</td>
-<td style="text-align: right;">0.0637191</td>
-<td style="text-align: right;">60.5665164</td>
+<td style="text-align: right;">3.8199245</td>
+<td style="text-align: right;">0.0685005</td>
+<td style="text-align: right;">55.7649217</td>
 <td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">transmissionCVT</td>
-<td style="text-align: right;">0.1124038</td>
-<td style="text-align: right;">0.0252141</td>
-<td style="text-align: right;">4.4579822</td>
-<td style="text-align: right;">0.0000094</td>
+<td style="text-align: right;">0.1112348</td>
+<td style="text-align: right;">0.0252321</td>
+<td style="text-align: right;">4.4084556</td>
+<td style="text-align: right;">0.0000117</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">transmissionManual</td>
-<td style="text-align: right;">0.0117744</td>
-<td style="text-align: right;">0.0209467</td>
-<td style="text-align: right;">0.5621115</td>
-<td style="text-align: right;">0.5741842</td>
+<td style="text-align: right;">0.0117752</td>
+<td style="text-align: right;">0.0210889</td>
+<td style="text-align: right;">0.5583622</td>
+<td style="text-align: right;">0.5767406</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">aspirationTurbocharged/Supercharged</td>
-<td style="text-align: right;">-0.1112815</td>
-<td style="text-align: right;">0.0102350</td>
-<td style="text-align: right;">-10.8726246</td>
+<td style="text-align: right;">-0.1082848</td>
+<td style="text-align: right;">0.0105613</td>
+<td style="text-align: right;">-10.2530173</td>
 <td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">lockup_torque_converterY</td>
-<td style="text-align: right;">-0.0848036</td>
-<td style="text-align: right;">0.0159267</td>
-<td style="text-align: right;">-5.3246176</td>
-<td style="text-align: right;">0.0000001</td>
+<td style="text-align: right;">-0.0812153</td>
+<td style="text-align: right;">0.0162432</td>
+<td style="text-align: right;">-4.9999736</td>
+<td style="text-align: right;">0.0000007</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">drive2-Wheel Drive, Rear</td>
-<td style="text-align: right;">0.0286435</td>
-<td style="text-align: right;">0.0229709</td>
-<td style="text-align: right;">1.2469466</td>
-<td style="text-align: right;">0.2127511</td>
+<td style="text-align: right;">0.0267326</td>
+<td style="text-align: right;">0.0231243</td>
+<td style="text-align: right;">1.1560408</td>
+<td style="text-align: right;">0.2479815</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">drive4-Wheel Drive</td>
-<td style="text-align: right;">-0.0922069</td>
-<td style="text-align: right;">0.0694116</td>
-<td style="text-align: right;">-1.3284069</td>
-<td style="text-align: right;">0.1843905</td>
+<td style="text-align: right;">-0.0946227</td>
+<td style="text-align: right;">0.0693818</td>
+<td style="text-align: right;">-1.3637968</td>
+<td style="text-align: right;">0.1729839</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">driveAll Wheel Drive</td>
-<td style="text-align: right;">-0.0246236</td>
-<td style="text-align: right;">0.0216698</td>
-<td style="text-align: right;">-1.1363094</td>
-<td style="text-align: right;">0.2561386</td>
+<td style="text-align: right;">-0.0254093</td>
+<td style="text-align: right;">0.0217824</td>
+<td style="text-align: right;">-1.1665048</td>
+<td style="text-align: right;">0.2437297</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">max_ethanol</td>
-<td style="text-align: right;">-0.0000688</td>
+<td style="text-align: right;">-0.0000903</td>
 <td style="text-align: right;">0.0002151</td>
-<td style="text-align: right;">-0.3197970</td>
-<td style="text-align: right;">0.7491986</td>
+<td style="text-align: right;">-0.4200232</td>
+<td style="text-align: right;">0.6745721</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">recommended_fuelPremium Unleaded Required</td>
-<td style="text-align: right;">-0.0146173</td>
-<td style="text-align: right;">0.0396871</td>
-<td style="text-align: right;">-0.3683146</td>
-<td style="text-align: right;">0.7127279</td>
+<td style="text-align: right;">-0.0124601</td>
+<td style="text-align: right;">0.0398575</td>
+<td style="text-align: right;">-0.3126149</td>
+<td style="text-align: right;">0.7546481</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">recommended_fuelRegular Unleaded Recommended</td>
-<td style="text-align: right;">0.0222313</td>
-<td style="text-align: right;">0.0185759</td>
-<td style="text-align: right;">1.1967769</td>
-<td style="text-align: right;">0.2317180</td>
+<td style="text-align: right;">0.0255288</td>
+<td style="text-align: right;">0.0186546</td>
+<td style="text-align: right;">1.3685029</td>
+<td style="text-align: right;">0.1715076</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">intake_valves_per_cyl</td>
-<td style="text-align: right;">-0.0158802</td>
-<td style="text-align: right;">0.0666364</td>
-<td style="text-align: right;">-0.2383109</td>
-<td style="text-align: right;">0.8116958</td>
+<td style="text-align: right;">-0.0284054</td>
+<td style="text-align: right;">0.0669422</td>
+<td style="text-align: right;">-0.4243274</td>
+<td style="text-align: right;">0.6714318</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">exhaust_valves_per_cyl</td>
-<td style="text-align: right;">-0.0756612</td>
-<td style="text-align: right;">0.0612320</td>
-<td style="text-align: right;">-1.2356483</td>
-<td style="text-align: right;">0.2169213</td>
+<td style="text-align: right;">-0.0635069</td>
+<td style="text-align: right;">0.0615174</td>
+<td style="text-align: right;">-1.0323408</td>
+<td style="text-align: right;">0.3021991</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">fuel_injectionMultipoint/sequential ignition</td>
-<td style="text-align: right;">-0.0376369</td>
-<td style="text-align: right;">0.0092654</td>
-<td style="text-align: right;">-4.0620962</td>
-<td style="text-align: right;">0.0000530</td>
+<td style="text-align: right;">-0.0373248</td>
+<td style="text-align: right;">0.0093153</td>
+<td style="text-align: right;">-4.0068477</td>
+<td style="text-align: right;">0.0000668</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">displacement_ns_1</td>
-<td style="text-align: right;">-0.3960991</td>
-<td style="text-align: right;">0.0331383</td>
-<td style="text-align: right;">-11.9529223</td>
+<td style="text-align: right;">-0.3615843</td>
+<td style="text-align: right;">0.0382241</td>
+<td style="text-align: right;">-9.4595932</td>
 <td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">displacement_ns_2</td>
-<td style="text-align: right;">-0.5661637</td>
-<td style="text-align: right;">0.0513578</td>
-<td style="text-align: right;">-11.0239058</td>
-<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">-0.3176055</td>
+<td style="text-align: right;">0.0807107</td>
+<td style="text-align: right;">-3.9351092</td>
+<td style="text-align: right;">0.0000898</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">displacement_ns_3</td>
-<td style="text-align: right;">-0.5197136</td>
-<td style="text-align: right;">0.0505905</td>
-<td style="text-align: right;">-10.2729462</td>
+<td style="text-align: right;">-0.4964326</td>
+<td style="text-align: right;">0.0698705</td>
+<td style="text-align: right;">-7.1050404</td>
 <td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">displacement_ns_4</td>
-<td style="text-align: right;">-1.0310594</td>
-<td style="text-align: right;">0.0783548</td>
-<td style="text-align: right;">-13.1588518</td>
+<td style="text-align: right;">-0.4479254</td>
+<td style="text-align: right;">0.0704548</td>
+<td style="text-align: right;">-6.3576228</td>
 <td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">displacement_ns_5</td>
-<td style="text-align: right;">-0.7492017</td>
-<td style="text-align: right;">0.0552533</td>
-<td style="text-align: right;">-13.5593978</td>
+<td style="text-align: right;">-0.8097319</td>
+<td style="text-align: right;">0.1304069</td>
+<td style="text-align: right;">-6.2092716</td>
 <td style="text-align: right;">0.0000000</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">displacement_ns_6</td>
+<td style="text-align: right;">-0.7109073</td>
+<td style="text-align: right;">0.0634985</td>
+<td style="text-align: right;">-11.1956491</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="odd">
 <td style="text-align: left;">cylinders_ns_1</td>
-<td style="text-align: right;">-0.0328730</td>
-<td style="text-align: right;">0.1390468</td>
-<td style="text-align: right;">-0.2364170</td>
-<td style="text-align: right;">0.8131645</td>
+<td style="text-align: right;">0.0750792</td>
+<td style="text-align: right;">0.2045495</td>
+<td style="text-align: right;">0.3670465</td>
+<td style="text-align: right;">0.7136735</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">cylinders_ns_2</td>
-<td style="text-align: right;">0.1394950</td>
-<td style="text-align: right;">0.0819253</td>
-<td style="text-align: right;">1.7027102</td>
-<td style="text-align: right;">0.0889779</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">cylinders_ns_3</td>
-<td style="text-align: right;">-0.0618675</td>
-<td style="text-align: right;">0.0774107</td>
-<td style="text-align: right;">-0.7992114</td>
-<td style="text-align: right;">0.4243850</td>
+<td style="text-align: right;">-0.0671265</td>
+<td style="text-align: right;">0.1109896</td>
+<td style="text-align: right;">-0.6048003</td>
+<td style="text-align: right;">0.5454692</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">cylinders_ns_4</td>
-<td style="text-align: right;">0.0549902</td>
-<td style="text-align: right;">0.0870957</td>
-<td style="text-align: right;">0.6313770</td>
-<td style="text-align: right;">0.5279591</td>
+<td style="text-align: left;">cylinders_ns_3</td>
+<td style="text-align: right;">0.0534042</td>
+<td style="text-align: right;">0.1138544</td>
+<td style="text-align: right;">0.4690565</td>
+<td style="text-align: right;">0.6391467</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">cylinders_ns_4</td>
+<td style="text-align: right;">-0.1620988</td>
+<td style="text-align: right;">0.0994543</td>
+<td style="text-align: right;">-1.6298820</td>
+<td style="text-align: right;">0.1034880</td>
+</tr>
+<tr class="odd">
 <td style="text-align: left;">cylinders_ns_5</td>
-<td style="text-align: right;">-0.0897536</td>
-<td style="text-align: right;">0.0638198</td>
-<td style="text-align: right;">-1.4063586</td>
-<td style="text-align: right;">0.1599731</td>
+<td style="text-align: right;">-0.1105315</td>
+<td style="text-align: right;">0.1406690</td>
+<td style="text-align: right;">-0.7857557</td>
+<td style="text-align: right;">0.4322243</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">cylinders_ns_6</td>
+<td style="text-align: right;">-0.1231298</td>
+<td style="text-align: right;">0.0845613</td>
+<td style="text-align: right;">-1.4561009</td>
+<td style="text-align: right;">0.1457251</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">gears_ns_1</td>
-<td style="text-align: right;">-0.0092980</td>
-<td style="text-align: right;">0.0274428</td>
-<td style="text-align: right;">-0.3388131</td>
-<td style="text-align: right;">0.7348319</td>
+<td style="text-align: right;">-0.0102324</td>
+<td style="text-align: right;">0.0275649</td>
+<td style="text-align: right;">-0.3712124</td>
+<td style="text-align: right;">0.7105696</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">gears_ns_2</td>
-<td style="text-align: right;">0.0251825</td>
-<td style="text-align: right;">0.0281656</td>
-<td style="text-align: right;">0.8940887</td>
-<td style="text-align: right;">0.3715206</td>
+<td style="text-align: right;">0.0262952</td>
+<td style="text-align: right;">0.0307764</td>
+<td style="text-align: right;">0.8543943</td>
+<td style="text-align: right;">0.3931215</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">gears_ns_3</td>
-<td style="text-align: right;">0.0830474</td>
-<td style="text-align: right;">0.0300417</td>
-<td style="text-align: right;">2.7644052</td>
-<td style="text-align: right;">0.0058227</td>
+<td style="text-align: right;">0.0281461</td>
+<td style="text-align: right;">0.0318665</td>
+<td style="text-align: right;">0.8832496</td>
+<td style="text-align: right;">0.3773451</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">gears_ns_4</td>
-<td style="text-align: right;">-0.1216043</td>
-<td style="text-align: right;">0.0686768</td>
-<td style="text-align: right;">-1.7706738</td>
-<td style="text-align: right;">0.0769635</td>
+<td style="text-align: right;">0.0919127</td>
+<td style="text-align: right;">0.0349123</td>
+<td style="text-align: right;">2.6326768</td>
+<td style="text-align: right;">0.0086215</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">gears_ns_5</td>
-<td style="text-align: right;">0.0991632</td>
-<td style="text-align: right;">0.0306434</td>
-<td style="text-align: right;">3.2360352</td>
-<td style="text-align: right;">0.0012576</td>
+<td style="text-align: right;">-0.1105689</td>
+<td style="text-align: right;">0.0693967</td>
+<td style="text-align: right;">-1.5932863</td>
+<td style="text-align: right;">0.1114588</td>
 </tr>
 <tr class="even">
+<td style="text-align: left;">gears_ns_6</td>
+<td style="text-align: right;">0.0851329</td>
+<td style="text-align: right;">0.0297666</td>
+<td style="text-align: right;">2.8600177</td>
+<td style="text-align: right;">0.0043374</td>
+</tr>
+<tr class="odd">
 <td style="text-align: left;"><code>drive2-Wheel Drive, Rear_x_transmissionCVT</code></td>
-<td style="text-align: right;">0.0992069</td>
-<td style="text-align: right;">0.0732241</td>
-<td style="text-align: right;">1.3548397</td>
-<td style="text-align: right;">0.1758187</td>
+<td style="text-align: right;">0.1027385</td>
+<td style="text-align: right;">0.0734966</td>
+<td style="text-align: right;">1.3978663</td>
+<td style="text-align: right;">0.1625091</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;"><code>drive4-Wheel Drive_x_transmissionCVT</code></td>
-<td style="text-align: right;">-0.0018008</td>
-<td style="text-align: right;">0.0480367</td>
-<td style="text-align: right;">-0.0374879</td>
-<td style="text-align: right;">0.9701046</td>
+<td style="text-align: right;">0.0068924</td>
+<td style="text-align: right;">0.0481294</td>
+<td style="text-align: right;">0.1432057</td>
+<td style="text-align: right;">0.8861609</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"><code>driveAll Wheel Drive_x_transmissionCVT</code></td>
-<td style="text-align: right;">-0.0128221</td>
-<td style="text-align: right;">0.0305568</td>
-<td style="text-align: right;">-0.4196140</td>
-<td style="text-align: right;">0.6748706</td>
+<td style="text-align: right;">-0.0130268</td>
+<td style="text-align: right;">0.0305162</td>
+<td style="text-align: right;">-0.4268796</td>
+<td style="text-align: right;">0.6695725</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;"><code>drive2-Wheel Drive, Rear_x_transmissionManual</code></td>
-<td style="text-align: right;">-0.1176156</td>
-<td style="text-align: right;">0.0207591</td>
-<td style="text-align: right;">-5.6657338</td>
-<td style="text-align: right;">0.0000000</td>
+<td style="text-align: right;">-0.1129130</td>
+<td style="text-align: right;">0.0210164</td>
+<td style="text-align: right;">-5.3726089</td>
+<td style="text-align: right;">0.0000001</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"><code>drive4-Wheel Drive_x_transmissionManual</code></td>
-<td style="text-align: right;">-0.0056999</td>
-<td style="text-align: right;">0.0286541</td>
-<td style="text-align: right;">-0.1989214</td>
-<td style="text-align: right;">0.8423705</td>
+<td style="text-align: right;">-0.0023616</td>
+<td style="text-align: right;">0.0289555</td>
+<td style="text-align: right;">-0.0815580</td>
+<td style="text-align: right;">0.9350170</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;"><code>driveAll Wheel Drive_x_transmissionManual</code></td>
-<td style="text-align: right;">-0.0295975</td>
-<td style="text-align: right;">0.0219413</td>
-<td style="text-align: right;">-1.3489416</td>
-<td style="text-align: right;">0.1777051</td>
+<td style="text-align: right;">-0.0263497</td>
+<td style="text-align: right;">0.0220420</td>
+<td style="text-align: right;">-1.1954326</td>
+<td style="text-align: right;">0.2322434</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"><code>drive2-Wheel Drive, Rear_x_recommended_fuelPremium Unleaded Required</code></td>
-<td style="text-align: right;">-0.0097167</td>
-<td style="text-align: right;">0.0427882</td>
-<td style="text-align: right;">-0.2270885</td>
-<td style="text-align: right;">0.8204080</td>
+<td style="text-align: right;">-0.0077960</td>
+<td style="text-align: right;">0.0428548</td>
+<td style="text-align: right;">-0.1819162</td>
+<td style="text-align: right;">0.8556908</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;"><code>drive4-Wheel Drive_x_recommended_fuelPremium Unleaded Required</code></td>
-<td style="text-align: right;">0.0458686</td>
-<td style="text-align: right;">0.0787657</td>
-<td style="text-align: right;">0.5823417</td>
-<td style="text-align: right;">0.5604867</td>
+<td style="text-align: right;">0.0450673</td>
+<td style="text-align: right;">0.0787188</td>
+<td style="text-align: right;">0.5725098</td>
+<td style="text-align: right;">0.5671244</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;"><code>driveAll Wheel Drive_x_recommended_fuelPremium Unleaded Required</code></td>
-<td style="text-align: right;">-0.0238039</td>
-<td style="text-align: right;">0.0428858</td>
-<td style="text-align: right;">-0.5550537</td>
-<td style="text-align: right;">0.5789999</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;"><code>drive2-Wheel Drive, Rear_x_recommended_fuelRegular Unleaded Recommended</code></td>
-<td style="text-align: right;">-0.0991718</td>
-<td style="text-align: right;">0.0253686</td>
-<td style="text-align: right;">-3.9092297</td>
-<td style="text-align: right;">0.0000998</td>
+<td style="text-align: right;">-0.0235163</td>
+<td style="text-align: right;">0.0429153</td>
+<td style="text-align: right;">-0.5479706</td>
+<td style="text-align: right;">0.5838525</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;"><code>drive4-Wheel Drive_x_recommended_fuelRegular Unleaded Recommended</code></td>
-<td style="text-align: right;">-0.0399189</td>
-<td style="text-align: right;">0.0704926</td>
-<td style="text-align: right;">-0.5662851</td>
-<td style="text-align: right;">0.5713454</td>
+<td style="text-align: left;"><code>drive2-Wheel Drive, Rear_x_recommended_fuelRegular Unleaded Recommended</code></td>
+<td style="text-align: right;">-0.1008941</td>
+<td style="text-align: right;">0.0254154</td>
+<td style="text-align: right;">-3.9698099</td>
+<td style="text-align: right;">0.0000779</td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;"><code>drive4-Wheel Drive_x_recommended_fuelRegular Unleaded Recommended</code></td>
+<td style="text-align: right;">-0.0417965</td>
+<td style="text-align: right;">0.0704613</td>
+<td style="text-align: right;">-0.5931843</td>
+<td style="text-align: right;">0.5532118</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;"><code>driveAll Wheel Drive_x_recommended_fuelRegular Unleaded Recommended</code></td>
-<td style="text-align: right;">-0.0642701</td>
-<td style="text-align: right;">0.0229673</td>
-<td style="text-align: right;">-2.7983298</td>
-<td style="text-align: right;">0.0052498</td>
+<td style="text-align: right;">-0.0620341</td>
+<td style="text-align: right;">0.0230943</td>
+<td style="text-align: right;">-2.6861265</td>
+<td style="text-align: right;">0.0073662</td>
 </tr>
 </tbody>
 </table>
