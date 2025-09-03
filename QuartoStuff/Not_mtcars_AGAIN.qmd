@@ -46,7 +46,7 @@ glimpse(cars2018)
 ```{r}
 # Plot the histogram
 ggplot(cars2018, aes(x = mpg)) +
-  geom_histogram(bins = 25, color = "black", fill = "red") +
+  geom_histogram(binwidth = 2, color = "black", fill = "red") +
   labs(x = "Fuel efficiency (mpg)",
        y = "Number of cars") + 
   theme_bw()
@@ -57,7 +57,7 @@ ggplot(cars2018, aes(x = mpg)) +
 cars2018 <- cars2018 |> 
   mutate(log_mpg = log(mpg))
 ggplot(cars2018, aes(x = log_mpg)) +
-  geom_histogram(bins = 15, color = "black", fill = "red") +
+  geom_histogram(binwidth = 0.15, color = "black", fill = "red") +
   labs(x = "Fuel efficiency (log_mpg)",
        y = "Number of cars") + 
   theme_bw()
@@ -141,7 +141,7 @@ Now that your `car_train` data is ready, you can fit a set of models with `tidym
 
 ### Instructions
 
-* Fit a basic linear regression model to your `car_train` data.  (Notice that we are fitting to `log(mpg)` since the fuel efficiency had a log normal distribution.)
+* Fit a basic linear regression model to your `car_train` data.  (Notice that we are fitting to `log_mpg` since the fuel efficiency had a log normal distribution.)
 
 ```{r}
 # Build a linear regression model specification
@@ -196,6 +196,7 @@ Note: The `yardstick` package is loaded since it is one of the packages in `tidy
 
 ```{r}
 # Create the new columns
+# rename and relocate are from dplyr
 results <- car_train |> 
     bind_cols(predict(fit_lm, car_train) |> 
                   rename(.pred_lm = .pred)) |> 
@@ -210,9 +211,9 @@ head(results) |>
 
 ```{r}
 # Evaluate the performance
-metrics(results, truth = log_mpg, estimate = .pred_lm) |> 
+metrics(data = results, truth = log_mpg, estimate = .pred_lm) |> 
   knitr::kable()
-metrics(results, truth = log_mpg, estimate = .pred_rf) |> 
+metrics(data = results, truth = log_mpg, estimate = .pred_rf) |> 
   knitr::kable()
 ```
 
@@ -364,7 +365,8 @@ The next code chunk will take 20 minutes or so to run.  Make sure to cache the c
 ```{r}
 #| cache: true
 #| label: "rf_tune"
-doParallel::registerDoParallel()
+library(future)
+plan(multisession, workers = 4)
 set.seed(321)
 rf_tune <- tune_grid(rf_wkfl, resample = car_folds, grid = 15)
 rf_tune
