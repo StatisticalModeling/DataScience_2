@@ -1601,10 +1601,14 @@ Run `show_notes(.Last.tune.result)` for more information.</code></pre>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show_best</span>(xgboost_tune, <span class="at">metric =</span> <span class="st">"rmse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 12
+<pre><code># A tibble: 5 × 12
   trees min_n tree_depth learn_rate loss_reduction sample_size .metric
   &lt;int&gt; &lt;int&gt;      &lt;int&gt;      &lt;dbl&gt;          &lt;dbl&gt;       &lt;dbl&gt; &lt;chr&gt;  
-1  1714     7         14     0.0405   0.0000000291       0.743 rmse   
+1  1857    31          2     0.0921   0.0164             0.679 rmse   
+2  1571    40         13     0.0611   0.000373           0.421 rmse   
+3  1714     7         14     0.0405   0.0000000291       0.743 rmse   
+4   429    21          4     0.139    0.0000000001       0.614 rmse   
+5   572    15         12     0.210    0.109              0.936 rmse   
 # ℹ 5 more variables: .estimator &lt;chr&gt;, mean &lt;dbl&gt;, n &lt;int&gt;, std_err &lt;dbl&gt;,
 #   .config &lt;chr&gt;</code></pre>
 </div>
@@ -1637,12 +1641,12 @@ Model: boost_tree()
 Boosted Tree Model Specification (regression)
 
 Main Arguments:
-  trees = 1714
-  min_n = 7
-  tree_depth = 14
-  learn_rate = 0.0404708995075976
-  loss_reduction = 2.91263265490874e-08
-  sample_size = 0.742857142857143
+  trees = 1857
+  min_n = 31
+  tree_depth = 2
+  learn_rate = 0.0921055317689482
+  loss_reduction = 0.0163789370695406
+  sample_size = 0.678571428571429
 
 Computational engine: xgboost </code></pre>
 </div>
@@ -1668,17 +1672,17 @@ Computational engine: xgboost </code></pre>
 <tr class="odd">
 <td style="text-align: left;">rmse</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.0918570</td>
+<td style="text-align: right;">0.0940729</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">rsq</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.8259708</td>
+<td style="text-align: right;">0.8154165</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">mae</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.0610113</td>
+<td style="text-align: right;">0.0708401</td>
 </tr>
 </tbody>
 </table>
