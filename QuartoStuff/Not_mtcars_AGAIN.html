@@ -1751,18 +1751,18 @@ Computational engine: glmnet </code></pre>
 <pre><code># Tuning results
 # 10-fold cross-validation repeated 5 times 
 # A tibble: 50 × 6
-   splits           id      id2    .order .metrics          .notes          
-   &lt;list&gt;           &lt;chr&gt;   &lt;chr&gt;   &lt;int&gt; &lt;list&gt;            &lt;list&gt;          
- 1 &lt;split [823/92]&gt; Repeat1 Fold03      3 &lt;tibble [30 × 5]&gt; &lt;tibble [1 × 3]&gt;
- 2 &lt;split [823/92]&gt; Repeat1 Fold05      1 &lt;tibble [30 × 5]&gt; &lt;tibble [1 × 3]&gt;
- 3 &lt;split [824/91]&gt; Repeat1 Fold08      2 &lt;tibble [30 × 5]&gt; &lt;tibble [1 × 3]&gt;
- 4 &lt;split [824/91]&gt; Repeat1 Fold07      4 &lt;tibble [24 × 5]&gt; &lt;tibble [0 × 3]&gt;
- 5 &lt;split [824/91]&gt; Repeat1 Fold06      5 &lt;tibble [22 × 5]&gt; &lt;tibble [0 × 3]&gt;
- 6 &lt;split [823/92]&gt; Repeat1 Fold01      6 &lt;tibble [22 × 5]&gt; &lt;tibble [0 × 3]&gt;
- 7 &lt;split [823/92]&gt; Repeat1 Fold02      7 &lt;tibble [22 × 5]&gt; &lt;tibble [0 × 3]&gt;
- 8 &lt;split [824/91]&gt; Repeat1 Fold09      8 &lt;tibble [22 × 5]&gt; &lt;tibble [0 × 3]&gt;
- 9 &lt;split [823/92]&gt; Repeat1 Fold04      9 &lt;tibble [22 × 5]&gt; &lt;tibble [0 × 3]&gt;
-10 &lt;split [824/91]&gt; Repeat1 Fold10     10 &lt;tibble [22 × 5]&gt; &lt;tibble [0 × 3]&gt;
+   splits           id      id2    .metrics          .notes           .order
+   &lt;list&gt;           &lt;chr&gt;   &lt;chr&gt;  &lt;list&gt;            &lt;list&gt;            &lt;int&gt;
+ 1 &lt;split [823/92]&gt; Repeat1 Fold05 &lt;tibble [30 × 5]&gt; &lt;tibble [1 × 4]&gt;      1
+ 2 &lt;split [824/91]&gt; Repeat1 Fold08 &lt;tibble [30 × 5]&gt; &lt;tibble [1 × 4]&gt;      2
+ 3 &lt;split [823/92]&gt; Repeat1 Fold03 &lt;tibble [30 × 5]&gt; &lt;tibble [1 × 4]&gt;      3
+ 4 &lt;split [824/91]&gt; Repeat1 Fold07 &lt;tibble [24 × 5]&gt; &lt;tibble [0 × 4]&gt;      4
+ 5 &lt;split [824/91]&gt; Repeat1 Fold06 &lt;tibble [22 × 5]&gt; &lt;tibble [0 × 4]&gt;      5
+ 6 &lt;split [823/92]&gt; Repeat1 Fold01 &lt;tibble [22 × 5]&gt; &lt;tibble [0 × 4]&gt;      6
+ 7 &lt;split [823/92]&gt; Repeat1 Fold02 &lt;tibble [22 × 5]&gt; &lt;tibble [0 × 4]&gt;      7
+ 8 &lt;split [824/91]&gt; Repeat1 Fold09 &lt;tibble [22 × 5]&gt; &lt;tibble [0 × 4]&gt;      8
+ 9 &lt;split [823/92]&gt; Repeat1 Fold04 &lt;tibble [22 × 5]&gt; &lt;tibble [0 × 4]&gt;      9
+10 &lt;split [824/91]&gt; Repeat1 Fold10 &lt;tibble [22 × 5]&gt; &lt;tibble [0 × 4]&gt;     10
 # ℹ 40 more rows
 
 There were issues with some computations:
@@ -1776,9 +1776,9 @@ Run `show_notes(.Last.tune.result)` for more information.</code></pre>
 <div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">show_best</span>(enet_tune, <span class="at">metric =</span> <span class="st">"rmse"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 7
-   penalty .metric .estimator  mean     n std_err .config              
-     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;                
-1 0.000996 rmse    standard   0.115    50 0.00171 Preprocessor1_Model11</code></pre>
+   penalty .metric .estimator  mean     n std_err .config         
+     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;           
+1 0.000996 rmse    standard   0.115    50 0.00171 pre0_mod11_post0</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>enet_param <span class="ot">&lt;-</span> <span class="fu">select_best</span>(enet_tune, <span class="at">metric =</span> <span class="st">"rmse"</span>)</span>
 <span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>final_enet_wkfl <span class="ot">&lt;-</span> enet_workflow <span class="sc">|&gt;</span> </span>

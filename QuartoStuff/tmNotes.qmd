@@ -1,0 +1,51 @@
+---
+title: "Linear Models & `tidymodels`"
+format: html
+---
+
+**tidymodels** does not natively support forward selection because it prefers alternative regularization and feature selection methods like Lasso. You would need to implement forward selection by manually adding predictor variables to your model recipe within tidymodels or use an alternative R package designed for stepwise regression.
+
+Why tidymodels doesn't support forward selection:
+
+  * Preference for Regularization: tidymodels developers and the broader tidymodels community consider regularization methods (like Lasso) to be superior to stepwise selection for feature selection. 
+
+  * "Locally Optimal" Nature: Forward selection is a "locally optimal" approach, meaning it finds the best model at each step but doesn't guarantee the globally optimal model. Regularization methods provide a more democratic way to handle coefficients. 
+  
+  * Goes Against Tidy Philosophy: Manually controlling the stepwise selection process in tidymodels can feel like it goes against the framework's philosophy of a streamlined, data-driven workflow.
+  
+How to perform feature selection with tidymodels:
+
+  1. Use Regularization: Fit a regularized model like Lasso using parsnip, and the regularization process will perform feature selection by shrinking some coefficients to zero. 
+  
+  2. Manual Selection: You can manually select features by defining a recipe with the chosen predictors using recipes and then train the model with that specific recipe. 
+  
+  3. Use External Packages: For true forward selection, you would use other R packages that specifically offer stepwise regression, such as the StepReg package on CRAN. 
+  
+The **tidymodels** philosophy
+
+The `tidymodels` framework is designed around a more consistent and robust approach to modeling than traditional stepwise procedures. Key aspects of this philosophy that lead away from forward selection include:
+
+* Encourages superior methods: The developers prioritize methods like regularization, which are more stable and produce better predictive models than automated stepwise selection.
+
+* Consistency: A core tenet of tidymodels is to have a uniform interface across different modeling engines. Stepwise procedures, which involve fitting many different model formulas, do not fit neatly into this framework.
+
+* Reduced overfitting: Automatic stepwise selection can lead to models that overfit the training data. Regularization techniques like Lasso are designed to prevent this by shrinking coefficients toward zero or setting them to exactly zero, resulting in sparser and more stable models.  
+
+### Recommended alternatives to forward selection
+Instead of stepwise methods, the `tidymodels` framework provides several powerful and well-integrated tools for handling feature selection and model complexity.
+
+#### Regularization with Lasso
+This is the main alternative recommended by the `tidymodels` developers. Lasso regression performs variable selection by shrinking some coefficients all the way to zero.
+
+* Model specification: Use `linear_reg()` with the mixture argument set to 1.
+
+* Engine: Specify the `glmnet` engine, which is highly efficient for fitting many values of the penalty simultaneously.
+
+* Tuning: Use `tune_grid()` to find the optimal value of the penalty hyperparameter.
+
+* Workflow: The entire process is integrated smoothly into a tidymodels workflow, from preprocessing with recipes to resampling with rsample and tuning with tune. 
+
+Example R code using Lasso:
+[Emil Hvitfeldt](https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/06-regularization.html) provides example R code using Lasso for feature selection with tidymodels. 
+  
+  
