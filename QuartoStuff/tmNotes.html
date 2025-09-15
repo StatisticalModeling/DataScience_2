@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -93,6 +127,191 @@ ul.task-list li input[type="checkbox"] {
 <li><p>Workflow: The entire process is integrated smoothly into a tidymodels workflow, from preprocessing with recipes to resampling with rsample and tuning with tune.</p></li>
 </ul>
 <p>Example R code using Lasso: <a href="https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/06-regularization.html">Emil Hvitfeldt</a> provides example R code using Lasso for feature selection with tidymodels.</p>
+</section>
+</section>
+<section id="working-with-data" class="level1">
+<h1>Working with Data</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching packages ────────────────────────────────────── tidymodels 1.4.1 ──</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>✔ broom        1.0.10     ✔ recipes      1.3.1 
+✔ dials        1.4.2      ✔ rsample      1.3.1 
+✔ dplyr        1.1.4      ✔ tailor       0.1.0 
+✔ ggplot2      4.0.0      ✔ tidyr        1.3.1 
+✔ infer        1.0.9      ✔ tune         2.0.0 
+✔ modeldata    1.5.1      ✔ workflows    1.3.0 
+✔ parsnip      1.3.3      ✔ workflowsets 1.1.1 
+✔ purrr        1.1.0      ✔ yardstick    1.3.2 </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Conflicts ───────────────────────────────────────── tidymodels_conflicts() ──
+✖ purrr::discard() masks scales::discard()
+✖ dplyr::filter()  masks stats::filter()
+✖ dplyr::lag()     masks stats::lag()
+✖ recipes::step()  masks stats::step()</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Attaching package: 'MASS'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>The following object is masked from 'package:dplyr':
+
+    select</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">3178</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>boston_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(<span class="at">data =</span> Boston, <span class="at">prop =</span> <span class="fl">0.80</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>boston_training <span class="ot">&lt;-</span> <span class="fu">training</span>(boston_split)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>boston_testing <span class="ot">&lt;-</span> <span class="fu">testing</span>(boston_split)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="visualizing-and-checking-data" class="level2">
+<h2 class="anchored" data-anchor-id="visualizing-and-checking-data">Visualizing and Checking Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(GGally)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(<span class="at">data =</span> boston_training,</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">columns =</span> <span class="fu">c</span>(<span class="st">"medv"</span>, <span class="st">"dis"</span>, <span class="st">"lstat"</span>, <span class="st">"nox"</span>, <span class="st">"age"</span>, <span class="st">"rm"</span>),</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">alpha =</span> <span class="fl">0.01</span>)) <span class="sc">+</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="tmNotes_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>boston_recipe <span class="ot">&lt;-</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(<span class="at">formula =</span> medv <span class="sc">~</span> ., <span class="at">data =</span> boston_training) <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_BoxCox</span>(<span class="fu">all_numeric_predictors</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_numeric_predictors</span>()) </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>boston_recipe</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Recipe ──────────────────────────────────────────────────────────────────────</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Inputs </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Number of variables by role</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>outcome:    1
+predictor: 13</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Operations </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>• Box-Cox transformation on: all_numeric_predictors()</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>• Centering and scaling for: all_numeric_predictors()</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(boston_recipe)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 2 × 6
+  number operation type      trained skip  id             
+   &lt;int&gt; &lt;chr&gt;     &lt;chr&gt;     &lt;lgl&gt;   &lt;lgl&gt; &lt;chr&gt;          
+1      1 step      BoxCox    FALSE   FALSE BoxCox_ZQrKj   
+2      2 step      normalize FALSE   FALSE normalize_UuPWI</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>boston_rec_trained <span class="ot">&lt;-</span> <span class="fu">prep</span>(boston_recipe, boston_training)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Non-positive values in selected variable.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Fewer than `num_unique` values in selected variable.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: No Box-Cox transformation could be estimated for: `zn` and `chas`.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>boston_rec_trained</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Recipe ──────────────────────────────────────────────────────────────────────</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Inputs </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Number of variables by role</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>outcome:    1
+predictor: 13</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Training information </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Training data contained 404 data points and no incomplete rows.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Operations </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>• Box-Cox transformation on: crim, indus, nox, rm, age, dis, ... | Trained</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>• Centering and scaling for: crim, zn, indus, chas, nox, rm, ... | Trained</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>boston_trained_data <span class="ot">&lt;-</span> <span class="fu">bake</span>(boston_rec_trained, <span class="at">new_data =</span> <span class="cn">NULL</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>boston_trained_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 404 × 14
+      crim     zn  indus   chas    nox      rm     age    dis    rad    tax
+     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;
+ 1 -0.0175 -0.485 -0.364 -0.278 -0.422  0.187  -1.07    0.717 -0.239 -0.594
+ 2  0.807  -0.485  1.17  -0.278  1.98  -0.942   1.19   -1.50  -0.239  0.329
+ 3 -0.0847 -0.485 -0.577 -0.278 -0.300  1.86   -1.72    0.104  0.324 -0.395
+ 4  0.132  -0.485 -0.577 -0.278 -0.300  1.52    0.240   0.261  0.324 -0.395
+ 5  1.49   -0.485  1.02  -0.278  0.676 -0.0732  0.688  -0.970  1.47   1.39 
+ 6  0.664  -0.485  1.17   3.59   0.610  2.71    0.934  -0.762 -0.239  0.329
+ 7 -0.261  -0.485 -0.170 -0.278 -0.132 -0.203   0.663  -0.311 -0.239  0.209
+ 8 -0.557  -0.485 -0.446 -0.278 -0.986 -0.300  -1.08    1.05  -0.905 -1.26 
+ 9 -0.0317 -0.485 -0.577 -0.278 -0.268  2.56   -0.0121  0.251  0.324 -0.395
+10  0.0213  0.438 -0.642 -0.278 -1.23   2.57   -1.90    1.79   0.169 -0.191
+# ℹ 394 more rows
+# ℹ 4 more variables: ptratio &lt;dbl&gt;, black &lt;dbl&gt;, lstat &lt;dbl&gt;, medv &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggpairs</span>(<span class="at">data =</span> boston_trained_data,</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">columns =</span> <span class="fu">c</span>(<span class="st">"medv"</span>, <span class="st">"dis"</span>, <span class="st">"lstat"</span>, <span class="st">"nox"</span>, <span class="st">"age"</span>, <span class="st">"rm"</span>),</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">aes</span>(<span class="at">alpha =</span> <span class="fl">0.01</span>)) <span class="sc">+</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="tmNotes_files/figure-html/g2-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 </section>
 </section>
 

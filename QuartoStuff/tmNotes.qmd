@@ -47,5 +47,53 @@ This is the main alternative recommended by the `tidymodels` developers. Lasso r
 
 Example R code using Lasso:
 [Emil Hvitfeldt](https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/06-regularization.html) provides example R code using Lasso for feature selection with tidymodels. 
+ 
+# Working with Data
+
+```{r}
+library(tidymodels)
+library(MASS)
+set.seed(3178)
+boston_split <- initial_split(data = Boston, prop = 0.80)
+boston_training <- training(boston_split)
+boston_testing <- testing(boston_split)
+```
+
+## Visualizing and Checking Data
+
+```{r}
+library(MASS)
+library(GGally)
+ggpairs(data = boston_training,
+        columns = c("medv", "dis", "lstat", "nox", "age", "rm"),
+        aes(alpha = 0.01)) +
   
+  theme_bw()
+```
+
+
+```{r}
+boston_recipe <- 
+  recipe(formula = medv ~ ., data = boston_training) |> 
+  step_BoxCox(all_numeric_predictors()) |> 
+  step_normalize(all_numeric_predictors()) 
+boston_recipe
+```
+
+```{r}
+tidy(boston_recipe)
+boston_rec_trained <- prep(boston_recipe, boston_training)
+boston_rec_trained
+```
+```{r}
+boston_trained_data <- bake(boston_rec_trained, new_data = NULL)
+boston_trained_data
+```
+```{r label = "g2"}
+ggpairs(data = boston_trained_data,
+        columns = c("medv", "dis", "lstat", "nox", "age", "rm"),
+        aes(alpha = 0.01)) +
   
+  theme_bw()
+```
+
