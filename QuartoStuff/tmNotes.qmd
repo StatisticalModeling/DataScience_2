@@ -1,7 +1,19 @@
 ---
 title: "Linear Models & `tidymodels`"
-format: html
+date: last-modified
+date-format: "[Last modified on] MMMM DD, YYYY HH:mm:ss zzz"
+format: 
+  html: default
+  pdf: default
+editor: source
 ---
+
+```{r include = FALSE}
+library(knitr) # packages
+library(tidyverse)
+library(scales)
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", comment = NA, message = FALSE,  warning = FALSE)
+```
 
 **tidymodels** does not natively support forward selection because it prefers alternative regularization and feature selection methods like Lasso. You would need to implement forward selection by manually adding predictor variables to your model recipe within tidymodels or use an alternative R package designed for stepwise regression.
 
@@ -95,5 +107,261 @@ ggpairs(data = boston_trained_data,
         aes(alpha = 0.01)) +
   
   theme_bw()
+```
+
+## Resampling
+
+Goal is to predict `medv`.
+
+```{r}
+lm_spec <- linear_reg() |> 
+  set_mode("regression") |> 
+  set_engine("lm")
+```
+
+First we will ignore the previously normalized and transformed variables and use the raw data.  Then, we will go back and use the previous `boston_recipe` with the transormations and normaliztions to see how the models compare.
+
+```{r}
+lm_fit <- lm_spec |> 
+  fit(medv ~ ., data = boston_training)
+```
+
+```{r}
+augment(lm_fit, new_data = boston_testing)
+augment(lm_fit, new_data = boston_testing) |> 
+  rmse(truth = medv, estimate = .pred) -> T1
+T1
+```
+
+Compare to the training RMSE:
+
+```{r}
+augment(lm_fit, new_data = boston_training) |> 
+  rmse(truth = medv, estimate = .pred) -> T2
+T2
+  
+```
+Note that we expect the training data to provide and overly optimistic estimate of the RMSE which in fact is what happens in this case where we see the $\text{RMSE}_{\text{Train}} = `r T2$.estimate`$ and $\text{RMSE}_{\text{Test}} = `r T1$.estimate`$.
+
+Consider what happens when we preprocess the data using `recipe()`.
+
+```{r}
+boston_recipe <- 
+  recipe(formula = medv ~ ., data = boston_training) |> 
+  step_BoxCox(all_numeric_predictors()) |> 
+  step_normalize(all_numeric_predictors()) 
+boston_wkfl <- workflow() |> 
+  add_recipe(boston_recipe) |> 
+  add_model(lm_spec)
+boston_wkfl
+```
+
+
+```{r}
+boston_fit <- fit(boston_wkfl, data = boston_training)
+augment(boston_fit, new_data = boston_testing) |> 
+  rmse(truth = medv, estimate = .pred)
+augment(boston_fit, new_data = boston_training) |> 
+  rmse(truth = medv, estimate = .pred)
+```
+Consider what happens if the seed is changed with the `initial_split()`.
+
+```{r}
+set.seed(3)
+boston_split <- initial_split(data = Boston, prop = 0.80)
+boston_training <- training(boston_split)
+boston_testing <- testing(boston_split)
+lm_fit <- lm_spec |> 
+  fit(medv ~ ., data = boston_training)
+augment(lm_fit, new_data = boston_testing)
+augment(lm_fit, new_data = boston_testing) |> 
+  rmse(truth = medv, estimate = .pred) -> T3
+T3
+augment(lm_fit, new_data = boston_training) |> 
+  rmse(truth = medv, estimate = .pred) -> T4
+T4
+boston_recipe <- 
+  recipe(formula = medv ~ ., data = boston_training) |> 
+  step_BoxCox(all_numeric_predictors()) |> 
+  step_normalize(all_numeric_predictors()) 
+boston_wkfl <- workflow() |> 
+  add_recipe(boston_recipe) |> 
+  add_model(lm_spec)
+boston_fit <- fit(boston_wkfl, data = boston_training)
+augment(boston_fit, new_data = boston_testing) |> 
+  rmse(truth = medv, estimate = .pred)
+augment(boston_fit, new_data = boston_training) |> 
+  rmse(truth = medv, estimate = .pred)
+```
+
+
+
+
+## k-Fold Cross-Validation
+
+```{r}
+set.seed(23)
+boston_folds <- vfold_cv(boston_training, v = 10, repeats = 3)
+boston_folds
+
+boston_wkfl |> 
+  fit_resamples(
+    resamples = boston_folds,
+    metrics = metric_set(rmse, mae, rsq),
+    control = control_resamples(save_pred = TRUE)
+  ) -> tenbyfive
+tenbyfive |> collect_predictions() |> 
+  metrics(truth = medv, estimate = .pred) 
+```
+
+## Ridge Regression
+
+```{r}
+ridge_spec <- linear_reg(mixture = 0, penalty = 0) |> 
+  set_mode("regression") |> 
+  set_engine("glmnet")
+ridge_fit <- fit(ridge_spec, medv ~ ., data = boston_training)
+tidy(ridge_fit)
+```
+
+
+Consider what happens as the penalty increases in the graph below.
+
+```{r}
+ridge_fit |> 
+  autoplot() +
+  theme_bw()
+```
+
+```{r}
+predict(ridge_fit, new_data = boston_training, penalty = 1)
+predict(ridge_fit, new_data = boston_training, penalty = 10)
+predict(ridge_fit, new_data = boston_training, penalty = 100)
+predict(ridge_fit, new_data = boston_training, penalty = 1000)
+```
+So how to we find the "best" `penalty`?  We can use tuning to find the best hyperparameter.  For now, we will only consider a grid search with evenly spaced parameter values to optimize our model.
+
+```{r}
+ridge_recipe <-
+  recipe(formula = medv ~ ., data = boston_training) |> 
+  step_BoxCox(all_numeric_predictors()) |> 
+  step_normalize(all_numeric_predictors())
+
+ridge_spec <- 
+  linear_reg(penalty = tune(), mixture = 0) |> 
+  set_mode("regression") |> 
+  set_engine("glmnet")
+
+ridge_wf <- workflow() |> 
+  add_recipe(ridge_recipe) |> 
+  add_model(ridge_spec)
+```
+
+We need values of the `penalty`.  Looking at the graph from `autoplot()`, we select values from 1 to 1000 using `grid_regular()` which will create a grid of evenly spaced values.
+
+```{r}
+penalty_grid <- grid_regular(penalty(range = c(-5, 5)), levels = 40)
+penalty_grid
+```
+```{r}
+tune_result <- tune_grid(
+  ridge_wf,
+  resamples = boston_folds,
+  grid = penalty_grid
+)
+tune_result
+```
+
+```{r}
+autoplot(tune_result)
+```
+```{r}
+collect_metrics(tune_result)
+```
+```{r}
+best_penalty <- select_best(tune_result, metric = "rmse")
+best_penalty
+```
+```{r}
+ridge_final <- finalize_workflow(ridge_wf, best_penalty)
+ridge_final_fit <- fit(ridge_final, data = boston_training)
+augment(ridge_final_fit, new_data = boston_testing) |> 
+  metrics(truth = medv, estimate = .pred)
+```
+## The LASSO
+
+To specify the LASSO use `mixture = 1`.
+
+```{r}
+lasso_recipe <-
+  recipe(formula = medv ~ ., data = boston_training) |> 
+  step_BoxCox(all_numeric_predictors()) |> 
+  step_normalize(all_numeric_predictors())
+
+lasso_spec <- 
+  linear_reg(penalty = tune(), mixture = 1) |> 
+  set_mode("regression") |> 
+  set_engine("glmnet")
+
+lasso_wf <- workflow() |> 
+  add_recipe(lasso_recipe) |> 
+  add_model(lasso_spec)
+```
+
+```{r}
+penalty_grid <- grid_regular(penalty(range = c(-2, 2)), levels = 40)
+```
+
+```{r}
+tune_res <- tune_grid(
+  lasso_wf,
+  resamples = boston_folds, 
+  grid = penalty_grid
+)
+
+autoplot(tune_res) + 
+  theme_bw()
+```
+
+```{r}
+best_penalty <- select_best(tune_res, metric = "rmse")
+lasso_final <- finalize_workflow(lasso_wf, best_penalty)
+lasso_final_fit <- fit(lasso_final, data = boston_training)
+augment(lasso_final_fit, new_data = boston_testing) |> 
+  metrics(truth = medv, estimate = .pred)
+```
+
+## Elastic net
+
+```{r}
+enet_recipe <-
+  recipe(formula = medv ~ ., data = boston_training) |> 
+  step_BoxCox(all_numeric_predictors()) |> 
+  step_normalize(all_numeric_predictors())
+
+enet_spec <- 
+  linear_reg(penalty = tune()) |> 
+  set_mode("regression") |> 
+  set_engine("glmnet")
+
+enet_wf <- workflow() |> 
+  add_recipe(enet_recipe) |> 
+  add_model(enet_spec)
+
+penalty_grid <- grid_regular(penalty(range = c(-2, 2)), levels = 40)
+
+tune_res <- tune_grid(
+  enet_wf,
+  resamples = boston_folds, 
+  grid = penalty_grid
+)
+```
+
+```{r}
+best_penalty <- select_best(tune_res, metric = "rmse")
+enet_final <- finalize_workflow(enet_wf, best_penalty)
+enet_final_fit <- fit(enet_final, data = boston_training)
+augment(enet_final_fit, new_data = boston_testing) |> 
+  metrics(truth = medv, estimate = .pred)
 ```
 
