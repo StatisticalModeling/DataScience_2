@@ -93,7 +93,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on September 16, 2025 11:57:58 Eastern Daylight Time</p>
+      <p class="date">Last modified on September 17, 2025 10:16:53 Eastern Daylight Time</p>
     </div>
   </div>
   
@@ -306,20 +306,24 @@ Computational engine: lm </code></pre>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>boston_fit <span class="ot">&lt;-</span> <span class="fu">fit</span>(boston_wkfl, <span class="at">data =</span> boston_training)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(boston_fit, <span class="at">new_data =</span> boston_testing) <span class="sc">|&gt;</span> </span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rmse</span>(<span class="at">truth =</span> medv, <span class="at">estimate =</span> .pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> medv, <span class="at">estimate =</span> .pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 3
+<pre><code># A tibble: 3 × 3
   .metric .estimator .estimate
   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
-1 rmse    standard        4.58</code></pre>
+1 rmse    standard       4.58 
+2 rsq     standard       0.680
+3 mae     standard       3.40 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(boston_fit, <span class="at">new_data =</span> boston_training) <span class="sc">|&gt;</span> </span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rmse</span>(<span class="at">truth =</span> medv, <span class="at">estimate =</span> .pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> medv, <span class="at">estimate =</span> .pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 3
+<pre><code># A tibble: 3 × 3
   .metric .estimator .estimate
   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
-1 rmse    standard        4.29</code></pre>
+1 rmse    standard       4.29 
+2 rsq     standard       0.793
+3 mae     standard       3.14 </code></pre>
 </div>
 </div>
 <p>Consider what happens if the seed is changed with the <code>initial_split()</code>.</p>
@@ -544,7 +548,7 @@ Computational engine: lm </code></pre>
 # ℹ 394 more rows</code></pre>
 </div>
 </div>
-<p>So how to we find the “best” <code>penalty</code>? We can use tuning to find the best hyperparameter. For now, we will only consider a grid search with evenly spaced parameter values to optimize our model.</p>
+<p>So how to we find the “best” <code>penalty</code> (<code>penalty</code> in tidymodels <span class="math inline">\(\equiv \lambda\)</span>, note: <span class="math inline">\(\lambda = \text{penalty} = 0 \text{and} \alpha = \text{mixture} = 0\)</span> is normal regression)? We can use tuning to find the best hyperparameter. For now, we will only consider a grid search with evenly spaced parameter values to optimize our model.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>ridge_recipe <span class="ot">&lt;-</span></span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(<span class="at">formula =</span> medv <span class="sc">~</span> ., <span class="at">data =</span> boston_training) <span class="sc">|&gt;</span> </span>
@@ -560,24 +564,24 @@ Computational engine: lm </code></pre>
 <span id="cb49-12"><a href="#cb49-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(ridge_recipe) <span class="sc">|&gt;</span> </span>
 <span id="cb49-13"><a href="#cb49-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(ridge_spec)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>We need values of the <code>penalty</code>. Looking at the graph from <code>autoplot()</code>, we select values from 1 to 1000 using <code>grid_regular()</code> which will create a grid of evenly spaced values.</p>
+<p>We need values of the <code>penalty</code>. Looking at the graph from <code>autoplot()</code>, we select values from 0.001 to 1000 using <code>grid_regular()</code> which will create a grid of evenly spaced values.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>penalty_grid <span class="ot">&lt;-</span> <span class="fu">grid_regular</span>(<span class="fu">penalty</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">5</span>, <span class="dv">5</span>)), <span class="at">levels =</span> <span class="dv">40</span>)</span>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>penalty_grid <span class="ot">&lt;-</span> <span class="fu">grid_regular</span>(<span class="fu">penalty</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>)), <span class="at">levels =</span> <span class="dv">40</span>)</span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>penalty_grid</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 40 × 1
-     penalty
-       &lt;dbl&gt;
- 1 0.00001  
- 2 0.0000180
- 3 0.0000326
- 4 0.0000588
- 5 0.000106 
- 6 0.000191 
- 7 0.000346 
- 8 0.000624 
- 9 0.00113  
-10 0.00203  
+   penalty
+     &lt;dbl&gt;
+ 1 0.001  
+ 2 0.00143
+ 3 0.00203
+ 4 0.00289
+ 5 0.00412
+ 6 0.00588
+ 7 0.00838
+ 8 0.0119 
+ 9 0.0170 
+10 0.0242 
 # ℹ 30 more rows</code></pre>
 </div>
 </div>
@@ -594,21 +598,20 @@ Computational engine: lm </code></pre>
 # A tibble: 30 × 5
    splits           id      id2    .metrics          .notes          
    &lt;list&gt;           &lt;chr&gt;   &lt;chr&gt;  &lt;list&gt;            &lt;list&gt;          
- 1 &lt;split [363/41]&gt; Repeat1 Fold01 &lt;tibble [80 × 5]&gt; &lt;tibble [8 × 4]&gt;
- 2 &lt;split [363/41]&gt; Repeat1 Fold02 &lt;tibble [80 × 5]&gt; &lt;tibble [8 × 4]&gt;
- 3 &lt;split [363/41]&gt; Repeat1 Fold03 &lt;tibble [80 × 5]&gt; &lt;tibble [8 × 4]&gt;
- 4 &lt;split [363/41]&gt; Repeat1 Fold04 &lt;tibble [80 × 5]&gt; &lt;tibble [8 × 4]&gt;
- 5 &lt;split [364/40]&gt; Repeat1 Fold05 &lt;tibble [80 × 5]&gt; &lt;tibble [8 × 4]&gt;
- 6 &lt;split [364/40]&gt; Repeat1 Fold06 &lt;tibble [80 × 5]&gt; &lt;tibble [8 × 4]&gt;
- 7 &lt;split [364/40]&gt; Repeat1 Fold07 &lt;tibble [80 × 5]&gt; &lt;tibble [8 × 4]&gt;
- 8 &lt;split [364/40]&gt; Repeat1 Fold08 &lt;tibble [80 × 5]&gt; &lt;tibble [8 × 4]&gt;
- 9 &lt;split [364/40]&gt; Repeat1 Fold09 &lt;tibble [80 × 5]&gt; &lt;tibble [8 × 4]&gt;
-10 &lt;split [364/40]&gt; Repeat1 Fold10 &lt;tibble [80 × 5]&gt; &lt;tibble [8 × 4]&gt;
+ 1 &lt;split [363/41]&gt; Repeat1 Fold01 &lt;tibble [80 × 5]&gt; &lt;tibble [3 × 4]&gt;
+ 2 &lt;split [363/41]&gt; Repeat1 Fold02 &lt;tibble [80 × 5]&gt; &lt;tibble [3 × 4]&gt;
+ 3 &lt;split [363/41]&gt; Repeat1 Fold03 &lt;tibble [80 × 5]&gt; &lt;tibble [3 × 4]&gt;
+ 4 &lt;split [363/41]&gt; Repeat1 Fold04 &lt;tibble [80 × 5]&gt; &lt;tibble [3 × 4]&gt;
+ 5 &lt;split [364/40]&gt; Repeat1 Fold05 &lt;tibble [80 × 5]&gt; &lt;tibble [3 × 4]&gt;
+ 6 &lt;split [364/40]&gt; Repeat1 Fold06 &lt;tibble [80 × 5]&gt; &lt;tibble [3 × 4]&gt;
+ 7 &lt;split [364/40]&gt; Repeat1 Fold07 &lt;tibble [80 × 5]&gt; &lt;tibble [3 × 4]&gt;
+ 8 &lt;split [364/40]&gt; Repeat1 Fold08 &lt;tibble [80 × 5]&gt; &lt;tibble [3 × 4]&gt;
+ 9 &lt;split [364/40]&gt; Repeat1 Fold09 &lt;tibble [80 × 5]&gt; &lt;tibble [3 × 4]&gt;
+10 &lt;split [364/40]&gt; Repeat1 Fold10 &lt;tibble [80 × 5]&gt; &lt;tibble [3 × 4]&gt;
 # ℹ 20 more rows
 
 There were issues with some computations:
 
-  - Warning(s) x150: A correlation computation is required, but `estimate` is constant...
   - Warning(s) x30: Fewer than `num_unique` values in selected variable.
   - Warning(s) x30: No Box-Cox transformation could be estimated for: `zn` and `chas`.
   - Warning(s) x30: Non-positive values in selected variable.
@@ -630,18 +633,18 @@ Run `show_notes(.Last.tune.result)` for more information.</code></pre>
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">collect_metrics</span>(tune_result)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 80 × 7
-     penalty .metric .estimator  mean     n std_err .config         
-       &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;           
- 1 0.00001   rmse    standard   4.24     30  0.155  pre0_mod01_post0
- 2 0.00001   rsq     standard   0.773    30  0.0143 pre0_mod01_post0
- 3 0.0000180 rmse    standard   4.24     30  0.155  pre0_mod02_post0
- 4 0.0000180 rsq     standard   0.773    30  0.0143 pre0_mod02_post0
- 5 0.0000326 rmse    standard   4.24     30  0.155  pre0_mod03_post0
- 6 0.0000326 rsq     standard   0.773    30  0.0143 pre0_mod03_post0
- 7 0.0000588 rmse    standard   4.24     30  0.155  pre0_mod04_post0
- 8 0.0000588 rsq     standard   0.773    30  0.0143 pre0_mod04_post0
- 9 0.000106  rmse    standard   4.24     30  0.155  pre0_mod05_post0
-10 0.000106  rsq     standard   0.773    30  0.0143 pre0_mod05_post0
+   penalty .metric .estimator  mean     n std_err .config         
+     &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;           
+ 1 0.001   rmse    standard   4.24     30  0.155  pre0_mod01_post0
+ 2 0.001   rsq     standard   0.773    30  0.0143 pre0_mod01_post0
+ 3 0.00143 rmse    standard   4.24     30  0.155  pre0_mod02_post0
+ 4 0.00143 rsq     standard   0.773    30  0.0143 pre0_mod02_post0
+ 5 0.00203 rmse    standard   4.24     30  0.155  pre0_mod03_post0
+ 6 0.00203 rsq     standard   0.773    30  0.0143 pre0_mod03_post0
+ 7 0.00289 rmse    standard   4.24     30  0.155  pre0_mod04_post0
+ 8 0.00289 rsq     standard   0.773    30  0.0143 pre0_mod04_post0
+ 9 0.00412 rmse    standard   4.24     30  0.155  pre0_mod05_post0
+10 0.00412 rsq     standard   0.773    30  0.0143 pre0_mod05_post0
 # ℹ 70 more rows</code></pre>
 </div>
 </div>
@@ -652,7 +655,7 @@ Run `show_notes(.Last.tune.result)` for more information.</code></pre>
 <pre><code># A tibble: 1 × 2
   penalty .config         
     &lt;dbl&gt; &lt;chr&gt;           
-1 0.00001 pre0_mod01_post0</code></pre>
+1   0.001 pre0_mod01_post0</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
@@ -672,7 +675,7 @@ Run `show_notes(.Last.tune.result)` for more information.</code></pre>
 </section>
 <section id="the-lasso" class="level2">
 <h2 class="anchored" data-anchor-id="the-lasso">The LASSO</h2>
-<p>To specify the LASSO use <code>mixture = 1</code>.</p>
+<p>To specify the LASSO use <span class="math inline">\(\alpha = \text{mixture} = 1\)</span>. Recall that <span class="math inline">\(\text{penalty} = \lambda\)</span>.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>lasso_recipe <span class="ot">&lt;-</span></span>
 <span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(<span class="at">formula =</span> medv <span class="sc">~</span> ., <span class="at">data =</span> boston_training) <span class="sc">|&gt;</span> </span>
@@ -710,10 +713,17 @@ Run `show_notes(.Last.tune.result)` for more information.</code></pre>
 </div>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>best_penalty <span class="ot">&lt;-</span> <span class="fu">select_best</span>(tune_res, <span class="at">metric =</span> <span class="st">"rmse"</span>)</span>
-<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>lasso_final <span class="ot">&lt;-</span> <span class="fu">finalize_workflow</span>(lasso_wf, best_penalty)</span>
-<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>lasso_final_fit <span class="ot">&lt;-</span> <span class="fu">fit</span>(lasso_final, <span class="at">data =</span> boston_training)</span>
-<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(lasso_final_fit, <span class="at">new_data =</span> boston_testing) <span class="sc">|&gt;</span> </span>
-<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> medv, <span class="at">estimate =</span> .pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>best_penalty</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 2
+  penalty .config         
+    &lt;dbl&gt; &lt;chr&gt;           
+1    0.01 pre0_mod01_post0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>lasso_final <span class="ot">&lt;-</span> <span class="fu">finalize_workflow</span>(lasso_wf, best_penalty)</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>lasso_final_fit <span class="ot">&lt;-</span> <span class="fu">fit</span>(lasso_final, <span class="at">data =</span> boston_training)</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(lasso_final_fit, <span class="at">new_data =</span> boston_testing) <span class="sc">|&gt;</span> </span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> medv, <span class="at">estimate =</span> .pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 3
   .metric .estimator .estimate
@@ -727,41 +737,48 @@ Run `show_notes(.Last.tune.result)` for more information.</code></pre>
 <section id="elastic-net" class="level2">
 <h2 class="anchored" data-anchor-id="elastic-net">Elastic net</h2>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>enet_recipe <span class="ot">&lt;-</span></span>
-<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(<span class="at">formula =</span> medv <span class="sc">~</span> ., <span class="at">data =</span> boston_training) <span class="sc">|&gt;</span> </span>
-<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_BoxCox</span>(<span class="fu">all_numeric_predictors</span>()) <span class="sc">|&gt;</span> </span>
-<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_numeric_predictors</span>())</span>
-<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>enet_spec <span class="ot">&lt;-</span> </span>
-<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">linear_reg</span>(<span class="at">penalty =</span> <span class="fu">tune</span>()) <span class="sc">|&gt;</span> </span>
-<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"glmnet"</span>)</span>
-<span id="cb66-10"><a href="#cb66-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb66-11"><a href="#cb66-11" aria-hidden="true" tabindex="-1"></a>enet_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span> </span>
-<span id="cb66-12"><a href="#cb66-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(enet_recipe) <span class="sc">|&gt;</span> </span>
-<span id="cb66-13"><a href="#cb66-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(enet_spec)</span>
-<span id="cb66-14"><a href="#cb66-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb66-15"><a href="#cb66-15" aria-hidden="true" tabindex="-1"></a>penalty_grid <span class="ot">&lt;-</span> <span class="fu">grid_regular</span>(<span class="fu">penalty</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>)), <span class="at">levels =</span> <span class="dv">40</span>)</span>
-<span id="cb66-16"><a href="#cb66-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb66-17"><a href="#cb66-17" aria-hidden="true" tabindex="-1"></a>tune_res <span class="ot">&lt;-</span> <span class="fu">tune_grid</span>(</span>
-<span id="cb66-18"><a href="#cb66-18" aria-hidden="true" tabindex="-1"></a>  enet_wf,</span>
-<span id="cb66-19"><a href="#cb66-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">resamples =</span> boston_folds, </span>
-<span id="cb66-20"><a href="#cb66-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> penalty_grid</span>
-<span id="cb66-21"><a href="#cb66-21" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>enet_recipe <span class="ot">&lt;-</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(<span class="at">formula =</span> medv <span class="sc">~</span> ., <span class="at">data =</span> boston_training) <span class="sc">|&gt;</span> </span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_BoxCox</span>(<span class="fu">all_numeric_predictors</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_numeric_predictors</span>())</span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>enet_spec <span class="ot">&lt;-</span> </span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">linear_reg</span>(<span class="at">penalty =</span> <span class="fu">tune</span>(), <span class="at">mixture =</span> <span class="fu">tune</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"glmnet"</span>)</span>
+<span id="cb68-10"><a href="#cb68-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-11"><a href="#cb68-11" aria-hidden="true" tabindex="-1"></a>enet_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb68-12"><a href="#cb68-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(enet_recipe) <span class="sc">|&gt;</span> </span>
+<span id="cb68-13"><a href="#cb68-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(enet_spec)</span>
+<span id="cb68-14"><a href="#cb68-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-15"><a href="#cb68-15" aria-hidden="true" tabindex="-1"></a>penalty_grid <span class="ot">&lt;-</span> <span class="fu">grid_regular</span>(<span class="fu">penalty</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>)), <span class="fu">mixture</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)), <span class="at">levels =</span> <span class="dv">10</span>)</span>
+<span id="cb68-16"><a href="#cb68-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-17"><a href="#cb68-17" aria-hidden="true" tabindex="-1"></a>tune_res <span class="ot">&lt;-</span> <span class="fu">tune_grid</span>(</span>
+<span id="cb68-18"><a href="#cb68-18" aria-hidden="true" tabindex="-1"></a>  enet_wf,</span>
+<span id="cb68-19"><a href="#cb68-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">resamples =</span> boston_folds, </span>
+<span id="cb68-20"><a href="#cb68-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">grid =</span> penalty_grid</span>
+<span id="cb68-21"><a href="#cb68-21" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>best_penalty <span class="ot">&lt;-</span> <span class="fu">select_best</span>(tune_res, <span class="at">metric =</span> <span class="st">"rmse"</span>)</span>
-<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>enet_final <span class="ot">&lt;-</span> <span class="fu">finalize_workflow</span>(enet_wf, best_penalty)</span>
-<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>enet_final_fit <span class="ot">&lt;-</span> <span class="fu">fit</span>(enet_final, <span class="at">data =</span> boston_training)</span>
-<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(enet_final_fit, <span class="at">new_data =</span> boston_testing) <span class="sc">|&gt;</span> </span>
-<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> medv, <span class="at">estimate =</span> .pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>best_penalty <span class="ot">&lt;-</span> <span class="fu">select_best</span>(tune_res, <span class="at">metric =</span> <span class="st">"rmse"</span>)</span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a>best_penalty</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  penalty mixture .config          
+    &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;            
+1  0.0774   0.111 pre0_mod022_post0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a>enet_final <span class="ot">&lt;-</span> <span class="fu">finalize_workflow</span>(enet_wf, best_penalty)</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>enet_final_fit <span class="ot">&lt;-</span> <span class="fu">fit</span>(enet_final, <span class="at">data =</span> boston_training)</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(enet_final_fit, <span class="at">new_data =</span> boston_testing) <span class="sc">|&gt;</span> </span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> medv, <span class="at">estimate =</span> .pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 3
   .metric .estimator .estimate
   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
-1 rmse    standard       5.71 
-2 rsq     standard       0.671
-3 mae     standard       3.90 </code></pre>
+1 rmse    standard       5.74 
+2 rsq     standard       0.667
+3 mae     standard       3.89 </code></pre>
 </div>
 </div>
 </section>

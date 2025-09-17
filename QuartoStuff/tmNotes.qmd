@@ -12,7 +12,7 @@ editor: source
 library(knitr) # packages
 library(tidyverse)
 library(scales)
-knitr::opts_chunk$set(echo = TRUE, fig.align = "center", comment = NA, message = FALSE,  warning = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", comment = NA, warning = FALSE, message = FALSE)
 ```
 
 **tidymodels** does not natively support forward selection because it prefers alternative regularization and feature selection methods like Lasso. You would need to implement forward selection by manually adding predictor variables to your model recipe within tidymodels or use an alternative R package designed for stepwise regression.
@@ -160,9 +160,9 @@ boston_wkfl
 ```{r}
 boston_fit <- fit(boston_wkfl, data = boston_training)
 augment(boston_fit, new_data = boston_testing) |> 
-  rmse(truth = medv, estimate = .pred)
+  metrics(truth = medv, estimate = .pred)
 augment(boston_fit, new_data = boston_training) |> 
-  rmse(truth = medv, estimate = .pred)
+  metrics(truth = medv, estimate = .pred)
 ```
 Consider what happens if the seed is changed with the `initial_split()`.
 
@@ -239,7 +239,7 @@ predict(ridge_fit, new_data = boston_training, penalty = 10)
 predict(ridge_fit, new_data = boston_training, penalty = 100)
 predict(ridge_fit, new_data = boston_training, penalty = 1000)
 ```
-So how to we find the "best" `penalty`?  We can use tuning to find the best hyperparameter.  For now, we will only consider a grid search with evenly spaced parameter values to optimize our model.
+So how to we find the "best" `penalty` (`penalty` in tidymodels $\equiv \lambda$, note: $\lambda = \text{penalty} = 0 \text{and} \alpha = \text{mixture} = 0$ is normal regression)?  We can use tuning to find the best hyperparameter.  For now, we will only consider a grid search with evenly spaced parameter values to optimize our model.
 
 ```{r}
 ridge_recipe <-
@@ -257,10 +257,10 @@ ridge_wf <- workflow() |>
   add_model(ridge_spec)
 ```
 
-We need values of the `penalty`.  Looking at the graph from `autoplot()`, we select values from 1 to 1000 using `grid_regular()` which will create a grid of evenly spaced values.
+We need values of the `penalty`.  Looking at the graph from `autoplot()`, we select values from 0.001 to 1000 using `grid_regular()` which will create a grid of evenly spaced values.
 
 ```{r}
-penalty_grid <- grid_regular(penalty(range = c(-5, 5)), levels = 40)
+penalty_grid <- grid_regular(penalty(range = c(-3, 3)), levels = 40)
 penalty_grid
 ```
 ```{r}
@@ -290,7 +290,7 @@ augment(ridge_final_fit, new_data = boston_testing) |>
 ```
 ## The LASSO
 
-To specify the LASSO use `mixture = 1`.
+To specify the LASSO use $\alpha = \text{mixture} = 1$.  Recall that $\text{penalty} = \lambda$.
 
 ```{r}
 lasso_recipe <-
@@ -325,6 +325,7 @@ autoplot(tune_res) +
 
 ```{r}
 best_penalty <- select_best(tune_res, metric = "rmse")
+best_penalty
 lasso_final <- finalize_workflow(lasso_wf, best_penalty)
 lasso_final_fit <- fit(lasso_final, data = boston_training)
 augment(lasso_final_fit, new_data = boston_testing) |> 
@@ -340,7 +341,7 @@ enet_recipe <-
   step_normalize(all_numeric_predictors())
 
 enet_spec <- 
-  linear_reg(penalty = tune()) |> 
+  linear_reg(penalty = tune(), mixture = tune()) |> 
   set_mode("regression") |> 
   set_engine("glmnet")
 
@@ -348,7 +349,7 @@ enet_wf <- workflow() |>
   add_recipe(enet_recipe) |> 
   add_model(enet_spec)
 
-penalty_grid <- grid_regular(penalty(range = c(-2, 2)), levels = 40)
+penalty_grid <- grid_regular(penalty(range = c(-2, 2)), mixture(range = c(0, 1)), levels = 10)
 
 tune_res <- tune_grid(
   enet_wf,
@@ -359,6 +360,7 @@ tune_res <- tune_grid(
 
 ```{r}
 best_penalty <- select_best(tune_res, metric = "rmse")
+best_penalty
 enet_final <- finalize_workflow(enet_wf, best_penalty)
 enet_final_fit <- fit(enet_final, data = boston_training)
 augment(enet_final_fit, new_data = boston_testing) |> 
