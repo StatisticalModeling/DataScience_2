@@ -74,6 +74,8 @@ boston_testing <- testing(boston_split)
 ## Visualizing and Checking Data
 
 ```{r}
+#| label: "g1"
+#| cache: true
 library(MASS)
 library(GGally)
 ggpairs(data = boston_training,
@@ -101,7 +103,9 @@ boston_rec_trained
 boston_trained_data <- bake(boston_rec_trained, new_data = NULL)
 boston_trained_data
 ```
-```{r label = "g2"}
+```{r}
+#| label: "g2"
+#| cache: true
 ggpairs(data = boston_trained_data,
         columns = c("medv", "dis", "lstat", "nox", "age", "rm"),
         aes(alpha = 0.01)) +
@@ -200,6 +204,8 @@ augment(boston_fit, new_data = boston_training) |>
 ## k-Fold Cross-Validation
 
 ```{r}
+#| label: "cv103"
+#| cache: true
 set.seed(23)
 boston_folds <- vfold_cv(boston_training, v = 10, repeats = 3)
 boston_folds
@@ -264,6 +270,8 @@ penalty_grid <- grid_regular(penalty(range = c(-3, 3)), levels = 40)
 penalty_grid
 ```
 ```{r}
+#| label: "ridgetune"
+#| cache: true
 tune_result <- tune_grid(
   ridge_wf,
   resamples = boston_folds,
@@ -309,10 +317,12 @@ lasso_wf <- workflow() |>
 ```
 
 ```{r}
-penalty_grid <- grid_regular(penalty(range = c(-2, 2)), levels = 40)
+penalty_grid <- grid_regular(penalty(range = c(-2, 2)), levels = 10)
 ```
 
 ```{r}
+#| label: "lassotune"
+#| cache: true
 tune_res <- tune_grid(
   lasso_wf,
   resamples = boston_folds, 
@@ -335,6 +345,8 @@ augment(lasso_final_fit, new_data = boston_testing) |>
 ## Elastic net
 
 ```{r}
+#| label: "enettune"
+#| cache: true
 enet_recipe <-
   recipe(formula = medv ~ ., data = boston_training) |> 
   step_BoxCox(all_numeric_predictors()) |> 
