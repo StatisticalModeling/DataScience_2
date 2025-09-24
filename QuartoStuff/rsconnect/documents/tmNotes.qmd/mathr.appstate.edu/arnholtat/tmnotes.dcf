@@ -1,0 +1,12 @@
+name: tmnotes
+title: tmNotes
+username: arnholtat
+account: arnholtat
+server: mathr.appstate.edu
+hostUrl: https://mathr.appstate.edu/connect/__api__
+appId: 135
+bundleId: 380
+url: https://mathr.appstate.edu/connect/content/65849283-bc12-4fd3-80aa-809fb4c5e3f9/
+version: 1
+asMultiple: FALSE
+asStatic: TRUE

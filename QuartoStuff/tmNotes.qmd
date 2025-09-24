@@ -49,13 +49,13 @@ Instead of stepwise methods, the `tidymodels` framework provides several powerfu
 #### Regularization with Lasso
 This is the main alternative recommended by the `tidymodels` developers. Lasso regression performs variable selection by shrinking some coefficients all the way to zero.
 
-* Model specification: Use `linear_reg()` with the mixture argument set to 1.
+* Model specification: Use `linear_reg()` with the `mixture` argument set to 1.
 
-* Engine: Specify the `glmnet` engine, which is highly efficient for fitting many values of the penalty simultaneously.
+* Engine: Specify the `glmnet` engine, which is highly efficient for fitting many values of the `penalty` ($\lambda$) simultaneously.
 
-* Tuning: Use `tune_grid()` to find the optimal value of the penalty hyperparameter.
+* Tuning: Use `tune_grid()` to find the optimal value of the `penalty` hyperparameter.
 
-* Workflow: The entire process is integrated smoothly into a tidymodels workflow, from preprocessing with recipes to resampling with rsample and tuning with tune. 
+* Workflow: The entire process is integrated smoothly into a tidymodels workflow, from preprocessing with `recipes` to resampling with `rsample` and tuning with `tune`. 
 
 Example R code using Lasso:
 [Emil Hvitfeldt](https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/06-regularization.html) provides example R code using Lasso for feature selection with tidymodels. 
@@ -245,7 +245,7 @@ predict(ridge_fit, new_data = boston_training, penalty = 10)
 predict(ridge_fit, new_data = boston_training, penalty = 100)
 predict(ridge_fit, new_data = boston_training, penalty = 1000)
 ```
-So how to we find the "best" `penalty` (`penalty` in tidymodels $\equiv \lambda$, note: $\lambda = \text{penalty} = 0 \text{and} \alpha = \text{mixture} = 0$ is normal regression)?  We can use tuning to find the best hyperparameter.  For now, we will only consider a grid search with evenly spaced parameter values to optimize our model.
+So how to we find the "best" `penalty` (`penalty` in tidymodels $\equiv \lambda$, note: $\lambda = \text{penalty} = 0 \text{ and } \alpha = \text{mixture} = 0$ is normal regression)?  We can use tuning to find the best hyperparameter.  For now, we will only consider a grid search with evenly spaced parameter values to optimize our model.
 
 ```{r}
 ridge_recipe <-
@@ -266,7 +266,7 @@ ridge_wf <- workflow() |>
 We need values of the `penalty`.  Looking at the graph from `autoplot()`, we select values from 0.001 to 1000 using `grid_regular()` which will create a grid of evenly spaced values.
 
 ```{r}
-penalty_grid <- grid_regular(penalty(range = c(-3, 3)), levels = 40)
+penalty_grid <- grid_regular(penalty(range = c(-3, 3)), levels = 20)
 penalty_grid
 ```
 ```{r}

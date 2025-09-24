@@ -93,7 +93,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on September 22, 2025 08:47:45 Eastern Daylight Time</p>
+      <p class="date">Last modified on September 24, 2025 09:11:11 Eastern Daylight Time</p>
     </div>
   </div>
   
@@ -130,10 +130,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h4 class="anchored" data-anchor-id="regularization-with-lasso">Regularization with Lasso</h4>
 <p>This is the main alternative recommended by the <code>tidymodels</code> developers. Lasso regression performs variable selection by shrinking some coefficients all the way to zero.</p>
 <ul>
-<li><p>Model specification: Use <code>linear_reg()</code> with the mixture argument set to 1.</p></li>
-<li><p>Engine: Specify the <code>glmnet</code> engine, which is highly efficient for fitting many values of the penalty simultaneously.</p></li>
-<li><p>Tuning: Use <code>tune_grid()</code> to find the optimal value of the penalty hyperparameter.</p></li>
-<li><p>Workflow: The entire process is integrated smoothly into a tidymodels workflow, from preprocessing with recipes to resampling with rsample and tuning with tune.</p></li>
+<li><p>Model specification: Use <code>linear_reg()</code> with the <code>mixture</code> argument set to 1.</p></li>
+<li><p>Engine: Specify the <code>glmnet</code> engine, which is highly efficient for fitting many values of the <code>penalty</code> (<span class="math inline">\(\lambda\)</span>) simultaneously.</p></li>
+<li><p>Tuning: Use <code>tune_grid()</code> to find the optimal value of the <code>penalty</code> hyperparameter.</p></li>
+<li><p>Workflow: The entire process is integrated smoothly into a tidymodels workflow, from preprocessing with <code>recipes</code> to resampling with <code>rsample</code> and tuning with <code>tune</code>.</p></li>
 </ul>
 <p>Example R code using Lasso: <a href="https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/06-regularization.html">Emil Hvitfeldt</a> provides example R code using Lasso for feature selection with tidymodels.</p>
 </section>
@@ -548,7 +548,7 @@ Computational engine: lm </code></pre>
 # ℹ 394 more rows</code></pre>
 </div>
 </div>
-<p>So how to we find the “best” <code>penalty</code> (<code>penalty</code> in tidymodels <span class="math inline">\(\equiv \lambda\)</span>, note: <span class="math inline">\(\lambda = \text{penalty} = 0 \text{and} \alpha = \text{mixture} = 0\)</span> is normal regression)? We can use tuning to find the best hyperparameter. For now, we will only consider a grid search with evenly spaced parameter values to optimize our model.</p>
+<p>So how to we find the “best” <code>penalty</code> (<code>penalty</code> in tidymodels <span class="math inline">\(\equiv \lambda\)</span>, note: <span class="math inline">\(\lambda = \text{penalty} = 0 \text{ and } \alpha = \text{mixture} = 0\)</span> is normal regression)? We can use tuning to find the best hyperparameter. For now, we will only consider a grid search with evenly spaced parameter values to optimize our model.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>ridge_recipe <span class="ot">&lt;-</span></span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(<span class="at">formula =</span> medv <span class="sc">~</span> ., <span class="at">data =</span> boston_training) <span class="sc">|&gt;</span> </span>
@@ -566,23 +566,32 @@ Computational engine: lm </code></pre>
 </div>
 <p>We need values of the <code>penalty</code>. Looking at the graph from <code>autoplot()</code>, we select values from 0.001 to 1000 using <code>grid_regular()</code> which will create a grid of evenly spaced values.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>penalty_grid <span class="ot">&lt;-</span> <span class="fu">grid_regular</span>(<span class="fu">penalty</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>)), <span class="at">levels =</span> <span class="dv">40</span>)</span>
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>penalty_grid <span class="ot">&lt;-</span> <span class="fu">grid_regular</span>(<span class="fu">penalty</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">3</span>, <span class="dv">3</span>)), <span class="at">levels =</span> <span class="dv">20</span>)</span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>penalty_grid</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 40 × 1
-   penalty
-     &lt;dbl&gt;
- 1 0.001  
- 2 0.00143
- 3 0.00203
- 4 0.00289
- 5 0.00412
- 6 0.00588
- 7 0.00838
- 8 0.0119 
- 9 0.0170 
-10 0.0242 
-# ℹ 30 more rows</code></pre>
+<pre><code># A tibble: 20 × 1
+      penalty
+        &lt;dbl&gt;
+ 1    0.001  
+ 2    0.00207
+ 3    0.00428
+ 4    0.00886
+ 5    0.0183 
+ 6    0.0379 
+ 7    0.0785 
+ 8    0.162  
+ 9    0.336  
+10    0.695  
+11    1.44   
+12    2.98   
+13    6.16   
+14   12.7    
+15   26.4    
+16   54.6    
+17  113.     
+18  234.     
+19  483.     
+20 1000      </code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center" data-hash="tmNotes_cache/html/ridgetune_aeda1d527577f8433a68369a904b227f">
