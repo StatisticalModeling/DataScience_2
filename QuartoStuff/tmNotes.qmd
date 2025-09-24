@@ -362,12 +362,14 @@ enet_wf <- workflow() |>
   add_model(enet_spec)
 
 penalty_grid <- grid_regular(penalty(range = c(-2, 2)), mixture(range = c(0, 1)), levels = 10)
-
+penalty_grid
 tune_res <- tune_grid(
   enet_wf,
   resamples = boston_folds, 
   grid = penalty_grid
 )
+autoplot(tune_res) + 
+  theme_bw()
 ```
 
 ```{r}
