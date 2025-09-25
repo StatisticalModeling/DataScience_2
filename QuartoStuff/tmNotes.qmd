@@ -31,7 +31,7 @@ How to perform feature selection with tidymodels:
   
   2. Manual Selection: You can manually select features by defining a recipe with the chosen predictors using recipes and then train the model with that specific recipe. 
   
-  3. Use External Packages: For true forward selection, you would use other R packages that specifically offer stepwise regression, such as the StepReg package on CRAN. 
+  3. Use External Packages: For true forward selection, you would use other R packages that specifically offer stepwise regression, such as the `StepReg` package on CRAN. 
   
 The **tidymodels** philosophy
 
@@ -113,7 +113,7 @@ ggpairs(data = boston_trained_data,
   theme_bw()
 ```
 
-## Resampling
+# Resampling
 
 Goal is to predict `medv`.
 
@@ -123,7 +123,7 @@ lm_spec <- linear_reg() |>
   set_engine("lm")
 ```
 
-First we will ignore the previously normalized and transformed variables and use the raw data.  Then, we will go back and use the previous `boston_recipe` with the transormations and normaliztions to see how the models compare.
+First we will ignore the previously normalized and transformed variables and use the raw data.  Then, we will go back and use the previous `boston_recipe` with the transformations and normalizations to see how the models compare.
 
 ```{r}
 lm_fit <- lm_spec |> 
@@ -131,7 +131,8 @@ lm_fit <- lm_spec |>
 ```
 
 ```{r}
-augment(lm_fit, new_data = boston_testing)
+relocate(augment(lm_fit, new_data = boston_testing), 
+         medv, .after =.pred)
 augment(lm_fit, new_data = boston_testing) |> 
   rmse(truth = medv, estimate = .pred) -> T1
 T1
@@ -215,8 +216,8 @@ boston_wkfl |>
     resamples = boston_folds,
     metrics = metric_set(rmse, mae, rsq),
     control = control_resamples(save_pred = TRUE)
-  ) -> tenbyfive
-tenbyfive |> collect_predictions() |> 
+  ) -> tenbythree
+tenbythree |> collect_predictions() |> 
   metrics(truth = medv, estimate = .pred) 
 ```
 
@@ -361,8 +362,11 @@ enet_wf <- workflow() |>
   add_recipe(enet_recipe) |> 
   add_model(enet_spec)
 
-penalty_grid <- grid_regular(penalty(range = c(-2, 2)), mixture(range = c(0, 1)), levels = 10)
+penalty_grid <- grid_regular(penalty(range = c(-2, 2)), 
+                             mixture(range = c(0, 1)), 
+                             levels = 10)
 penalty_grid
+
 tune_res <- tune_grid(
   enet_wf,
   resamples = boston_folds, 

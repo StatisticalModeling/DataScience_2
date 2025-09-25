@@ -93,7 +93,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on September 24, 2025 09:38:06 Eastern Daylight Time</p>
+      <p class="date">Last modified on September 25, 2025 09:18:33 Eastern Daylight Time</p>
     </div>
   </div>
   
@@ -114,7 +114,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ol type="1">
 <li><p>Use Regularization: Fit a regularized model like Lasso using parsnip, and the regularization process will perform feature selection by shrinking some coefficients to zero.</p></li>
 <li><p>Manual Selection: You can manually select features by defining a recipe with the chosen predictors using recipes and then train the model with that specific recipe.</p></li>
-<li><p>Use External Packages: For true forward selection, you would use other R packages that specifically offer stepwise regression, such as the StepReg package on CRAN.</p></li>
+<li><p>Use External Packages: For true forward selection, you would use other R packages that specifically offer stepwise regression, such as the <code>StepReg</code> package on CRAN.</p></li>
 </ol>
 <p>The <strong>tidymodels</strong> philosophy</p>
 <p>The <code>tidymodels</code> framework is designed around a more consistent and robust approach to modeling than traditional stepwise procedures. Key aspects of this philosophy that lead away from forward selection include:</p>
@@ -221,37 +221,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="resampling" class="level2">
-<h2 class="anchored" data-anchor-id="resampling">Resampling</h2>
+</section>
+<section id="resampling" class="level1">
+<h1>Resampling</h1>
 <p>Goal is to predict <code>medv</code>.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>lm_spec <span class="ot">&lt;-</span> <span class="fu">linear_reg</span>() <span class="sc">|&gt;</span> </span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"regression"</span>) <span class="sc">|&gt;</span> </span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"lm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>First we will ignore the previously normalized and transformed variables and use the raw data. Then, we will go back and use the previous <code>boston_recipe</code> with the transormations and normaliztions to see how the models compare.</p>
+<p>First we will ignore the previously normalized and transformed variables and use the raw data. Then, we will go back and use the previous <code>boston_recipe</code> with the transformations and normalizations to see how the models compare.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>lm_fit <span class="ot">&lt;-</span> lm_spec <span class="sc">|&gt;</span> </span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(medv <span class="sc">~</span> ., <span class="at">data =</span> boston_training)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(lm_fit, <span class="at">new_data =</span> boston_testing)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">relocate</span>(<span class="fu">augment</span>(lm_fit, <span class="at">new_data =</span> boston_testing), </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>         medv, <span class="at">.after =</span>.pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 102 × 16
-   .pred .resid    crim    zn indus  chas   nox    rm   age   dis   rad   tax
-   &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt;
- 1  30.4 -6.44  0.00632  18    2.31     0 0.538  6.58  65.2  4.09     1   296
- 2  25.0 -3.40  0.0273    0    7.07     0 0.469  6.42  78.9  4.97     2   242
- 3  25.4  3.31  0.0298    0    2.18     0 0.458  6.43  58.7  6.06     3   222
- 4  11.8  4.66  0.211    12.5  7.87     0 0.524  5.63 100    6.08     5   311
- 5  16.6  0.892 0.784     0    8.14     0 0.538  5.99  81.7  4.26     4   307
- 6  15.3  0.324 0.750     0    8.14     0 0.538  5.92  94.1  4.40     4   307
- 7  23.2 -2.16  0.0801    0    5.96     0 0.499  5.85  41.5  3.93     5   279
- 8  22.3 -2.98  0.171     0    6.91     0 0.448  5.68  33.8  5.10     3   233
- 9  18.0 -1.39  0.229     0    6.91     0 0.448  6.03  85.5  5.69     3   233
-10  28.2 -3.24  0.0536   21    5.64     0 0.439  6.51  21.1  6.81     4   243
+   .pred  medv .resid    crim    zn indus  chas   nox    rm   age   dis   rad
+   &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;int&gt;
+ 1  30.4  24   -6.44  0.00632  18    2.31     0 0.538  6.58  65.2  4.09     1
+ 2  25.0  21.6 -3.40  0.0273    0    7.07     0 0.469  6.42  78.9  4.97     2
+ 3  25.4  28.7  3.31  0.0298    0    2.18     0 0.458  6.43  58.7  6.06     3
+ 4  11.8  16.5  4.66  0.211    12.5  7.87     0 0.524  5.63 100    6.08     5
+ 5  16.6  17.5  0.892 0.784     0    8.14     0 0.538  5.99  81.7  4.26     4
+ 6  15.3  15.6  0.324 0.750     0    8.14     0 0.538  5.92  94.1  4.40     4
+ 7  23.2  21   -2.16  0.0801    0    5.96     0 0.499  5.85  41.5  3.93     5
+ 8  22.3  19.3 -2.98  0.171     0    6.91     0 0.448  5.68  33.8  5.10     3
+ 9  18.0  16.6 -1.39  0.229     0    6.91     0 0.448  6.03  85.5  5.69     3
+10  28.2  25   -3.24  0.0536   21    5.64     0 0.439  6.51  21.1  6.81     4
 # ℹ 92 more rows
-# ℹ 4 more variables: ptratio &lt;dbl&gt;, black &lt;dbl&gt;, lstat &lt;dbl&gt;, medv &lt;dbl&gt;</code></pre>
+# ℹ 4 more variables: tax &lt;dbl&gt;, ptratio &lt;dbl&gt;, black &lt;dbl&gt;, lstat &lt;dbl&gt;</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(lm_fit, <span class="at">new_data =</span> boston_testing) <span class="sc">|&gt;</span> </span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rmse</span>(<span class="at">truth =</span> medv, <span class="at">estimate =</span> .pred) <span class="ot">-&gt;</span> T1</span>
@@ -395,10 +397,9 @@ Computational engine: lm </code></pre>
 1 rmse    standard        4.08</code></pre>
 </div>
 </div>
-</section>
 <section id="k-fold-cross-validation" class="level2">
 <h2 class="anchored" data-anchor-id="k-fold-cross-validation">k-Fold Cross-Validation</h2>
-<div class="cell" data-layout-align="center" data-hash="tmNotes_cache/html/cv103_7cbca3131f1cc20af41952034856fdc4">
+<div class="cell" data-layout-align="center" data-hash="tmNotes_cache/html/cv103_9695879e98eb8c3f3a7ecda4e1f01a6e">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">23</span>)</span>
 <span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>boston_folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(boston_training, <span class="at">v =</span> <span class="dv">10</span>, <span class="at">repeats =</span> <span class="dv">3</span>)</span>
 <span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>boston_folds</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -424,8 +425,8 @@ Computational engine: lm </code></pre>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">resamples =</span> boston_folds,</span>
 <span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">metrics =</span> <span class="fu">metric_set</span>(rmse, mae, rsq),</span>
 <span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">control =</span> <span class="fu">control_resamples</span>(<span class="at">save_pred =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="ot">-&gt;</span> tenbyfive</span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>tenbyfive <span class="sc">|&gt;</span> <span class="fu">collect_predictions</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="ot">-&gt;</span> tenbythree</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>tenbythree <span class="sc">|&gt;</span> <span class="fu">collect_predictions</span>() <span class="sc">|&gt;</span> </span>
 <span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> medv, <span class="at">estimate =</span> .pred) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 3
@@ -745,7 +746,7 @@ Run `show_notes(.Last.tune.result)` for more information.</code></pre>
 </section>
 <section id="elastic-net" class="level2">
 <h2 class="anchored" data-anchor-id="elastic-net">Elastic net</h2>
-<div class="cell" data-layout-align="center" data-hash="tmNotes_cache/html/enettune_6434da52de02f4da11cec4a64deda2ac">
+<div class="cell" data-layout-align="center" data-hash="tmNotes_cache/html/enettune_b681fddb4eee7ea1b74e52ff43e58fd1">
 <div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>enet_recipe <span class="ot">&lt;-</span></span>
 <span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(<span class="at">formula =</span> medv <span class="sc">~</span> ., <span class="at">data =</span> boston_training) <span class="sc">|&gt;</span> </span>
 <span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_BoxCox</span>(<span class="fu">all_numeric_predictors</span>()) <span class="sc">|&gt;</span> </span>
@@ -760,8 +761,10 @@ Run `show_notes(.Last.tune.result)` for more information.</code></pre>
 <span id="cb68-12"><a href="#cb68-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(enet_recipe) <span class="sc">|&gt;</span> </span>
 <span id="cb68-13"><a href="#cb68-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(enet_spec)</span>
 <span id="cb68-14"><a href="#cb68-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb68-15"><a href="#cb68-15" aria-hidden="true" tabindex="-1"></a>penalty_grid <span class="ot">&lt;-</span> <span class="fu">grid_regular</span>(<span class="fu">penalty</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>)), <span class="fu">mixture</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)), <span class="at">levels =</span> <span class="dv">10</span>)</span>
-<span id="cb68-16"><a href="#cb68-16" aria-hidden="true" tabindex="-1"></a>penalty_grid</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb68-15"><a href="#cb68-15" aria-hidden="true" tabindex="-1"></a>penalty_grid <span class="ot">&lt;-</span> <span class="fu">grid_regular</span>(<span class="fu">penalty</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">2</span>, <span class="dv">2</span>)), </span>
+<span id="cb68-16"><a href="#cb68-16" aria-hidden="true" tabindex="-1"></a>                             <span class="fu">mixture</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)), </span>
+<span id="cb68-17"><a href="#cb68-17" aria-hidden="true" tabindex="-1"></a>                             <span class="at">levels =</span> <span class="dv">10</span>)</span>
+<span id="cb68-18"><a href="#cb68-18" aria-hidden="true" tabindex="-1"></a>penalty_grid</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 100 × 2
     penalty mixture
