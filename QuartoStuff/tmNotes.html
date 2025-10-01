@@ -54,7 +54,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="tmNotes_files/libs/clipboard/clipboard.min.js"></script>
@@ -93,7 +112,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on September 25, 2025 09:18:33 Eastern Daylight Time</p>
+      <p class="date">Last modified on October 01, 2025 10:30:49 Eastern Daylight Time</p>
     </div>
   </div>
   
@@ -112,12 +131,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </ul>
 <p>How to perform feature selection with tidymodels:</p>
 <ol type="1">
-<li><p>Use Regularization: Fit a regularized model like Lasso using parsnip, and the regularization process will perform feature selection by shrinking some coefficients to zero.</p></li>
-<li><p>Manual Selection: You can manually select features by defining a recipe with the chosen predictors using recipes and then train the model with that specific recipe.</p></li>
-<li><p>Use External Packages: For true forward selection, you would use other R packages that specifically offer stepwise regression, such as the <code>StepReg</code> package on CRAN.</p></li>
+<li><p>Use Regularization: Fit a regularized model like Lasso using <code>parsnip</code> written by <span class="citation" data-cites="R-parsnip">Kuhn and Vaughan (<a href="#ref-R-parsnip" role="doc-biblioref">2025</a>)</span>, and the regularization process will perform feature selection by shrinking some coefficients to zero.</p></li>
+<li><p>Manual Selection: You can manually select features by defining a recipe with the chosen predictors using <code>recipes</code> written by <span class="citation" data-cites="R-recipes">Kuhn, Wickham, and Hvitfeldt (<a href="#ref-R-recipes" role="doc-biblioref">2025</a>)</span> and then train the model with that specific recipe.</p></li>
+<li><p>Use External Packages: For true forward selection, you would use other R packages that specifically offer stepwise regression, such as the <code>StepReg</code> written by <span class="citation" data-cites="R-StepReg">Li et al. (<a href="#ref-R-StepReg" role="doc-biblioref">2025</a>)</span> and available on CRAN.</p></li>
 </ol>
 <p>The <strong>tidymodels</strong> philosophy</p>
-<p>The <code>tidymodels</code> framework is designed around a more consistent and robust approach to modeling than traditional stepwise procedures. Key aspects of this philosophy that lead away from forward selection include:</p>
+<p>The <code>tidymodels</code> framework written by <span class="citation" data-cites="R-tidymodels">Kuhn and Wickham (<a href="#ref-R-tidymodels" role="doc-biblioref">2025</a>)</span> is designed around a more consistent and robust approach to modeling than traditional stepwise procedures. Key aspects of this philosophy that lead away from forward selection include:</p>
 <ul>
 <li><p>Encourages superior methods: The developers prioritize methods like regularization, which are more stable and produce better predictive models than automated stepwise selection.</p></li>
 <li><p>Consistency: A core tenet of tidymodels is to have a uniform interface across different modeling engines. Stepwise procedures, which involve fitting many different model formulas, do not fit neatly into this framework.</p></li>
@@ -132,8 +151,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <ul>
 <li><p>Model specification: Use <code>linear_reg()</code> with the <code>mixture</code> argument set to 1.</p></li>
 <li><p>Engine: Specify the <code>glmnet</code> engine, which is highly efficient for fitting many values of the <code>penalty</code> (<span class="math inline">\(\lambda\)</span>) simultaneously.</p></li>
-<li><p>Tuning: Use <code>tune_grid()</code> to find the optimal value of the <code>penalty</code> hyperparameter.</p></li>
-<li><p>Workflow: The entire process is integrated smoothly into a tidymodels workflow, from preprocessing with <code>recipes</code> to resampling with <code>rsample</code> and tuning with <code>tune</code>.</p></li>
+<li><p>Tuning: Use <code>tune_grid()</code> from the <code>tune</code> package written by <span class="citation" data-cites="R-tune">Kuhn (<a href="#ref-R-tune" role="doc-biblioref">2025</a>)</span> to find the optimal value of the <code>penalty</code> hyperparameter.</p></li>
+<li><p>Workflow: The entire process is integrated smoothly into a tidymodels workflow, from preprocessing with <code>recipes</code> <span class="citation" data-cites="R-recipes">(<a href="#ref-R-recipes" role="doc-biblioref">Kuhn, Wickham, and Hvitfeldt 2025</a>)</span> to resampling with <code>rsample</code> <span class="citation" data-cites="R-rsample">(<a href="#ref-R-rsample" role="doc-biblioref">Frick et al. 2025</a>)</span> and tuning with <code>tune</code> <span class="citation" data-cites="R-tune">(<a href="#ref-R-tune" role="doc-biblioref">Kuhn 2025</a>)</span>.</p></li>
 </ul>
 <p>Example R code using Lasso: <a href="https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/06-regularization.html">Emil Hvitfeldt</a> provides example R code using Lasso for feature selection with tidymodels.</p>
 </section>
@@ -308,7 +327,8 @@ Computational engine: lm </code></pre>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>boston_fit <span class="ot">&lt;-</span> <span class="fu">fit</span>(boston_wkfl, <span class="at">data =</span> boston_training)</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(boston_fit, <span class="at">new_data =</span> boston_testing) <span class="sc">|&gt;</span> </span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> medv, <span class="at">estimate =</span> .pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> medv, <span class="at">estimate =</span> .pred) <span class="ot">-&gt;</span> T3</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>T3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 3
   .metric .estimator .estimate
@@ -318,7 +338,8 @@ Computational engine: lm </code></pre>
 3 mae     standard       3.40 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(boston_fit, <span class="at">new_data =</span> boston_training) <span class="sc">|&gt;</span> </span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> medv, <span class="at">estimate =</span> .pred)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">metrics</span>(<span class="at">truth =</span> medv, <span class="at">estimate =</span> .pred) <span class="ot">-&gt;</span> T4</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>T4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 3
   .metric .estimator .estimate
@@ -328,6 +349,7 @@ Computational engine: lm </code></pre>
 3 mae     standard       3.14 </code></pre>
 </div>
 </div>
+<p>By normalizing and appling transformations to the data the <span class="math inline">\(\text{RMSE}_\text{test} = 4.5830635\)</span> compared to the untransformed and unnormalized <span class="math inline">\(\text{RMSE}_\text{test} = 5.1893357\)</span>.</p>
 <p>Consider what happens if the seed is changed with the <code>initial_split()</code>.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">3</span>)</span>
@@ -355,8 +377,8 @@ Computational engine: lm </code></pre>
 # ℹ 4 more variables: ptratio &lt;dbl&gt;, black &lt;dbl&gt;, lstat &lt;dbl&gt;, medv &lt;dbl&gt;</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(lm_fit, <span class="at">new_data =</span> boston_testing) <span class="sc">|&gt;</span> </span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rmse</span>(<span class="at">truth =</span> medv, <span class="at">estimate =</span> .pred) <span class="ot">-&gt;</span> T3</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>T3</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rmse</span>(<span class="at">truth =</span> medv, <span class="at">estimate =</span> .pred) <span class="ot">-&gt;</span> T5</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>T5</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
   .metric .estimator .estimate
@@ -364,8 +386,8 @@ Computational engine: lm </code></pre>
 1 rmse    standard        6.24</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">augment</span>(lm_fit, <span class="at">new_data =</span> boston_training) <span class="sc">|&gt;</span> </span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rmse</span>(<span class="at">truth =</span> medv, <span class="at">estimate =</span> .pred) <span class="ot">-&gt;</span> T4</span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>T4</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rmse</span>(<span class="at">truth =</span> medv, <span class="at">estimate =</span> .pred) <span class="ot">-&gt;</span> T6</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>T6</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
   .metric .estimator .estimate
@@ -397,6 +419,7 @@ Computational engine: lm </code></pre>
 1 rmse    standard        4.08</code></pre>
 </div>
 </div>
+<p>Remember this is with untransformed and unnormalized data so the (<code>set.seed(3)</code>) <span class="math inline">\(\text{RMSE}_\text{test} = 6.2432295\)</span> must be compared with (<code>set.seed(3178)</code>) <span class="math inline">\(\text{RMSE}_\text{test} = 5.1893357\)</span>. Changing the seed had a considerable impact on the <span class="math inline">\(\text{RMSE}_\text{test}\)</span>! To reduce the variability from the arbitrary splitting of data into training and testing data, we will create many training and testing sets and average the <span class="math inline">\(\text{RMSE}\)</span> using k-fold cross-validation.</p>
 <section id="k-fold-cross-validation" class="level2">
 <h2 class="anchored" data-anchor-id="k-fold-cross-validation">k-Fold Cross-Validation</h2>
 <div class="cell" data-layout-align="center" data-hash="tmNotes_cache/html/cv103_9695879e98eb8c3f3a7ecda4e1f01a6e">
@@ -818,10 +841,30 @@ Run `show_notes(.Last.tune.result)` for more information.</code></pre>
 3 mae     standard       3.89 </code></pre>
 </div>
 </div>
+
 </section>
 </section>
 
-</main>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-R-rsample" class="csl-entry" role="listitem">
+Frick, Hannah, Fanny Chow, Max Kuhn, Michael Mahoney, Julia Silge, and Hadley Wickham. 2025. <em>Rsample: General Resampling Infrastructure</em>. <a href="https://rsample.tidymodels.org">https://rsample.tidymodels.org</a>.
+</div>
+<div id="ref-R-tune" class="csl-entry" role="listitem">
+Kuhn, Max. 2025. <em>Tune: Tidy Tuning Tools</em>. <a href="https://tune.tidymodels.org/">https://tune.tidymodels.org/</a>.
+</div>
+<div id="ref-R-parsnip" class="csl-entry" role="listitem">
+Kuhn, Max, and Davis Vaughan. 2025. <em>Parsnip: A Common API to Modeling and Analysis Functions</em>. <a href="https://github.com/tidymodels/parsnip">https://github.com/tidymodels/parsnip</a>.
+</div>
+<div id="ref-R-tidymodels" class="csl-entry" role="listitem">
+Kuhn, Max, and Hadley Wickham. 2025. <em>Tidymodels: Easily Install and Load the Tidymodels Packages</em>. <a href="https://tidymodels.tidymodels.org">https://tidymodels.tidymodels.org</a>.
+</div>
+<div id="ref-R-recipes" class="csl-entry" role="listitem">
+Kuhn, Max, Hadley Wickham, and Emil Hvitfeldt. 2025. <em>Recipes: Preprocessing and Feature Engineering Steps for Modeling</em>. <a href="https://github.com/tidymodels/recipes">https://github.com/tidymodels/recipes</a>.
+</div>
+<div id="ref-R-StepReg" class="csl-entry" role="listitem">
+Li, Junhui, Kai Hu, Xiaohuan Lu, Wenxin Liu, and Lihua Julie Zhu. 2025. <em>StepReg: Stepwise Regression Analysis</em>.
+</div>
+</div></section></div></main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {

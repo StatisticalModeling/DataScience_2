@@ -6,6 +6,7 @@ format:
   html: default
   pdf: default
 editor: source
+bibliography: packages.bib
 ---
 
 ```{r include = FALSE}
@@ -13,6 +14,7 @@ library(knitr) # packages
 library(tidyverse)
 library(scales)
 knitr::opts_chunk$set(echo = TRUE, fig.align = "center", comment = NA, warning = FALSE, message = FALSE)
+knitr::write_bib(c("parsnip", "tidymodels", "recipes", "rsample", "StepReg", "tune"), file = "packages.bib")
 ```
 
 **tidymodels** does not natively support forward selection because it prefers alternative regularization and feature selection methods like Lasso. You would need to implement forward selection by manually adding predictor variables to your model recipe within tidymodels or use an alternative R package designed for stepwise regression.
@@ -27,15 +29,15 @@ Why tidymodels doesn't support forward selection:
   
 How to perform feature selection with tidymodels:
 
-  1. Use Regularization: Fit a regularized model like Lasso using parsnip, and the regularization process will perform feature selection by shrinking some coefficients to zero. 
+  1. Use Regularization: Fit a regularized model like Lasso using `parsnip` written by @R-parsnip, and the regularization process will perform feature selection by shrinking some coefficients to zero. 
   
-  2. Manual Selection: You can manually select features by defining a recipe with the chosen predictors using recipes and then train the model with that specific recipe. 
+  2. Manual Selection: You can manually select features by defining a recipe with the chosen predictors using `recipes` written by @R-recipes and then train the model with that specific recipe. 
   
-  3. Use External Packages: For true forward selection, you would use other R packages that specifically offer stepwise regression, such as the `StepReg` package on CRAN. 
+  3. Use External Packages: For true forward selection, you would use other R packages that specifically offer stepwise regression, such as the `StepReg` written by @R-StepReg and available on CRAN. 
   
 The **tidymodels** philosophy
 
-The `tidymodels` framework is designed around a more consistent and robust approach to modeling than traditional stepwise procedures. Key aspects of this philosophy that lead away from forward selection include:
+The `tidymodels` framework written by @R-tidymodels is designed around a more consistent and robust approach to modeling than traditional stepwise procedures. Key aspects of this philosophy that lead away from forward selection include:
 
 * Encourages superior methods: The developers prioritize methods like regularization, which are more stable and produce better predictive models than automated stepwise selection.
 
@@ -53,9 +55,9 @@ This is the main alternative recommended by the `tidymodels` developers. Lasso r
 
 * Engine: Specify the `glmnet` engine, which is highly efficient for fitting many values of the `penalty` ($\lambda$) simultaneously.
 
-* Tuning: Use `tune_grid()` to find the optimal value of the `penalty` hyperparameter.
+* Tuning: Use `tune_grid()` from the `tune` package written by @R-tune to find the optimal value of the `penalty` hyperparameter.
 
-* Workflow: The entire process is integrated smoothly into a tidymodels workflow, from preprocessing with `recipes` to resampling with `rsample` and tuning with `tune`. 
+* Workflow: The entire process is integrated smoothly into a tidymodels workflow, from preprocessing with `recipes` [@R-recipes] to resampling with `rsample` [@R-rsample] and tuning with `tune` [@R-tune]. 
 
 Example R code using Lasso:
 [Emil Hvitfeldt](https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/06-regularization.html) provides example R code using Lasso for feature selection with tidymodels. 
@@ -165,11 +167,15 @@ boston_wkfl
 ```{r}
 boston_fit <- fit(boston_wkfl, data = boston_training)
 augment(boston_fit, new_data = boston_testing) |> 
-  metrics(truth = medv, estimate = .pred)
+  metrics(truth = medv, estimate = .pred) -> T3
+T3
 augment(boston_fit, new_data = boston_training) |> 
-  metrics(truth = medv, estimate = .pred)
+  metrics(truth = medv, estimate = .pred) -> T4
+T4
 ```
-Consider what happens if the seed is changed with the `initial_split()`.
+By normalizing and appling transformations to the data the $\text{RMSE}_\text{test} = `r T3$.estimate[1]`$ compared to the untransformed and unnormalized $\text{RMSE}_\text{test} = `r T1$.estimate[1]`$.
+
+Consider what happens if the seed is changed with the `initial_split()`.   
 
 ```{r}
 set.seed(3)
@@ -180,11 +186,11 @@ lm_fit <- lm_spec |>
   fit(medv ~ ., data = boston_training)
 augment(lm_fit, new_data = boston_testing)
 augment(lm_fit, new_data = boston_testing) |> 
-  rmse(truth = medv, estimate = .pred) -> T3
-T3
+  rmse(truth = medv, estimate = .pred) -> T5
+T5
 augment(lm_fit, new_data = boston_training) |> 
-  rmse(truth = medv, estimate = .pred) -> T4
-T4
+  rmse(truth = medv, estimate = .pred) -> T6
+T6
 boston_recipe <- 
   recipe(formula = medv ~ ., data = boston_training) |> 
   step_BoxCox(all_numeric_predictors()) |> 
@@ -198,6 +204,8 @@ augment(boston_fit, new_data = boston_testing) |>
 augment(boston_fit, new_data = boston_training) |> 
   rmse(truth = medv, estimate = .pred)
 ```
+
+Remember this is with untransformed and unnormalized data so the (`set.seed(3)`) $\text{RMSE}_\text{test} = `r T5$.estimate[1]`$ must be compared with (`set.seed(3178)`) $\text{RMSE}_\text{test} = `r T1$.estimate[1]`$.  Changing the seed had a considerable impact on the $\text{RMSE}_\text{test}$!  To reduce the variability from the arbitrary splitting of data into training and testing data, we will create many training and testing sets and average the $\text{RMSE}$ using k-fold cross-validation.
 
 
 
