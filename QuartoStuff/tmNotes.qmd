@@ -62,7 +62,7 @@ This is the main alternative recommended by the `tidymodels` developers. Lasso r
 Example R code using Lasso:
 [Emil Hvitfeldt](https://emilhvitfeldt.github.io/ISLR-tidymodels-labs/06-regularization.html) provides example R code using Lasso for feature selection with tidymodels. 
  
-# Working with Data
+# Working with the Data
 
 ```{r}
 library(tidymodels)
@@ -86,9 +86,11 @@ ggpairs(data = boston_training,
   
   theme_bw()
 ```
+## Feature Engineering with Recipes
 
+The goal of feature engineering is to transform predictor values that lead to models that better uncover predictor-response relationships.  Feature engineering is a preprocessing of the data that allows one to build better features for modeling.  One can use a `recipe` from the [recipes](https://recipes.tidymodels.org/) package which permits [dplyr](https://dplyr.tidyverse.org/)-like pipeable sequences to reformat data from modeling.  Note that all preprocessing and feature engineering steps use ***only***Boston the training data. In this example, we use a Box-Cox transformation to rescale the numeric predictors to be more similar to a normal distribution as well as the normalizing the numeric predictors to a have a mean of 0 and a standard deviation of 1.       
 
-```{r}
+```{r, message = TRUE}
 boston_recipe <- 
   recipe(formula = medv ~ ., data = boston_training) |> 
   step_BoxCox(all_numeric_predictors()) |> 
@@ -96,12 +98,14 @@ boston_recipe <-
 boston_recipe
 ```
 
-```{r}
+The `recipe()` defines the preprocessing; but, the various steps are not applied to the training data until the recipe is fit to the training set with `prep()` and finally applied to the training data with the `bake()` function.  Note that `prep()` for a recipe is like `fit()` for a model and `bake()` for a recipe is similar to  `predict()` for a model.
+
+```{r, message = TRUE}
 tidy(boston_recipe)
 boston_rec_trained <- prep(boston_recipe, boston_training)
 boston_rec_trained
 ```
-```{r}
+```{r, message = TRUE}
 boston_trained_data <- bake(boston_rec_trained, new_data = NULL)
 boston_trained_data
 ```
