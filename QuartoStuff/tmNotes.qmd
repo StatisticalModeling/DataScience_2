@@ -98,7 +98,8 @@ boston_recipe <-
 boston_recipe
 ```
 
-The `recipe()` defines the preprocessing; but, the various steps are not applied to the training data until the recipe is fit to the training set with `prep()` and finally applied to the training data with the `bake()` function.  Note that `prep()` for a recipe is like `fit()` for a model and `bake()` for a recipe is similar to  `predict()` for a model.
+The `recipe()` defines the preprocessing; but, the various steps are not applied to the training data until the recipe is fit to the training set with `prep()` and finally applied to the training data with the `bake()` function.  Note that `prep()` for a recipe is like `fit()` for a model and `bake()` for a recipe is similar to  `predict()` for a model.usethis::create_github_token()
+
 
 ```{r, message = TRUE}
 tidy(boston_recipe)
