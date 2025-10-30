@@ -98,7 +98,7 @@ boston_recipe <-
 boston_recipe
 ```
 
-The `recipe()` defines the preprocessing; but, the various steps are not applied to the training data until the recipe is fit to the training set with `prep()` and finally applied to the training data with the `bake()` function.  Note that `prep()` for a recipe is like `fit()` for a model and `bake()` for a recipe is similar to  `predict()` for a model.usethis::create_github_token()
+The `recipe()` defines the preprocessing; but, the various steps are not applied to the training data until the recipe is fit to the training set with `prep()` and finally applied to the training data with the `bake()` function.  Note that `prep()` for a recipe is like `fit()` for a model and `bake()` for a recipe is similar to  `predict()` for a model.
 
 
 ```{r, message = TRUE}
@@ -174,6 +174,7 @@ boston_fit <- fit(boston_wkfl, data = boston_training)
 augment(boston_fit, new_data = boston_testing) |> 
   metrics(truth = medv, estimate = .pred) -> T3
 T3
+# Note: this is RMSE_Training
 augment(boston_fit, new_data = boston_training) |> 
   metrics(truth = medv, estimate = .pred) -> T4
 T4
@@ -187,6 +188,7 @@ set.seed(3)
 boston_split <- initial_split(data = Boston, prop = 0.80)
 boston_training <- training(boston_split)
 boston_testing <- testing(boston_split)
+# This is untransformed and not normalized
 lm_fit <- lm_spec |> 
   fit(medv ~ ., data = boston_training)
 augment(lm_fit, new_data = boston_testing)
@@ -218,10 +220,10 @@ Remember this is with untransformed and unnormalized data so the (`set.seed(3)`)
 ## k-Fold Cross-Validation
 
 ```{r}
-#| label: "cv103"
+#| label: "cv105"
 #| cache: true
 set.seed(23)
-boston_folds <- vfold_cv(boston_training, v = 10, repeats = 3)
+boston_folds <- vfold_cv(boston_training, v = 10, repeats = 5)
 boston_folds
 
 boston_wkfl |> 
@@ -229,15 +231,15 @@ boston_wkfl |>
     resamples = boston_folds,
     metrics = metric_set(rmse, mae, rsq),
     control = control_resamples(save_pred = TRUE)
-  ) -> tenbythree
-tenbythree |> collect_predictions() |> 
+  ) -> tenbyfive
+tenbyfive |> collect_predictions() |> 
   metrics(truth = medv, estimate = .pred) 
 ```
 
 ## Ridge Regression
 
 ```{r}
-ridge_spec <- linear_reg(mixture = 0, penalty = 0) |> 
+ridge_spec <- linear_reg(mixture = 0, penalty = 0.001) |> 
   set_mode("regression") |> 
   set_engine("glmnet")
 ridge_fit <- fit(ridge_spec, medv ~ ., data = boston_training)
@@ -259,7 +261,7 @@ predict(ridge_fit, new_data = boston_training, penalty = 10)
 predict(ridge_fit, new_data = boston_training, penalty = 100)
 predict(ridge_fit, new_data = boston_training, penalty = 1000)
 ```
-So how to we find the "best" `penalty` (`penalty` in tidymodels $\equiv \lambda$, note: $\lambda = \text{penalty} = 0 \text{ and } \alpha = \text{mixture} = 0$ is normal regression)?  We can use tuning to find the best hyperparameter.  For now, we will only consider a grid search with evenly spaced parameter values to optimize our model.
+So how to we find the "best" `penalty` (`penalty` in tidymodels $\equiv \lambda$, note: $\lambda = \text{penalty} = 0 \text{ and } \alpha = \text{mixture} = 0$ is normal regression.  However, `glmnet` uses an iterative coordinate descent algorithm to find coefficient estimates by solving a penalized maximum likelihood problem.  The iterative process introduces minor numerical differences when compared to a direct calculation such as the one used with `lm()`)?  We can use tuning to find the best hyperparameter.  For now, we will only consider a grid search with evenly spaced parameter values to optimize our model.
 
 ```{r}
 ridge_recipe <-
@@ -277,13 +279,13 @@ ridge_wf <- workflow() |>
   add_model(ridge_spec)
 ```
 
-We need values of the `penalty`.  Looking at the graph from `autoplot()`, we select values from 0.001 to 1000 using `grid_regular()` which will create a grid of evenly spaced values.
+We need values of the `penalty`.  Looking at the graph from `autoplot()`, we select values from 0.001 to 1000 using `grid_regular()` from the `dials` package which will create a grid of evenly spaced values.
 
 ```{r}
 penalty_grid <- grid_regular(penalty(range = c(-3, 3)), levels = 20)
 penalty_grid
 ```
-```{r}
+```{r, message = FALSE, warning = FALSE}
 #| label: "ridgetune"
 #| cache: true
 tune_result <- tune_grid(
@@ -397,4 +399,15 @@ enet_final_fit <- fit(enet_final, data = boston_training)
 augment(enet_final_fit, new_data = boston_testing) |> 
   metrics(truth = medv, estimate = .pred)
 ```
+
+## Comparing Models with Resampling
+
+Start by creating a `workflow_set`.  The `workflowsets` package is used to create a collection of different modeling pipelines, each potentially containing a different model specification and/or preprocessing recipe.
+
+```{r}
+library(workflowsets)  # Note: this is part of tidymodels
+
+
+```
+
 
