@@ -305,7 +305,8 @@ ggplot(urchins,
        aes(initial_volume, width)) +      # returns a ggplot object 
   geom_jitter() +                         # same
   geom_smooth(method = lm, se = FALSE) +  # same                  
-  labs(x = "Volume", y = "Width")         # etc
+  labs(x = "Volume", y = "Width") +       # etc
+  theme_bw()
 ```
 
 ## SESSION INFORMATION
