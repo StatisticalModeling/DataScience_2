@@ -91,7 +91,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on November 11, 2025 11:55:49 Eastern Standard Time</p>
+      <p class="date">Last modified on November 11, 2025 12:27:12 Eastern Standard Time</p>
     </div>
   </div>
   
@@ -506,6 +506,333 @@ Coefficients:
 <p><img src="Build_A_Model_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
+</div>
+</div>
+</section>
+<section id="model-with-a-different-engine" class="level2">
+<h2 class="anchored" data-anchor-id="model-with-a-different-engine">MODEL WITH A DIFFERENT ENGINE</h2>
+<p>Every one on your team is happy with that plot except that one person who just read their first book on <a href="https://bayesian.org/what-is-bayesian-analysis/">Bayesian analysis</a>. They are interested in knowing if the results would be different if the model were estimated using a Bayesian approach. In such an analysis, a <a href="https://towardsdatascience.com/introduction-to-bayesian-linear-regression-e66e60791ea7/"><em>prior distribution</em></a> needs to be declared for each model parameter that represents the possible values of the parameters (before being exposed to the observed data). After some discussion, the group agrees that the priors should be bell-shaped but, since no one has any idea what the range of values should be, to take a conservative approach and make the priors wide using a Cauchy distribution (which is the same as a t-distribution with a single degree of freedom).</p>
+<p>The <a href="https://mc-stan.org/rstanarm/articles/priors.html">documentation</a> on the <code>rstanarm</code> package shows us that the <code>stan_glm()</code> function can be used to estimate this model, and that the function arguments that need to be specified are called <code>prior</code> and <code>prior_intercept</code>. It turns out that <code>linear_reg()</code> has a <a href="https://parsnip.tidymodels.org/reference/linear_reg.html#details"><code>stan</code></a> engine. Since these prior distribution arguments are specific to the Stan software, they are passed as arguments to <a href="https://parsnip.tidymodels.org/reference/set_engine.html"><code>parsnip::set_engine()</code></a>. After that, the same exact <code>fit()</code> call is used:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set the prior distribution</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>prior_dist <span class="ot">&lt;-</span> rstanarm<span class="sc">::</span><span class="fu">student_t</span>(<span class="at">df =</span> <span class="dv">1</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co"># make the parsnip model</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>bayes_mod <span class="ot">&lt;-</span>   </span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">linear_reg</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"stan"</span>, </span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>             <span class="at">prior_intercept =</span> prior_dist, </span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>             <span class="at">prior =</span> prior_dist) </span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="co"># train the model</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>bayes_fit <span class="ot">&lt;-</span> </span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  bayes_mod <span class="sc">%&gt;%</span> </span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(width <span class="sc">~</span> initial_volume <span class="sc">*</span> food_regime, <span class="at">data =</span> urchins)</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>bayes_fit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>parsnip model object
+
+stan_glm
+ family:       gaussian [identity]
+ formula:      width ~ initial_volume * food_regime
+ observations: 72
+ predictors:   6
+------
+                               Median MAD_SD
+(Intercept)                    0.0    0.0   
+initial_volume                 0.0    0.0   
+food_regimeLow                 0.0    0.0   
+food_regimeHigh                0.0    0.0   
+initial_volume:food_regimeLow  0.0    0.0   
+initial_volume:food_regimeHigh 0.0    0.0   
+
+Auxiliary parameter(s):
+      Median MAD_SD
+sigma 0.0    0.0   
+
+------
+* For help interpreting the printed output see ?print.stanreg
+* For info on the priors used see ?prior_summary.stanreg</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(bayes_fit, <span class="at">digits =</span> <span class="dv">5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>parsnip model object
+
+stan_glm
+ family:       gaussian [identity]
+ formula:      width ~ initial_volume * food_regime
+ observations: 72
+ predictors:   6
+------
+                               Median   MAD_SD  
+(Intercept)                     0.03345  0.00959
+initial_volume                  0.00154  0.00040
+food_regimeLow                  0.01948  0.01303
+food_regimeHigh                 0.02132  0.01419
+initial_volume:food_regimeLow  -0.00125  0.00051
+initial_volume:food_regimeHigh  0.00054  0.00068
+
+Auxiliary parameter(s):
+      Median  MAD_SD 
+sigma 0.02124 0.00191
+
+------
+* For help interpreting the printed output see ?print.stanreg
+* For info on the priors used see ?prior_summary.stanreg</code></pre>
+</div>
+</div>
+<p>This kind of Bayesian analysis (like many models) involves randomly generated numbers in its fitting procedure. We can use <code>set.seed()</code> to ensure that the same (pseudo-)random numbers are generated each time we run this code. The number <code>123</code> isn’t special or related to our data; it is just a “seed” used to choose random numbers.</p>
+<p>To update the parameter table, the <code>tidy()</code> method is once again used:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tidy</span>(bayes_fit, <span class="at">conf.int =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 41%">
+<col style="width: 14%">
+<col style="width: 13%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">term</th>
+<th style="text-align: right;">estimate</th>
+<th style="text-align: right;">std.error</th>
+<th style="text-align: right;">conf.low</th>
+<th style="text-align: right;">conf.high</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">0.0334484</td>
+<td style="text-align: right;">0.0095904</td>
+<td style="text-align: right;">0.0170691</td>
+<td style="text-align: right;">0.0494020</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">initial_volume</td>
+<td style="text-align: right;">0.0015428</td>
+<td style="text-align: right;">0.0004011</td>
+<td style="text-align: right;">0.0008927</td>
+<td style="text-align: right;">0.0022024</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">food_regimeLow</td>
+<td style="text-align: right;">0.0194757</td>
+<td style="text-align: right;">0.0130347</td>
+<td style="text-align: right;">-0.0016588</td>
+<td style="text-align: right;">0.0415978</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">food_regimeHigh</td>
+<td style="text-align: right;">0.0213163</td>
+<td style="text-align: right;">0.0141872</td>
+<td style="text-align: right;">-0.0020526</td>
+<td style="text-align: right;">0.0443661</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">initial_volume:food_regimeLow</td>
+<td style="text-align: right;">-0.0012499</td>
+<td style="text-align: right;">0.0005138</td>
+<td style="text-align: right;">-0.0020976</td>
+<td style="text-align: right;">-0.0004077</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">initial_volume:food_regimeHigh</td>
+<td style="text-align: right;">0.0005385</td>
+<td style="text-align: right;">0.0006844</td>
+<td style="text-align: right;">-0.0005875</td>
+<td style="text-align: right;">0.0016587</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>A goal of the tidymodels packages is that the <strong>interfaces to common tasks are standardized</strong> (as seen in the <code>tidy()</code> results above). The same is true for getting predictions; we can use the same code even though the underlying packages use very different syntax:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>bayes_plot_data <span class="ot">&lt;-</span> </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  new_points  <span class="sc">|&gt;</span>  </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(bayes_fit, <span class="at">new_data =</span> new_points))  <span class="sc">|&gt;</span>  </span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(bayes_fit, <span class="at">new_data =</span> new_points, <span class="at">type =</span> <span class="st">"conf_int"</span>))</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(bayes_plot_data, <span class="fu">aes</span>(<span class="at">x =</span> food_regime)) <span class="sc">+</span> </span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">y =</span> .pred)) <span class="sc">+</span> </span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> .pred_lower, <span class="at">ymax =</span> .pred_upper), <span class="at">width =</span> <span class="fl">0.15</span>) <span class="sc">+</span> </span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">"urchin size"</span>, <span class="at">x=</span> <span class="st">"food regime"</span>) <span class="sc">+</span> </span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"Bayesian model with t(1) prior distribution"</span>) <span class="sc">+</span> </span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Build_A_Model_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This isn’t very different from the non-Bayesian results (except in interpretation).</p>
+<div class="callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <a href="https://parsnip.tidymodels.org/">parsnip</a> package can work with many model types, engines, and arguments. Check out <a href="tidymodels.org/find/parsnip">tidymodels.org/find/parsnip</a> to see what is available.</p>
+</div>
+</div>
+<p>WHY DOES IT WORK THAT WAY?</p>
+<p>The extra step of defining the model using a function like l<code>inear_reg()</code> might seem superfluous since a call to <code>lm()</code> is much more succinct. However, the problem with standard modeling functions is that they don’t separate what you want to do from the execution. For example, the process of executing a formula has to happen repeatedly across model calls even when the formula does not change; we can’t recycle those computations.</p>
+<p>Also, using the <code>tidymodels</code> framework, we can do some interesting things by incrementally creating a model (instead of using single function call). Model tuning with <code>tidymodels</code> uses the specification of the model to declare what parts of the model should be tuned. That would be very difficult to do if <code>linear_reg()</code> immediately fit the model.</p>
+<p>If you are familiar with the tidyverse, you may have noticed that our modeling code uses the pipe (<code>|&gt;</code>). With dplyr and other tidyverse packages, the pipe works well because all of the functions take the data as the first argument. For example:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>urchins <span class="sc">|&gt;</span>  </span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(food_regime) <span class="sc">|&gt;</span>  </span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">med_vol =</span> <span class="fu">median</span>(initial_volume))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 3 × 2
+  food_regime med_vol
+  &lt;fct&gt;         &lt;dbl&gt;
+1 Initial        20.5
+2 Low            19.2
+3 High           15  </code></pre>
+</div>
+</div>
+<p>whereas the modeling code uses the pipe to pass around the <em>model object</em>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>bayes_mod <span class="sc">%&gt;%</span> </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(width <span class="sc">~</span> initial_volume <span class="sc">*</span> food_regime, </span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>      <span class="at">data =</span> urchins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>parsnip model object
+
+stan_glm
+ family:       gaussian [identity]
+ formula:      width ~ initial_volume * food_regime
+ observations: 72
+ predictors:   6
+------
+                               Median MAD_SD
+(Intercept)                    0.0    0.0   
+initial_volume                 0.0    0.0   
+food_regimeLow                 0.0    0.0   
+food_regimeHigh                0.0    0.0   
+initial_volume:food_regimeLow  0.0    0.0   
+initial_volume:food_regimeHigh 0.0    0.0   
+
+Auxiliary parameter(s):
+      Median MAD_SD
+sigma 0.0    0.0   
+
+------
+* For help interpreting the printed output see ?print.stanreg
+* For info on the priors used see ?prior_summary.stanreg</code></pre>
+</div>
+</div>
+<p>This may seem jarring if you have used <code>dplyr</code> a lot, but it is extremely similar to how <code>ggplot2</code> operates:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(urchins,</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>       <span class="fu">aes</span>(initial_volume, width)) <span class="sc">+</span>      <span class="co"># returns a ggplot object </span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>() <span class="sc">+</span>                         <span class="co"># same</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> lm, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span>  <span class="co"># same                  </span></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Volume"</span>, <span class="at">y =</span> <span class="st">"Width"</span>)         <span class="co"># etc</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Build_A_Model_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="session-information" class="level2">
+<h2 class="anchored" data-anchor-id="session-information">SESSION INFORMATION</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.5.1 (2025-06-13)
+Platform: x86_64-redhat-linux-gnu
+Running under: Red Hat Enterprise Linux 9.6 (Plow)
+
+Matrix products: default
+BLAS/LAPACK: FlexiBLAS OPENBLAS-OPENMP;  LAPACK version 3.9.0
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+time zone: America/New_York
+tzcode source: system (glibc)
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] dotwhisker_0.8.4    broom.mixed_0.2.9.6 yardstick_1.3.2    
+ [4] workflowsets_1.1.1  workflows_1.3.0     tune_2.0.1         
+ [7] tailor_0.1.0        rsample_1.3.1       recipes_1.3.1      
+[10] parsnip_1.3.3       modeldata_1.5.1     infer_1.0.9        
+[13] dials_1.4.2         broom_1.0.10        tidymodels_1.4.1   
+[16] scales_1.4.0        lubridate_1.9.4     forcats_1.0.1      
+[19] stringr_1.5.2       dplyr_1.1.4         purrr_1.1.0        
+[22] readr_2.1.5         tidyr_1.3.1         tibble_3.3.0       
+[25] ggplot2_4.0.0       tidyverse_2.0.0     knitr_1.50         
+
+loaded via a namespace (and not attached):
+  [1] RColorBrewer_1.1-3     tensorA_0.36.2.1       rstudioapi_0.17.1     
+  [4] jsonlite_2.0.0         datawizard_1.3.0       magrittr_2.0.4        
+  [7] ggstance_0.3.7         nloptr_2.2.1           farver_2.1.2          
+ [10] rmarkdown_2.30         vctrs_0.6.5            minqa_1.2.8           
+ [13] base64enc_0.1-3        sparsevctrs_0.3.4      htmltools_0.5.8.1     
+ [16] distributional_0.5.0   curl_7.0.0             StanHeaders_2.32.10   
+ [19] parallelly_1.45.1      htmlwidgets_1.6.4      plyr_1.8.9            
+ [22] zoo_1.8-14             igraph_2.2.0           mime_0.13             
+ [25] lifecycle_1.0.4        pkgconfig_2.0.3        colourpicker_1.3.0    
+ [28] Matrix_1.7-4           R6_2.6.1               fastmap_1.2.0         
+ [31] rbibutils_2.3          future_1.67.0          shiny_1.11.1          
+ [34] digest_0.6.37          colorspace_2.1-2       furrr_0.3.1           
+ [37] patchwork_1.3.2        crosstalk_1.2.2        labeling_0.4.3        
+ [40] timechange_0.3.0       abind_1.4-8            mgcv_1.9-3            
+ [43] compiler_4.5.1         bit64_4.6.0-1          withr_3.0.2           
+ [46] inline_0.3.21          S7_0.2.0               backports_1.5.0       
+ [49] shinystan_2.6.0        performance_0.15.2     QuickJSR_1.8.1        
+ [52] pkgbuild_1.4.8         MASS_7.3-65            lava_1.8.1            
+ [55] loo_2.8.0              gtools_3.9.5           tools_4.5.1           
+ [58] httpuv_1.6.16          future.apply_1.20.0    threejs_0.3.4         
+ [61] nnet_7.3-20            glue_1.8.0             nlme_3.1-168          
+ [64] promises_1.3.3         grid_4.5.1             checkmate_2.3.3       
+ [67] reshape2_1.4.4         generics_0.1.4         gtable_0.3.6          
+ [70] tzdb_0.5.0             class_7.3-23           data.table_1.17.8     
+ [73] hms_1.1.4              utf8_1.2.6             markdown_2.0          
+ [76] pillar_1.11.1          vroom_1.6.6            posterior_1.6.1       
+ [79] later_1.4.4            splines_4.5.1          lhs_1.2.0             
+ [82] lattice_0.22-7         survival_3.8-3         bit_4.6.0             
+ [85] tidyselect_1.2.1       miniUI_0.1.2           reformulas_0.4.1      
+ [88] gridExtra_2.3          stats4_4.5.1           xfun_0.53             
+ [91] rstanarm_2.32.2        hardhat_1.4.2          matrixStats_1.5.0     
+ [94] timeDate_4051.111      rstan_2.32.7           DT_0.34.0             
+ [97] stringi_1.8.7          boot_1.3-32            DiceDesign_1.10       
+[100] yaml_2.3.10            evaluate_1.0.5         codetools_0.2-20      
+[103] cli_3.6.5              RcppParallel_5.1.11-1  rpart_4.1.24          
+[106] Rdpack_2.6.4           shinythemes_1.2.0      xtable_1.8-4          
+[109] parameters_0.28.2      dichromat_2.0-0.1      Rcpp_1.1.0            
+[112] globals_0.18.0         parallel_4.5.1         rstantools_2.5.0      
+[115] gower_1.0.2            bayestestR_0.17.0      dygraphs_1.1.1.6      
+[118] bayesplot_1.14.0       marginaleffects_0.30.0 lme4_1.1-37           
+[121] GPfit_1.0-9            listenv_0.9.1          ipred_0.9-15          
+[124] xts_0.14.1             prodlim_2025.04.28     insight_1.4.2         
+[127] crayon_1.5.3           rlang_1.1.6            shinyjs_2.1.0         </code></pre>
 </div>
 </div>
 </section>
