@@ -3,8 +3,9 @@ title: "Build a model"
 date: last-modified
 date-format: "[Last modified on] MMMM DD, YYYY HH:mm:ss zzz"
 format:
-  html:
-    axe: true
+  html: 
+    axe:
+      output: document
   pdf: default
 editor: source
 ---
