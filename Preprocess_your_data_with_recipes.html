@@ -91,7 +91,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on November 12, 2025 12:01:24 Eastern Standard Time</p>
+      <p class="date">Last modified on November 13, 2025 11:22:55 Eastern Standard Time</p>
     </div>
   </div>
   
@@ -139,11 +139,12 @@ Note
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)      <span class="co"># for the recipes package, along with the rest of tidymodels</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Helper packages</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nycflights13)    <span class="co"># for flight data</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)           <span class="co"># for variable summaries</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)      <span class="co"># for the recipes package, along with the rest of</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>                         <span class="co">#tidymodels</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Helper packages</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(nycflights13)    <span class="co"># for flight data</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(skimr)           <span class="co"># for variable summaries</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="the-new-york-city-flight-data" class="level2">
@@ -199,6 +200,545 @@ Note
 </tr>
 </tbody>
 </table>
+</div>
+</div>
+<p>Before we start building up our recipe, let’s take a quick look at a few specific variables that will be important for both preprocessing and modeling.</p>
+<p>First, notice that the variable we created called <code>arr_delay</code> is a factor variable; it is important that our outcome variable for training a logistic regression model is a factor.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(flight_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 325,819
+Columns: 10
+$ dep_time  &lt;int&gt; 517, 533, 542, 544, 554, 554, 555, 557, 557, 558, 558, 558, …
+$ flight    &lt;int&gt; 1545, 1714, 1141, 725, 461, 1696, 507, 5708, 79, 301, 49, 71…
+$ origin    &lt;fct&gt; EWR, LGA, JFK, JFK, LGA, EWR, EWR, LGA, JFK, LGA, JFK, JFK, …
+$ dest      &lt;fct&gt; IAH, IAH, MIA, BQN, ATL, ORD, FLL, IAD, MCO, ORD, PBI, TPA, …
+$ air_time  &lt;dbl&gt; 227, 227, 160, 183, 116, 150, 158, 53, 140, 138, 149, 158, 3…
+$ distance  &lt;dbl&gt; 1400, 1416, 1089, 1576, 762, 719, 1065, 229, 944, 733, 1028,…
+$ carrier   &lt;fct&gt; UA, UA, AA, B6, DL, UA, B6, EV, B6, AA, B6, B6, UA, UA, AA, …
+$ date      &lt;date&gt; 2013-01-01, 2013-01-01, 2013-01-01, 2013-01-01, 2013-01-01,…
+$ arr_delay &lt;fct&gt; on_time, on_time, late, on_time, on_time, on_time, on_time, …
+$ time_hour &lt;dttm&gt; 2013-01-01 05:00:00, 2013-01-01 05:00:00, 2013-01-01 05:00:…</code></pre>
+</div>
+</div>
+<p>Second, there are two variables that we don’t want to use as predictors in our model, but that we would like to retain as identification variables that can be used to troubleshoot poorly predicted data points. These are <code>flight</code>, a numeric value, and <code>time_hour</code>, a date-time value.</p>
+<p>Third, there are 104 flight destinations contained in <code>dest</code> and 16 distinct <code>carrier</code>s.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>flight_data <span class="sc">|&gt;</span>  </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  skimr<span class="sc">::</span><span class="fu">skim</span>(dest, carrier) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<caption>Data summary</caption>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Name</td>
+<td style="text-align: left;">flight_data</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Number of rows</td>
+<td style="text-align: left;">325819</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Number of columns</td>
+<td style="text-align: left;">10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">_______________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Column type frequency:</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">factor</td>
+<td style="text-align: left;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">________________________</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Group variables</td>
+<td style="text-align: left;">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: factor</strong></p>
+<table class="table table-sm table-striped small">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 9%">
+<col style="width: 13%">
+<col style="width: 7%">
+<col style="width: 8%">
+<col style="width: 46%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">skim_variable</th>
+<th style="text-align: right;">n_missing</th>
+<th style="text-align: right;">complete_rate</th>
+<th style="text-align: left;">ordered</th>
+<th style="text-align: right;">n_unique</th>
+<th style="text-align: left;">top_counts</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">dest</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">104</td>
+<td style="text-align: left;">ATL: 16771, ORD: 16507, LAX: 15942, BOS: 14948</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">carrier</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: left;">FALSE</td>
+<td style="text-align: right;">16</td>
+<td style="text-align: left;">UA: 57489, B6: 53715, EV: 50868, DL: 47465</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Because we’ll be using a simple logistic regression model, the variables <code>dest</code> and <code>carrier</code> will be converted to <a href="https://bookdown.org/max/FES/creating-dummy-variables-for-unordered-categories.html">dummy variables</a>. However, some of these values do not occur very frequently and this could complicate our analysis. We’ll discuss specific steps later in this article that we can add to our recipe to address this issue before modeling.</p>
+</section>
+<section id="data-splitting" class="level2">
+<h2 class="anchored" data-anchor-id="data-splitting">DATA SPLITTING</h2>
+<p>To get started, let’s split this single dataset into two: a <em><strong>training</strong></em> set and a <em><strong>testing</strong></em> set. We’ll keep most of the rows in the original dataset (subset chosen randomly) in the <em><strong>training</strong></em> set. The training data will be used to <em><strong>fit</strong></em> the model, and the <em><strong>testing</strong></em> set will be used to measure model performance.</p>
+<p>To do this, we can use the <a href="https://rsample.tidymodels.org/">rsample</a> package to create an object that contains the information on <em>how</em> to split the data, and then two more <code>rsample</code> functions to create data frames for the training and testing sets:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fix the random numbers by setting the seed </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># This enables the analysis to be reproducible when random numbers are used </span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">222</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Put 3/4 of the data into the training set </span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>data_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(flight_data, <span class="at">prop =</span> <span class="dv">3</span><span class="sc">/</span><span class="dv">4</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create data frames for the two sets:</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>train_data <span class="ot">&lt;-</span> <span class="fu">training</span>(data_split)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>test_data  <span class="ot">&lt;-</span> <span class="fu">testing</span>(data_split)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="create-recipe-and-roles" class="level2">
+<h2 class="anchored" data-anchor-id="create-recipe-and-roles">CREATE RECIPE AND ROLES</h2>
+<p>To get started, let’s create a recipe for a simple logistic regression model. Before training the model, we can use a recipe to create a few new predictors and conduct some preprocessing required by the model.</p>
+<p>Let’s initiate a new recipe:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>flights_rec <span class="ot">&lt;-</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(arr_delay <span class="sc">~</span> ., <span class="at">data =</span> train_data) </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>flights_rec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Recipe ──────────────────────────────────────────────────────────────────────</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Inputs </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Number of variables by role</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>outcome:   1
+predictor: 9</code></pre>
+</div>
+</div>
+<p>The <a href="https://recipes.tidymodels.org/reference/recipe.html"><code>recipe()</code></a> function as we used it here has two arguments:</p>
+<ul>
+<li><p>A <strong>formula</strong>. Any variable on the left-hand side of the tilde (<code>~</code>) is considered the model outcome (here, <code>arr_delay</code>). On the right-hand side of the tilde are the predictors. Variables may be listed by name, or you can use the dot (<code>.</code>) to indicate all other variables as predictors.</p></li>
+<li><p>The <strong>data</strong>. A recipe is associated with the data set used to create the model. This will typically be the training set, so <code>data = train_data</code> here. Naming a data set doesn’t actually change the data itself; it is only used to catalog the names of the variables and their types, like factors, integers, dates, etc.</p></li>
+</ul>
+<p>Now we can add <a href="https://recipes.tidymodels.org/reference/roles.html">roles</a> to this recipe. We can use the <a href="https://recipes.tidymodels.org/reference/roles.html">update_role()</a> function to let recipes know that <code>flight</code> and <code>time_hour</code> are variables with a custom role that we called <code>"ID"</code> (a role can have any character value). Whereas our formula included all variables in the training set other than <code>arr_delay</code> as predictors, this tells the recipe to keep these two variables but not use them as either outcomes or predictors.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>flights_rec <span class="ot">&lt;-</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(arr_delay <span class="sc">~</span> ., <span class="at">data =</span> train_data) <span class="sc">|&gt;</span>  </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update_role</span>(flight, time_hour, <span class="at">new_role =</span> <span class="st">"ID"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This step of adding roles to a recipe is optional; the purpose of using it here is that those two variables can be retained in the data but not included in the model. This can be convenient when, after the model is fit, we want to investigate some poorly predicted value. These ID columns will be available and can be used to try to understand what went wrong.</p>
+<p>To get the current set of variables and roles, use the <code>summary()</code> function:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(flights_rec)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 10 × 4
+   variable  type      role      source  
+   &lt;chr&gt;     &lt;list&gt;    &lt;chr&gt;     &lt;chr&gt;   
+ 1 dep_time  &lt;chr [2]&gt; predictor original
+ 2 flight    &lt;chr [2]&gt; ID        original
+ 3 origin    &lt;chr [3]&gt; predictor original
+ 4 dest      &lt;chr [3]&gt; predictor original
+ 5 air_time  &lt;chr [2]&gt; predictor original
+ 6 distance  &lt;chr [2]&gt; predictor original
+ 7 carrier   &lt;chr [3]&gt; predictor original
+ 8 date      &lt;chr [1]&gt; predictor original
+ 9 time_hour &lt;chr [1]&gt; ID        original
+10 arr_delay &lt;chr [3]&gt; outcome   original</code></pre>
+</div>
+</div>
+</section>
+<section id="create-features" class="level2">
+<h2 class="anchored" data-anchor-id="create-features">CREATE FEATURES</h2>
+<p>Now we can start adding steps onto our recipe using the pipe operator. Perhaps it is reasonable for the date of the flight to have an effect on the likelihood of a late arrival. A little bit of <strong>feature engineering</strong> might go a long way to improving our model. How should the date be encoded into the model? The <code>date</code> column has an R <code>date</code> object so including that column “as is” will mean that the model will convert it to a numeric format equal to the number of days after a reference date:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>flight_data  <span class="sc">|&gt;</span>  </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(date)  <span class="sc">|&gt;</span>  </span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">numeric_date =</span> <span class="fu">as.numeric</span>(date)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 364 × 2
+   date       numeric_date
+   &lt;date&gt;            &lt;dbl&gt;
+ 1 2013-01-01        15706
+ 2 2013-01-02        15707
+ 3 2013-01-03        15708
+ 4 2013-01-04        15709
+ 5 2013-01-05        15710
+ 6 2013-01-06        15711
+ 7 2013-01-07        15712
+ 8 2013-01-08        15713
+ 9 2013-01-09        15714
+10 2013-01-10        15715
+# ℹ 354 more rows</code></pre>
+</div>
+</div>
+<p>It’s possible that the numeric date variable is a good option for modeling; perhaps the model would benefit from a linear trend between the log-odds of a late arrival and the numeric date variable. However, it might be better to add model terms derived from the date that have a better potential to be important to the model. For example, we could derive the following meaningful features from the single date variable:</p>
+<ul>
+<li><p>the day of the week,</p></li>
+<li><p>the month, and</p></li>
+<li><p>whether or not the date corresponds to a holiday.</p></li>
+</ul>
+<p>Let’s do all three of these by adding steps to our recipe:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>flights_rec <span class="ot">&lt;-</span> </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(arr_delay <span class="sc">~</span> ., <span class="at">data =</span> train_data) <span class="sc">|&gt;</span>  </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update_role</span>(flight, time_hour, <span class="at">new_role =</span> <span class="st">"ID"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_date</span>(date, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"dow"</span>, <span class="st">"month"</span>)) <span class="sc">|&gt;</span>                </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_holiday</span>(date, </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">holidays =</span> timeDate<span class="sc">::</span><span class="fu">listHolidays</span>(<span class="st">"US"</span>), </span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">keep_original_cols =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>What do each of these steps do?</p>
+<p>With <a href="https://recipes.tidymodels.org/reference/step_date.html"><code>step_date()</code></a>, we created two new factor columns with the appropriate day of the week and the month.</p>
+<ul>
+<li><p>With <a href="https://recipes.tidymodels.org/reference/step_holiday.html"><code>step_holiday()</code></a>, we created a binary variable indicating whether the current date is a holiday or not. The argument value of <code>timeDate::listHolidays("US")</code> uses the <a href="https://cran.r-project.org/web/packages/timeDate/index.html"><code>timeDate</code></a> package to list the 18 standard US holidays.</p></li>
+<li><p>With <code>keep_original_cols = FALSE</code>, we remove the original date variable since we no longer want it in the model. Many recipe steps that create new variables have this argument.</p></li>
+</ul>
+<p>Next, we’ll turn our attention to the variable types of our predictors. Because we plan to train a logistic regression model, we know that predictors will ultimately need to be numeric, as opposed to nominal data like strings and factor variables. In other words, there may be a difference in how we store our data (in factors inside a data frame), and how the underlying equations require them (a purely numeric matrix).</p>
+<p>For factors like <code>dest</code> and <code>origin</code>, standard practice is to convert them into dummy or indicator variables to make them numeric. These are binary values for each level of the factor. For example, our <code>origin</code> variable has values of <code>"EWR"</code>, <code>"JFK"</code>, and <code>"LGA"</code>. The standard dummy variable encoding, shown below, will create two numeric columns of the data that are 1 when the originating airport is <code>"JFK"</code> or <code>"LGA"</code> and zero otherwise, respectively.</p>
+<p>INSERT TABLE HERE</p>
+<p>But, unlike the standard model formula methods in R, a recipe <strong>does not</strong> automatically create these dummy variables for you; you’ll need to tell your recipe to add this step. This is for two reasons. First, many models do not require numeric predictors, so dummy variables may not always be preferred. Second, recipes can also be used for purposes outside of modeling, where non-dummy versions of the variables may work better. For example, you may want to make a table or a plot with a variable as a single factor. For those reasons, you need to explicitly tell recipes to create dummy variables using <code>step_dummy()</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>flights_rec <span class="ot">&lt;-</span> </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(arr_delay <span class="sc">~</span> ., <span class="at">data =</span> train_data) <span class="sc">|&gt;</span>  </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update_role</span>(flight, time_hour, <span class="at">new_role =</span> <span class="st">"ID"</span>)  <span class="sc">|&gt;</span>  </span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_date</span>(date, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"dow"</span>, <span class="st">"month"</span>))  <span class="sc">|&gt;</span>                </span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_holiday</span>(date, </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">holidays =</span> timeDate<span class="sc">::</span><span class="fu">listHolidays</span>(<span class="st">"US"</span>), </span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">keep_original_cols =</span> <span class="cn">FALSE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>())</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>flights_rec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Recipe ──────────────────────────────────────────────────────────────────────</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Inputs </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Number of variables by role</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>outcome:   1
+predictor: 7
+ID:        2</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Operations </code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>• Date features from: date</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>• Holiday features from: date</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>• Dummy variables from: all_nominal_predictors()</code></pre>
+</div>
+</div>
+<p>Here, we did something different than before: instead of applying a step to an individual variable, we used <a href="https://recipes.tidymodels.org/reference/selections.html">selectors</a> to apply this recipe step to several variables at once, <code>all_nominal_predictors()</code>. The <a href="https://recipes.tidymodels.org/reference/selections.html">selector</a> functions can be combined to select intersections of variables.</p>
+<p>At this stage in the recipe, this step selects the <code>origin</code>, <code>dest</code>, and <code>carrier</code> variables. It also includes two new variables, <code>date_dow</code> and <code>date_month</code>, that were created by the earlier <code>step_date()</code>.</p>
+<p>More generally, the recipe selectors mean that you don’t always have to apply steps to individual variables one at a time. Since a recipe knows the variable type and role of each column, they can also be selected (or dropped) using this information.</p>
+<p>We need one final step to add to our recipe. Since <code>carrier</code> and <code>dest</code> have some infrequently occurring factor values, it is possible that dummy variables might be created for values that don’t exist in the training set. For example, there is one destination that is only in the test set:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>test_data <span class="sc">|&gt;</span>  </span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(dest) <span class="sc">|&gt;</span>  </span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">anti_join</span>(train_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Joining with `by = join_by(dest)`</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 1
+  dest 
+  &lt;fct&gt;
+1 LEX  </code></pre>
+</div>
+</div>
+<p>When the recipe is applied to the training set, a column is made for <code>LEX</code> because the factor levels come from <code>flight_data</code> (not the training set), but this column will contain all zeros. This is a “zero-variance predictor” that has no information within the column. While some R functions will not produce an error for such predictors, it usually causes warnings and other issues. <code>step_zv()</code> will remove columns from the data when the training set data have a single value, so it is added to the recipe after <code>step_dummy()</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>flights_rec <span class="ot">&lt;-</span> </span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(arr_delay <span class="sc">~</span> ., <span class="at">data =</span> train_data) <span class="sc">|&gt;</span>  </span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update_role</span>(flight, time_hour, <span class="at">new_role =</span> <span class="st">"ID"</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_date</span>(date, <span class="at">features =</span> <span class="fu">c</span>(<span class="st">"dow"</span>, <span class="st">"month"</span>)) <span class="sc">|&gt;</span>                </span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_holiday</span>(date, </span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>               <span class="at">holidays =</span> timeDate<span class="sc">::</span><span class="fu">listHolidays</span>(<span class="st">"US"</span>), </span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>               <span class="at">keep_original_cols =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>()) <span class="sc">|&gt;</span>  </span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_zv</span>(<span class="fu">all_predictors</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we’ve created a <em>specification</em> of what should be done with the data. How do we use the recipe we made?</p>
+</section>
+<section id="fit-a-model-with-a-recipe" class="level2">
+<h2 class="anchored" data-anchor-id="fit-a-model-with-a-recipe">FIT A MODEL WITH A RECIPE</h2>
+<p>Let’s use logistic regression to model the flight data. As we saw in Build a Model, we start by building a model specification using the parsnip package:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>lr_mod <span class="ot">&lt;-</span> </span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span>  </span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"glm"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We will want to use our recipe across several steps as we train and test our model. We will:</p>
+<ol type="1">
+<li><p><strong>Process the recipe using the training set</strong>: This involves any estimation or calculations based on the training set. For our recipe, the training set will be used to determine which predictors should be converted to dummy variables and which predictors will have zero-variance in the training set, and should be slated for removal.</p></li>
+<li><p><strong>Apply the recipe to the training set</strong>: We create the final predictor set on the training set.</p></li>
+<li><p><strong>Apply the recipe to the test set</strong>: We create the final predictor set on the test set. Nothing is recomputed and no information from the test set is used here; the dummy variable and zero-variance results from the training set are applied to the test set.</p></li>
+</ol>
+<p>To simplify this process, we can use a <em><strong>model workflow</strong></em>, which pairs a model and recipe together. This is a straightforward approach because different recipes are often needed for different models, so when a model and recipe are bundled, it becomes easier to train and test <em><strong>workflows</strong></em>. We’ll use the <a href="https://workflows.tidymodels.org/"><code>workflows</code></a> package from <code>tidymodels</code> to bundle our parsnip model (<code>lr_mod</code>) with our recipe (<code>flights_rec</code>).</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>flights_wflow <span class="ot">&lt;-</span> </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">workflow</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(lr_mod) <span class="sc">%&gt;%</span> </span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(flights_rec)</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>flights_wflow</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>══ Workflow ════════════════════════════════════════════════════════════════════
+Preprocessor: Recipe
+Model: logistic_reg()
+
+── Preprocessor ────────────────────────────────────────────────────────────────
+4 Recipe Steps
+
+• step_date()
+• step_holiday()
+• step_dummy()
+• step_zv()
+
+── Model ───────────────────────────────────────────────────────────────────────
+Logistic Regression Model Specification (classification)
+
+Computational engine: glm </code></pre>
+</div>
+</div>
+<p>Now, there is a single function that can be used to prepare the recipe and train the model from the resulting predictors:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>flights_fit <span class="ot">&lt;-</span> </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  flights_wflow <span class="sc">|&gt;</span>  </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(<span class="at">data =</span> train_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This object has the finalized recipe and fitted model objects inside. You may want to extract the model or recipe objects from the workflow. To do this, you can use the helper functions <code>extract_fit_parsnip()</code> and <code>extract_recipe()</code>. For example, here we pull the fitted model object then use the <code>broom::tidy()</code> function to get a tidy tibble of model coefficients:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>flights_fit <span class="sc">|&gt;</span>  </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_fit_parsnip</span>() <span class="sc">|&gt;</span>  </span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tidy</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 157 × 5
+   term                         estimate std.error statistic  p.value
+   &lt;chr&gt;                           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+ 1 (Intercept)                   7.28    2.73           2.67 7.64e- 3
+ 2 dep_time                     -0.00166 0.0000141   -118.   0       
+ 3 air_time                     -0.0440  0.000563     -78.2  0       
+ 4 distance                      0.00507 0.00150        3.38 7.32e- 4
+ 5 date_USCPulaskisBirthday      0.807   0.139          5.80 6.57e- 9
+ 6 date_USChristmasDay           1.33    0.177          7.49 6.93e-14
+ 7 date_USColumbusDay            0.724   0.170          4.25 2.13e- 5
+ 8 date_USDecorationMemorialDay  0.585   0.117          4.98 6.32e- 7
+ 9 date_USElectionDay            0.948   0.190          4.98 6.25e- 7
+10 date_USGoodFriday             1.25    0.167          7.45 9.40e-14
+# ℹ 147 more rows</code></pre>
+</div>
+</div>
+</section>
+<section id="use-a-trained-workflow-to-predict" class="level2">
+<h2 class="anchored" data-anchor-id="use-a-trained-workflow-to-predict">USE A TRAINED WORKFLOW TO PREDICT</h2>
+<p>Our goal was to predict whether a plane arrives more than 30 minutes late. We have just:</p>
+<ol type="1">
+<li><p>Built the model (<code>lr_mod</code>),</p></li>
+<li><p>Created a preprocessing recipe ( flights_rec ),</p></li>
+<li><p>Bundled the model and recipe (<code>flights_wflow</code>), and</p></li>
+<li><p>Trained our workflow using a single call to <code>fit()</code>.</p></li>
+</ol>
+<p>The next step is to use the trained workflow (<code>flights_fit</code>) to predict with the unseen test data, which we will do with a single call to <code>predict()</code>. The <code>predict()</code> method applies the recipe to the new data, then passes them to the fitted model.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(flights_fit, <span class="at">new_data =</span> test_data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 81,455 × 1
+   .pred_class
+   &lt;fct&gt;      
+ 1 on_time    
+ 2 on_time    
+ 3 on_time    
+ 4 on_time    
+ 5 on_time    
+ 6 on_time    
+ 7 on_time    
+ 8 on_time    
+ 9 on_time    
+10 on_time    
+# ℹ 81,445 more rows</code></pre>
+</div>
+</div>
+<p>Because our outcome variable here is a factor, the output from <code>predict()</code> returns the predicted class: <code>late</code> versus <code>on_time</code>. But, let’s say we want the predicted class probabilities for each flight instead. To return those, we can specify <code>type = "prob"</code> when we use <code>predict()</code> or use <code>augment()</code> with the model plus test data to save them together:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(flights_fit, <span class="at">new_data =</span> test_data, <span class="at">type =</span> <span class="st">"prob"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 81,455 × 2
+   .pred_late .pred_on_time
+        &lt;dbl&gt;         &lt;dbl&gt;
+ 1     0.0547         0.945
+ 2     0.0515         0.949
+ 3     0.0361         0.964
+ 4     0.0386         0.961
+ 5     0.0384         0.962
+ 6     0.0249         0.975
+ 7     0.0366         0.963
+ 8     0.0191         0.981
+ 9     0.0646         0.935
+10     0.0687         0.931
+# ℹ 81,445 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Or</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>flights_aug <span class="ot">&lt;-</span> </span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">augment</span>(flights_fit, test_data)</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="co"># The data look like: </span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>flights_aug <span class="sc">|&gt;</span> </span>
+<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(arr_delay, time_hour, flight, .pred_class, .pred_on_time)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 81,455 × 5
+   arr_delay time_hour           flight .pred_class .pred_on_time
+   &lt;fct&gt;     &lt;dttm&gt;               &lt;int&gt; &lt;fct&gt;               &lt;dbl&gt;
+ 1 on_time   2013-01-01 05:00:00   1545 on_time             0.945
+ 2 on_time   2013-01-01 05:00:00   1714 on_time             0.949
+ 3 on_time   2013-01-01 06:00:00    507 on_time             0.964
+ 4 on_time   2013-01-01 06:00:00   5708 on_time             0.961
+ 5 on_time   2013-01-01 06:00:00     71 on_time             0.962
+ 6 on_time   2013-01-01 06:00:00    194 on_time             0.975
+ 7 on_time   2013-01-01 06:00:00   1124 on_time             0.963
+ 8 on_time   2013-01-01 05:00:00   1806 on_time             0.981
+ 9 on_time   2013-01-01 06:00:00   1187 on_time             0.935
+10 on_time   2013-01-01 06:00:00   4650 on_time             0.931
+# ℹ 81,445 more rows</code></pre>
+</div>
+</div>
+<p>Now that we have a tibble with our predicted class probabilities, how will we evaluate the performance of our workflow? We can see from these first few rows that our model predicted these 5 on time flights correctly because the values of <code>.pred_on_time</code> are <code>p &gt; .50</code>. But we also know that we have 81,455 rows total to predict. We would like to calculate a metric that tells how well our model predicted late arrivals, compared to the true status of our outcome variable, <code>arr_delay</code>.</p>
+<p>Let’s use the area under the <a href="https://bookdown.org/max/FES/measuring-performance.html#class-metrics">ROC curve</a> as our metric, computed using <code>roc_curve()</code> and <code>roc_auc()</code> from the <a href="https://yardstick.tidymodels.org/"><code>yardstick</code></a> package.</p>
+<p>To generate a ROC curve, we need the predicted class probabilities for <code>late</code> and <code>on_time</code>, which we just calculated in the code chunk above. We can create the ROC curve with these values, using <code>roc_curve()</code> and then piping to the <code>autoplot()</code> method:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>flights_aug <span class="sc">|&gt;</span>  </span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">roc_curve</span>(<span class="at">truth =</span> arr_delay, .pred_late) <span class="sc">|&gt;</span>   </span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autoplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Preprocess_your_data_with_recipes_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Similarly, <code>roc_auc()</code> estimates the area under the curve:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>flights_aug <span class="sc">|&gt;</span>  </span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">roc_auc</span>(<span class="at">truth =</span> arr_delay, .pred_late)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  .metric .estimator .estimate
+  &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+1 roc_auc binary         0.764</code></pre>
+</div>
+</div>
+<p>Not too bad! We leave it to the reader to test out this workflow without this recipe. You can use <code>workflows::add_formula(arr_delay ~ .)</code> instead of <code>add_recipe()</code> (remember to remove the identification variables first!), and see whether our recipe improved our model’s ability to predict late arrivals.</p>
+</section>
+<section id="session-information" class="level2">
+<h2 class="anchored" data-anchor-id="session-information">SESSION INFORMATION</h2>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.5.1 (2025-06-13)
+Platform: x86_64-redhat-linux-gnu
+Running under: Red Hat Enterprise Linux 9.6 (Plow)
+
+Matrix products: default
+BLAS/LAPACK: FlexiBLAS OPENBLAS-OPENMP;  LAPACK version 3.9.0
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+time zone: America/New_York
+tzcode source: system (glibc)
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] skimr_2.2.1        nycflights13_1.0.2 yardstick_1.3.2    workflowsets_1.1.1
+ [5] workflows_1.3.0    tune_2.0.1         tailor_0.1.0       rsample_1.3.1     
+ [9] recipes_1.3.1      parsnip_1.3.3      modeldata_1.5.1    infer_1.0.9       
+[13] dials_1.4.2        broom_1.0.10       tidymodels_1.4.1   scales_1.4.0      
+[17] lubridate_1.9.4    forcats_1.0.1      stringr_1.5.2      dplyr_1.1.4       
+[21] purrr_1.1.0        readr_2.1.5        tidyr_1.3.1        tibble_3.3.0      
+[25] ggplot2_4.0.0      tidyverse_2.0.0    knitr_1.50        
+
+loaded via a namespace (and not attached):
+ [1] tidyselect_1.2.1    timeDate_4051.111   farver_2.1.2       
+ [4] clock_0.7.3         S7_0.2.0            fastmap_1.2.0      
+ [7] digest_0.6.37       rpart_4.1.24        timechange_0.3.0   
+[10] lifecycle_1.0.4     survival_3.8-3      magrittr_2.0.4     
+[13] compiler_4.5.1      rlang_1.1.6         tools_4.5.1        
+[16] utf8_1.2.6          yaml_2.3.10         data.table_1.17.8  
+[19] labeling_0.4.3      htmlwidgets_1.6.4   repr_1.1.7         
+[22] DiceDesign_1.10     RColorBrewer_1.1-3  withr_3.0.2        
+[25] nnet_7.3-20         grid_4.5.1          sparsevctrs_0.3.4  
+[28] future_1.67.0       globals_0.18.0      MASS_7.3-65        
+[31] dichromat_2.0-0.1   cli_3.6.5           rmarkdown_2.30     
+[34] generics_0.1.4      rstudioapi_0.17.1   future.apply_1.20.0
+[37] tzdb_0.5.0          splines_4.5.1       parallel_4.5.1     
+[40] base64enc_0.1-3     vctrs_0.6.5         hardhat_1.4.2      
+[43] Matrix_1.7-4        jsonlite_2.0.0      hms_1.1.4          
+[46] listenv_0.9.1       gower_1.0.2         glue_1.8.0         
+[49] parallelly_1.45.1   codetools_0.2-20    stringi_1.8.7      
+[52] gtable_0.3.6        GPfit_1.0-9         pillar_1.11.1      
+[55] furrr_0.3.1         htmltools_0.5.8.1   ipred_0.9-15       
+[58] lava_1.8.1          R6_2.6.1            lhs_1.2.0          
+[61] evaluate_1.0.5      lattice_0.22-7      backports_1.5.0    
+[64] class_7.3-23        Rcpp_1.1.0          prodlim_2025.04.28 
+[67] xfun_0.53           pkgconfig_2.0.3    </code></pre>
 </div>
 </div>
 </section>
