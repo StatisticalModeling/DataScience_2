@@ -143,6 +143,182 @@ rf_mod <-
   rand_forest(trees = 1000) |>  
   set_engine("ranger") |>  
   set_mode("classification")
+```
 
+Starting with this parsnip model object, the `fit()` function can be used with a model formula. Since random forest models use random numbers, we again set the seed prior to computing:
+
+```{r}
+set.seed(234)
+rf_fit <- 
+  rf_mod |>  
+  fit(class ~ ., data = cell_train)
+rf_fit
+```
+
+This new `rf_fit` object is our fitted model, trained on our training data set.
+
+## ESTIMATING PERFORMANCE
+
+During a modeling project, we might create a variety of different models. To choose between them, we need to consider how well these models do, as measured by some performance statistics. In our example in this article, some options we could use are:
+
+* the area under the Receiver Operating Characteristic (ROC) curve, and
+
+* overall classification accuracy.
+
+The ROC curve uses the class probability estimates to give us a sense of performance across the entire set of potential probability cutoffs. Overall accuracy uses the hard class predictions to measure performance. The hard class predictions tell us whether our model predicted `PS` or `WS` for each cell. But, behind those predictions, the model is actually estimating a probability. A simple 50% probability cutoff is used to categorize a cell as poorly segmented.
+
+The [yardstick](https://yardstick.tidymodels.org/) package has functions for computing both of these measures called `roc_auc()` and `accuracy()`.
+
+At first glance, it might seem like a good idea to use the training set data to compute these statistics. (This is actually a very bad idea.) Let’s see what happens if we try this. To evaluate performance based on the training set, we call the `predict()` method to get both types of predictions (i.e. probabilities and hard class predictions).
+
+```{r}
+rf_training_pred <- 
+  predict(rf_fit, cell_train) |>  
+  bind_cols(predict(rf_fit, cell_train, type = "prob")) |>  
+  # Add the true outcome data back in
+  bind_cols(cell_train %>% 
+              select(class))
+head(rf_training_pred, n = 5) |> 
+  kable()
+```
+
+Using the yardstick functions, this model has spectacular results, so spectacular that you might be starting to get suspicious:
+
+```{r}
+rf_training_pred |>                 # training set predictions
+  roc_auc(truth = class, .pred_PS) |> 
+  kable()
+rf_training_pred |>                 # training set predictions
+  accuracy(truth = class, .pred_class) |> 
+  kable()
+```
+
+Now that we have this model with exceptional performance, we proceed to the test set. Unfortunately, we discover that, although our results aren’t bad, they are certainly worse than what we initially thought based on predicting the training set:
+
+```{r}
+rf_testing_pred <- 
+  predict(rf_fit, cell_test) |>  
+  bind_cols(predict(rf_fit, cell_test, type = "prob")) |>  
+  bind_cols(cell_test |>  select(class))
+head(rf_testing_pred, n = 5) |> 
+  kable()
+rf_testing_pred |>                    # test set predictions
+  roc_auc(truth = class, .pred_PS) |> 
+  kable()
+rf_testing_pred |>                    # test set predictions
+  accuracy(truth = class, .pred_class) |> 
+  kable()
+```
+
+## What happened here?
+There are several reasons why training set statistics like the ones shown in this section can be unrealistically optimistic:
+
+* Models like random forests, neural networks, and other black-box methods can essentially memorize the training set. Re-predicting that same set should always result in nearly perfect results.
+
+* The training set does not have the capacity to be a good arbiter of performance. It is not an independent piece of information; predicting the training set can only reflect what the model already knows.
+
+To understand that second point better, think about an analogy from teaching. Suppose you give a class a test, then give them the answers, then provide the same test. The student scores on the second test do not accurately reflect what they know about the subject; these scores would probably be higher than their results on the first test.
+
+## RESAMPLING TO THE RESCUE
+
+Resampling methods, such as cross-validation and the bootstrap, are empirical simulation systems. They create a series of data sets similar to the training/testing split discussed previously; a subset of the data are used for creating the model and a different subset is used to measure performance. Resampling is always used with the training set. This schematic from [Kuhn and Johnson (2019)](https://bookdown.org/max/FES/resampling.html) illustrates data usage for resampling methods:
+
+```{r, echo = FALSE}
+knitr::include_graphics("./jpg/resampling.jpg")
+```
+
+In the first level of this diagram, you see what happens when you use `rsample::initial_split()`, which splits the original data into training and test sets. Then, the training set is chosen for resampling, and the test set is held out.
+
+Let’s use 10-fold cross-validation (CV) in this example. This method randomly allocates the 1514 cells in the training set to 10 groups of roughly equal size, called “folds”. For the first iteration of resampling, the first fold of about 151 cells are held out for the purpose of measuring performance. This is similar to a test set but, to avoid confusion, we call these data the _assessment_ set in the `tidymodels` framework.
+
+The other 90% of the data (about 1362 cells) are used to fit the model. Again, this sounds similar to a training set, so in `tidymodels` we call this data the _analysis_ set. This model, trained on the analysis set, is applied to the assessment set to generate predictions, and performance statistics are computed based on those predictions.
+
+In this example, 10-fold CV moves iteratively through the folds and leaves a different 10% out each time for model assessment. At the end of this process, there are 10 sets of performance statistics that were created on 10 data sets that were not used in the modeling process. For the cell example, this means 10 accuracies and 10 areas under the ROC curve. While 10 models were created, these are not used further; we do not keep the models themselves trained on these folds because their only purpose is calculating performance metrics.
+
+The final resampling estimates for the model are the averages of the performance statistics replicates. For example, suppose for our data the results were:
+
+```{r, label = "CV", echo = FALSE, cache = TRUE}
+set.seed(345)
+folds <- vfold_cv(cell_train, v = 10)
+rf_wf <- 
+  workflow()  |> 
+  add_model(rf_mod)  |> 
+  add_formula(class ~ .)
+set.seed(456)
+rf_fit_rs <- 
+  rf_wf %>% 
+  fit_resamples(folds)
+collect_metrics(rf_fit_rs, summarize = FALSE, type = "wide")[, -1] |> 
+  kable()
+```
+
+```{r, echo = FALSE}
+T3 <- collect_metrics(rf_fit_rs)
+auc <- T3$mean[3]
+acc <- T3$mean[1]
+```
+
+From these resampling statistics, the final estimate of performance for this random forest model would be `r auc` for the area under the ROC curve and `r acc` for accuracy.
+
+These resampling statistics are an effective method for measuring model performance without predicting the training set directly as a whole.
+
+## FIT A MODEL WITH RESAMPLING
+
+To generate these results, the first step is to create a resampling object using `rsample`. There are [several resampling methods](https://rsample.tidymodels.org/reference/index.html#section-resampling-methods) implemented in `rsample`; cross-validation folds can be created using `vfold_cv()`:
+
+```{r}
+set.seed(345)
+folds <- vfold_cv(cell_train, v = 10)
+folds
+```
+
+The list column for splits contains the information on which rows belong in the analysis and assessment sets. There are functions that can be used to extract the individual resampled data called `analysis()` and `assessment()`.
+
+However, the `tune` package contains high-level functions that can do the required computations to resample a model for the purpose of measuring performance. You have several options for building an object for resampling:
+
+* Resample a model specification preprocessed with a formula or recipe, or
+
+* Resample a `workflow()` that bundles together a model specification and formula/recipe.
+
+For this example, let’s use a `workflow()` that bundles together the random forest model and a formula, since we are not using a recipe. Whichever of these options you use, the syntax to `fit_resamples()` is very similar to `fit()`:
+
+```{r}
+rf_wf <- 
+  workflow() %>%
+  add_model(rf_mod) %>%
+  add_formula(class ~ .)
+
+set.seed(456)
+rf_fit_rs <- 
+  rf_wf %>% 
+  fit_resamples(folds)
+rf_fit_rs
+```
+
+The results are similar to the `folds` results with some extra columns. The column `.metrics` contains the performance statistics created from the 10 assessment sets. These can be manually unnested but the tune package contains a number of simple functions that can extract these data:
+
+```{r}
+collect_metrics(rf_fit_rs) |> 
+  kable()
+```
+
+Think about these values we now have for accuracy and AUC. These performance metrics are now more realistic (i.e. lower) than our ill-advised first attempt at computing performance metrics in the section above. If we wanted to try different model types for this data set, we could more confidently compare performance metrics computed using resampling to choose between models. Also, remember that at the end of our project, we return to our test set to estimate final model performance. We have looked at this once already before we started using resampling, but let’s remind ourselves of the results:
+
+```{r}
+rf_testing_pred |>                    # test set predictions
+  roc_auc(truth = class, .pred_PS) |> 
+  kable()
+
+rf_testing_pred |>                    # test set predictions
+  accuracy(truth = class, .pred_class) |> 
+  kable()
+```
+
+The performance metrics from the test set are much closer to the performance metrics computed using resampling than our first (“bad idea”) attempt. Resampling allows us to simulate how well our model will perform on new data, and the test set acts as the final, unbiased check for our model’s performance.
+
+## SESSION INFORMATION
+
+```{r, echo = FALSE}
+sessionInfo()
 ```
 

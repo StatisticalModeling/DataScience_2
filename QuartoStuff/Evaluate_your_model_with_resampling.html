@@ -91,7 +91,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on November 14, 2025 12:02:52 Eastern Standard Time</p>
+      <p class="date">Last modified on November 18, 2025 10:49:04 Eastern Standard Time</p>
     </div>
   </div>
   
@@ -311,6 +311,556 @@ Note
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rand_forest</span>(<span class="at">trees =</span> <span class="dv">1000</span>) <span class="sc">|&gt;</span>  </span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">"ranger"</span>) <span class="sc">|&gt;</span>  </span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Starting with this parsnip model object, the <code>fit()</code> function can be used with a model formula. Since random forest models use random numbers, we again set the seed prior to computing:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">234</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>rf_fit <span class="ot">&lt;-</span> </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  rf_mod <span class="sc">|&gt;</span>  </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit</span>(class <span class="sc">~</span> ., <span class="at">data =</span> cell_train)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>rf_fit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>parsnip model object
+
+Ranger result
+
+Call:
+ ranger::ranger(x = maybe_data_frame(x), y = y, num.trees = ~1000,      num.threads = 1, verbose = FALSE, seed = sample.int(10^5,          1), probability = TRUE) 
+
+Type:                             Probability estimation 
+Number of trees:                  1000 
+Sample size:                      1514 
+Number of independent variables:  56 
+Mtry:                             7 
+Target node size:                 10 
+Variable importance mode:         none 
+Splitrule:                        gini 
+OOB prediction error (Brier s.):  0.1187479 </code></pre>
+</div>
+</div>
+<p>This new <code>rf_fit</code> object is our fitted model, trained on our training data set.</p>
+</section>
+<section id="estimating-performance" class="level2">
+<h2 class="anchored" data-anchor-id="estimating-performance">ESTIMATING PERFORMANCE</h2>
+<p>During a modeling project, we might create a variety of different models. To choose between them, we need to consider how well these models do, as measured by some performance statistics. In our example in this article, some options we could use are:</p>
+<ul>
+<li><p>the area under the Receiver Operating Characteristic (ROC) curve, and</p></li>
+<li><p>overall classification accuracy.</p></li>
+</ul>
+<p>The ROC curve uses the class probability estimates to give us a sense of performance across the entire set of potential probability cutoffs. Overall accuracy uses the hard class predictions to measure performance. The hard class predictions tell us whether our model predicted <code>PS</code> or <code>WS</code> for each cell. But, behind those predictions, the model is actually estimating a probability. A simple 50% probability cutoff is used to categorize a cell as poorly segmented.</p>
+<p>The <a href="https://yardstick.tidymodels.org/">yardstick</a> package has functions for computing both of these measures called <code>roc_auc()</code> and <code>accuracy()</code>.</p>
+<p>At first glance, it might seem like a good idea to use the training set data to compute these statistics. (This is actually a very bad idea.) Let’s see what happens if we try this. To evaluate performance based on the training set, we call the <code>predict()</code> method to get both types of predictions (i.e.&nbsp;probabilities and hard class predictions).</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>rf_training_pred <span class="ot">&lt;-</span> </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(rf_fit, cell_train) <span class="sc">|&gt;</span>  </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(rf_fit, cell_train, <span class="at">type =</span> <span class="st">"prob"</span>)) <span class="sc">|&gt;</span>  </span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add the true outcome data back in</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(cell_train <span class="sc">%&gt;%</span> </span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>              <span class="fu">select</span>(class))</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(rf_training_pred, <span class="at">n =</span> <span class="dv">5</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.pred_class</th>
+<th style="text-align: right;">.pred_PS</th>
+<th style="text-align: right;">.pred_WS</th>
+<th style="text-align: left;">class</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">PS</td>
+<td style="text-align: right;">0.7395460</td>
+<td style="text-align: right;">0.2604540</td>
+<td style="text-align: left;">PS</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PS</td>
+<td style="text-align: right;">0.9402575</td>
+<td style="text-align: right;">0.0597425</td>
+<td style="text-align: left;">PS</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PS</td>
+<td style="text-align: right;">0.9293341</td>
+<td style="text-align: right;">0.0706659</td>
+<td style="text-align: left;">PS</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PS</td>
+<td style="text-align: right;">0.9593913</td>
+<td style="text-align: right;">0.0406087</td>
+<td style="text-align: left;">PS</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PS</td>
+<td style="text-align: right;">0.9261619</td>
+<td style="text-align: right;">0.0738381</td>
+<td style="text-align: left;">PS</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Using the yardstick functions, this model has spectacular results, so spectacular that you might be starting to get suspicious:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>rf_training_pred <span class="sc">|&gt;</span>                 <span class="co"># training set predictions</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">roc_auc</span>(<span class="at">truth =</span> class, .pred_PS) <span class="sc">|&gt;</span> </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">roc_auc</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.999707</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>rf_training_pred <span class="sc">|&gt;</span>                 <span class="co"># training set predictions</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">accuracy</span>(<span class="at">truth =</span> class, .pred_class) <span class="sc">|&gt;</span> </span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9900925</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Now that we have this model with exceptional performance, we proceed to the test set. Unfortunately, we discover that, although our results aren’t bad, they are certainly worse than what we initially thought based on predicting the training set:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>rf_testing_pred <span class="ot">&lt;-</span> </span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">predict</span>(rf_fit, cell_test) <span class="sc">|&gt;</span>  </span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(<span class="fu">predict</span>(rf_fit, cell_test, <span class="at">type =</span> <span class="st">"prob"</span>)) <span class="sc">|&gt;</span>  </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bind_cols</span>(cell_test <span class="sc">|&gt;</span>  <span class="fu">select</span>(class))</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(rf_testing_pred, <span class="at">n =</span> <span class="dv">5</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.pred_class</th>
+<th style="text-align: right;">.pred_PS</th>
+<th style="text-align: right;">.pred_WS</th>
+<th style="text-align: left;">class</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">PS</td>
+<td style="text-align: right;">0.8929730</td>
+<td style="text-align: right;">0.1070270</td>
+<td style="text-align: left;">PS</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PS</td>
+<td style="text-align: right;">0.9203198</td>
+<td style="text-align: right;">0.0796802</td>
+<td style="text-align: left;">PS</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">WS</td>
+<td style="text-align: right;">0.0800512</td>
+<td style="text-align: right;">0.9199488</td>
+<td style="text-align: left;">WS</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">PS</td>
+<td style="text-align: right;">0.8165123</td>
+<td style="text-align: right;">0.1834877</td>
+<td style="text-align: left;">WS</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">PS</td>
+<td style="text-align: right;">0.7519345</td>
+<td style="text-align: right;">0.2480655</td>
+<td style="text-align: left;">PS</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>rf_testing_pred <span class="sc">|&gt;</span>                    <span class="co"># test set predictions</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">roc_auc</span>(<span class="at">truth =</span> class, .pred_PS) <span class="sc">|&gt;</span> </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">roc_auc</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.8909402</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>rf_testing_pred <span class="sc">|&gt;</span>                    <span class="co"># test set predictions</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">accuracy</span>(<span class="at">truth =</span> class, .pred_class) <span class="sc">|&gt;</span> </span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.8138614</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="what-happened-here" class="level2">
+<h2 class="anchored" data-anchor-id="what-happened-here">What happened here?</h2>
+<p>There are several reasons why training set statistics like the ones shown in this section can be unrealistically optimistic:</p>
+<ul>
+<li><p>Models like random forests, neural networks, and other black-box methods can essentially memorize the training set. Re-predicting that same set should always result in nearly perfect results.</p></li>
+<li><p>The training set does not have the capacity to be a good arbiter of performance. It is not an independent piece of information; predicting the training set can only reflect what the model already knows.</p></li>
+</ul>
+<p>To understand that second point better, think about an analogy from teaching. Suppose you give a class a test, then give them the answers, then provide the same test. The student scores on the second test do not accurately reflect what they know about the subject; these scores would probably be higher than their results on the first test.</p>
+</section>
+<section id="resampling-to-the-rescue" class="level2">
+<h2 class="anchored" data-anchor-id="resampling-to-the-rescue">RESAMPLING TO THE RESCUE</h2>
+<p>Resampling methods, such as cross-validation and the bootstrap, are empirical simulation systems. They create a series of data sets similar to the training/testing split discussed previously; a subset of the data are used for creating the model and a different subset is used to measure performance. Resampling is always used with the training set. This schematic from <a href="https://bookdown.org/max/FES/resampling.html">Kuhn and Johnson (2019)</a> illustrates data usage for resampling methods:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./jpg/resampling.jpg" class="img-fluid figure-img" width="1014"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In the first level of this diagram, you see what happens when you use <code>rsample::initial_split()</code>, which splits the original data into training and test sets. Then, the training set is chosen for resampling, and the test set is held out.</p>
+<p>Let’s use 10-fold cross-validation (CV) in this example. This method randomly allocates the 1514 cells in the training set to 10 groups of roughly equal size, called “folds”. For the first iteration of resampling, the first fold of about 151 cells are held out for the purpose of measuring performance. This is similar to a test set but, to avoid confusion, we call these data the <em>assessment</em> set in the <code>tidymodels</code> framework.</p>
+<p>The other 90% of the data (about 1362 cells) are used to fit the model. Again, this sounds similar to a training set, so in <code>tidymodels</code> we call this data the <em>analysis</em> set. This model, trained on the analysis set, is applied to the assessment set to generate predictions, and performance statistics are computed based on those predictions.</p>
+<p>In this example, 10-fold CV moves iteratively through the folds and leaves a different 10% out each time for model assessment. At the end of this process, there are 10 sets of performance statistics that were created on 10 data sets that were not used in the modeling process. For the cell example, this means 10 accuracies and 10 areas under the ROC curve. While 10 models were created, these are not used further; we do not keep the models themselves trained on these folds because their only purpose is calculating performance metrics.</p>
+<p>The final resampling estimates for the model are the averages of the performance statistics replicates. For example, suppose for our data the results were:</p>
+<div class="cell" data-layout-align="center" data-hash="Evaluate_your_model_with_resampling_cache/html/CV_9deb7843ff2615c086991bb043ca8f8d">
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">id</th>
+<th style="text-align: right;">accuracy</th>
+<th style="text-align: right;">roc_auc</th>
+<th style="text-align: right;">brier_class</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Fold01</td>
+<td style="text-align: right;">0.8289474</td>
+<td style="text-align: right;">0.8915511</td>
+<td style="text-align: right;">0.1318143</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fold02</td>
+<td style="text-align: right;">0.7631579</td>
+<td style="text-align: right;">0.8730574</td>
+<td style="text-align: right;">0.1446245</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Fold03</td>
+<td style="text-align: right;">0.8486842</td>
+<td style="text-align: right;">0.9058435</td>
+<td style="text-align: right;">0.1172227</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fold04</td>
+<td style="text-align: right;">0.8421053</td>
+<td style="text-align: right;">0.8918169</td>
+<td style="text-align: right;">0.1195464</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Fold05</td>
+<td style="text-align: right;">0.7947020</td>
+<td style="text-align: right;">0.8833524</td>
+<td style="text-align: right;">0.1339253</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fold06</td>
+<td style="text-align: right;">0.8476821</td>
+<td style="text-align: right;">0.9256729</td>
+<td style="text-align: right;">0.1089129</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Fold07</td>
+<td style="text-align: right;">0.8211921</td>
+<td style="text-align: right;">0.8977667</td>
+<td style="text-align: right;">0.1239223</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fold08</td>
+<td style="text-align: right;">0.8609272</td>
+<td style="text-align: right;">0.9273504</td>
+<td style="text-align: right;">0.1075464</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Fold09</td>
+<td style="text-align: right;">0.8476821</td>
+<td style="text-align: right;">0.9215210</td>
+<td style="text-align: right;">0.1051810</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fold10</td>
+<td style="text-align: right;">0.8543046</td>
+<td style="text-align: right;">0.9251880</td>
+<td style="text-align: right;">0.1113001</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>From these resampling statistics, the final estimate of performance for this random forest model would be 0.904312 for the area under the ROC curve and 0.8309385 for accuracy.</p>
+<p>These resampling statistics are an effective method for measuring model performance without predicting the training set directly as a whole.</p>
+</section>
+<section id="fit-a-model-with-resampling" class="level2">
+<h2 class="anchored" data-anchor-id="fit-a-model-with-resampling">FIT A MODEL WITH RESAMPLING</h2>
+<p>To generate these results, the first step is to create a resampling object using <code>rsample</code>. There are <a href="https://rsample.tidymodels.org/reference/index.html#section-resampling-methods">several resampling methods</a> implemented in <code>rsample</code>; cross-validation folds can be created using <code>vfold_cv()</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">345</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(cell_train, <span class="at">v =</span> <span class="dv">10</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>folds</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>#  10-fold cross-validation 
+# A tibble: 10 × 2
+   splits             id    
+   &lt;list&gt;             &lt;chr&gt; 
+ 1 &lt;split [1362/152]&gt; Fold01
+ 2 &lt;split [1362/152]&gt; Fold02
+ 3 &lt;split [1362/152]&gt; Fold03
+ 4 &lt;split [1362/152]&gt; Fold04
+ 5 &lt;split [1363/151]&gt; Fold05
+ 6 &lt;split [1363/151]&gt; Fold06
+ 7 &lt;split [1363/151]&gt; Fold07
+ 8 &lt;split [1363/151]&gt; Fold08
+ 9 &lt;split [1363/151]&gt; Fold09
+10 &lt;split [1363/151]&gt; Fold10</code></pre>
+</div>
+</div>
+<p>The list column for splits contains the information on which rows belong in the analysis and assessment sets. There are functions that can be used to extract the individual resampled data called <code>analysis()</code> and <code>assessment()</code>.</p>
+<p>However, the <code>tune</code> package contains high-level functions that can do the required computations to resample a model for the purpose of measuring performance. You have several options for building an object for resampling:</p>
+<ul>
+<li><p>Resample a model specification preprocessed with a formula or recipe, or</p></li>
+<li><p>Resample a <code>workflow()</code> that bundles together a model specification and formula/recipe.</p></li>
+</ul>
+<p>For this example, let’s use a <code>workflow()</code> that bundles together the random forest model and a formula, since we are not using a recipe. Whichever of these options you use, the syntax to <code>fit_resamples()</code> is very similar to <code>fit()</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>rf_wf <span class="ot">&lt;-</span> </span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">workflow</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(rf_mod) <span class="sc">%&gt;%</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_formula</span>(class <span class="sc">~</span> .)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">456</span>)</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>rf_fit_rs <span class="ot">&lt;-</span> </span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  rf_wf <span class="sc">%&gt;%</span> </span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">fit_resamples</span>(folds)</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>rf_fit_rs</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Resampling results
+# 10-fold cross-validation 
+# A tibble: 10 × 4
+   splits             id     .metrics         .notes          
+   &lt;list&gt;             &lt;chr&gt;  &lt;list&gt;           &lt;list&gt;          
+ 1 &lt;split [1362/152]&gt; Fold01 &lt;tibble [3 × 4]&gt; &lt;tibble [0 × 4]&gt;
+ 2 &lt;split [1362/152]&gt; Fold02 &lt;tibble [3 × 4]&gt; &lt;tibble [0 × 4]&gt;
+ 3 &lt;split [1362/152]&gt; Fold03 &lt;tibble [3 × 4]&gt; &lt;tibble [0 × 4]&gt;
+ 4 &lt;split [1362/152]&gt; Fold04 &lt;tibble [3 × 4]&gt; &lt;tibble [0 × 4]&gt;
+ 5 &lt;split [1363/151]&gt; Fold05 &lt;tibble [3 × 4]&gt; &lt;tibble [0 × 4]&gt;
+ 6 &lt;split [1363/151]&gt; Fold06 &lt;tibble [3 × 4]&gt; &lt;tibble [0 × 4]&gt;
+ 7 &lt;split [1363/151]&gt; Fold07 &lt;tibble [3 × 4]&gt; &lt;tibble [0 × 4]&gt;
+ 8 &lt;split [1363/151]&gt; Fold08 &lt;tibble [3 × 4]&gt; &lt;tibble [0 × 4]&gt;
+ 9 &lt;split [1363/151]&gt; Fold09 &lt;tibble [3 × 4]&gt; &lt;tibble [0 × 4]&gt;
+10 &lt;split [1363/151]&gt; Fold10 &lt;tibble [3 × 4]&gt; &lt;tibble [0 × 4]&gt;</code></pre>
+</div>
+</div>
+<p>The results are similar to the <code>folds</code> results with some extra columns. The column <code>.metrics</code> contains the performance statistics created from the 10 assessment sets. These can be manually unnested but the tune package contains a number of simple functions that can extract these data:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">collect_metrics</span>(rf_fit_rs) <span class="sc">|&gt;</span> </span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">mean</th>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">std_err</th>
+<th style="text-align: left;">.config</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.8309385</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0096907</td>
+<td style="text-align: left;">pre0_mod0_post0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">brier_class</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.1203996</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0041297</td>
+<td style="text-align: left;">pre0_mod0_post0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">roc_auc</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9043120</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.0062355</td>
+<td style="text-align: left;">pre0_mod0_post0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Think about these values we now have for accuracy and AUC. These performance metrics are now more realistic (i.e.&nbsp;lower) than our ill-advised first attempt at computing performance metrics in the section above. If we wanted to try different model types for this data set, we could more confidently compare performance metrics computed using resampling to choose between models. Also, remember that at the end of our project, we return to our test set to estimate final model performance. We have looked at this once already before we started using resampling, but let’s remind ourselves of the results:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>rf_testing_pred <span class="sc">|&gt;</span>                    <span class="co"># test set predictions</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">roc_auc</span>(<span class="at">truth =</span> class, .pred_PS) <span class="sc">|&gt;</span> </span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">roc_auc</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.8909402</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>rf_testing_pred <span class="sc">|&gt;</span>                    <span class="co"># test set predictions</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">accuracy</span>(<span class="at">truth =</span> class, .pred_class) <span class="sc">|&gt;</span> </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">kable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<table class="table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.8138614</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>The performance metrics from the test set are much closer to the performance metrics computed using resampling than our first (“bad idea”) attempt. Resampling allows us to simulate how well our model will perform on new data, and the test set acts as the final, unbiased check for our model’s performance.</p>
+</section>
+<section id="session-information" class="level2">
+<h2 class="anchored" data-anchor-id="session-information">SESSION INFORMATION</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.5.1 (2025-06-13)
+Platform: x86_64-redhat-linux-gnu
+Running under: Red Hat Enterprise Linux 9.6 (Plow)
+
+Matrix products: default
+BLAS/LAPACK: FlexiBLAS OPENBLAS-OPENMP;  LAPACK version 3.9.0
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+time zone: America/New_York
+tzcode source: system (glibc)
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] yardstick_1.3.2    workflowsets_1.1.1 workflows_1.3.0    tune_2.0.1        
+ [5] tailor_0.1.0       rsample_1.3.1      recipes_1.3.1      parsnip_1.3.3     
+ [9] modeldata_1.5.1    infer_1.0.9        dials_1.4.2        broom_1.0.10      
+[13] tidymodels_1.4.1   scales_1.4.0       lubridate_1.9.4    forcats_1.0.1     
+[17] stringr_1.5.2      dplyr_1.1.4        purrr_1.1.0        readr_2.1.5       
+[21] tidyr_1.3.1        tibble_3.3.0       ggplot2_4.0.0      tidyverse_2.0.0   
+[25] knitr_1.50        
+
+loaded via a namespace (and not attached):
+ [1] tidyselect_1.2.1    timeDate_4051.111   farver_2.1.2       
+ [4] S7_0.2.0            fastmap_1.2.0       digest_0.6.37      
+ [7] rpart_4.1.24        timechange_0.3.0    lifecycle_1.0.4    
+[10] survival_3.8-3      magrittr_2.0.4      compiler_4.5.1     
+[13] rlang_1.1.6         tools_4.5.1         utf8_1.2.6         
+[16] yaml_2.3.10         data.table_1.17.8   htmlwidgets_1.6.4  
+[19] DiceDesign_1.10     RColorBrewer_1.1-3  withr_3.0.2        
+[22] nnet_7.3-20         grid_4.5.1          sparsevctrs_0.3.4  
+[25] future_1.67.0       globals_0.18.0      MASS_7.3-65        
+[28] dichromat_2.0-0.1   cli_3.6.5           rmarkdown_2.30     
+[31] generics_0.1.4      rstudioapi_0.17.1   future.apply_1.20.0
+[34] tzdb_0.5.0          modelenv_0.2.0      splines_4.5.1      
+[37] parallel_4.5.1      vctrs_0.6.5         hardhat_1.4.2      
+[40] Matrix_1.7-4        jsonlite_2.0.0      hms_1.1.4          
+[43] listenv_0.9.1       jpeg_0.1-11         gower_1.0.2        
+[46] glue_1.8.0          parallelly_1.45.1   codetools_0.2-20   
+[49] stringi_1.8.7       gtable_0.3.6        GPfit_1.0-9        
+[52] pillar_1.11.1       furrr_0.3.1         htmltools_0.5.8.1  
+[55] ipred_0.9-15        lava_1.8.1          R6_2.6.1           
+[58] lhs_1.2.0           evaluate_1.0.5      lattice_0.22-7     
+[61] backports_1.5.0     class_7.3-23        Rcpp_1.1.0         
+[64] prodlim_2025.04.28  ranger_0.17.0       xfun_0.53          
+[67] pkgconfig_2.0.3    </code></pre>
+</div>
 </div>
 </section>
 
