@@ -1,0 +1,12 @@
+name: tune_model_parameters
+title: Tune_model_parameters
+username: arnholtat
+account: arnholtat
+server: mathr.appstate.edu
+hostUrl: https://mathr.appstate.edu/connect/__api__
+appId: 143
+bundleId: 391
+url: https://mathr.appstate.edu/connect/content/4b0cc0df-c55b-4c41-aec9-dda52872eb9e/
+version: 1
+asMultiple: FALSE
+asStatic: TRUE
