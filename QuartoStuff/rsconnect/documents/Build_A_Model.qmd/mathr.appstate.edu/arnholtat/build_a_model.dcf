@@ -1,0 +1,12 @@
+name: build_a_model
+title: Build_A_Model
+username: arnholtat
+account: arnholtat
+server: mathr.appstate.edu
+hostUrl: https://mathr.appstate.edu/connect/__api__
+appId: 144
+bundleId: 392
+url: https://mathr.appstate.edu/connect/content/ab5cbd93-3064-480b-af15-2619229c8f43/
+version: 1
+asMultiple: FALSE
+asStatic: TRUE
