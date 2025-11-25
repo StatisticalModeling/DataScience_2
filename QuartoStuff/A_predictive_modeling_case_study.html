@@ -91,7 +91,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on November 24, 2025 09:35:44 Eastern Standard Time</p>
+      <p class="date">Last modified on November 25, 2025 10:31:40 Eastern Standard Time</p>
     </div>
   </div>
   
@@ -623,7 +623,7 @@ Computational engine: ranger </code></pre>
 <pre><code>See `?dials::finalize()` or `?dials::update.parameters()` for more information.</code></pre>
 </div>
 </div>
-<p>The mtry hyperparameter sets the number of predictor variables that each node in the decision tree “sees” and can learn about, so it can range from 1 to the total number of features present; when <code>mtry =</code> all possible features, the model is the same as bagging decision trees. The <code>min_n</code> hyperparameter sets the minimum <code>n</code> to split at any node.</p>
+<p>The <code>mtry</code> hyperparameter sets the number of predictor variables that each node in the decision tree “sees” and can learn about, so it can range from 1 to the total number of features present; when <code>mtry =</code> all possible features, the model is the same as bagging decision trees. The <code>min_n</code> hyperparameter sets the minimum <code>n</code> to split at any node.</p>
 <p>We will use a space-filling design to tune (a method of creating a parameter grid for hyperparameter tuning that is specifically designed to cover the parameter space as evenly and thoroughly as possible), with 25 candidate models:</p>
 <div class="cell" data-layout-align="center" data-hash="A_predictive_modeling_case_study_cache/html/spacefill_0159a75a78fc91c72f6fcb6e4166bd0b">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">345</span>)</span>
@@ -714,7 +714,8 @@ Computational engine: ranger </code></pre>
 <span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_path</span>(<span class="at">lwd =</span> <span class="fl">1.5</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
 <span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">lty =</span> <span class="dv">3</span>) <span class="sc">+</span> </span>
 <span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>() <span class="sc">+</span> </span>
-<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">option =</span> <span class="st">"plasma"</span>, <span class="at">end =</span> .<span class="dv">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">option =</span> <span class="st">"plasma"</span>, <span class="at">end =</span> .<span class="dv">6</span>) <span class="sc">+</span> </span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -771,7 +772,7 @@ Computational engine: ranger </code></pre>
 </div>
 </div>
 <p>This ROC AUC value is pretty close to what we saw when we tuned the random forest model with the validation set, which is good news. That means that our estimate of how well our model would perform with new data was not too far off from how well our model actually performed with the unseen test data.</p>
-<p>We can access those variable importance scores via the <code>.workflow</code> column. We can <a href="https://tune.tidymodels.org/reference/extract-tune.html">extract out the fit</a> from the workflow object, and then use the vip package to visualize the variable importance scores for the top 20 features:</p>
+<p>We can access those variable importance scores via the <code>.workflow</code> column. We can <a href="https://tune.tidymodels.org/reference/extract-tune.html">extract out the fit</a> from the workflow object, and then use the <code>vip</code> package to visualize the variable importance scores for the top 20 features:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>last_rf_fit <span class="sc">|&gt;</span>  </span>
 <span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">extract_fit_parsnip</span>() <span class="sc">|&gt;</span>  </span>
@@ -786,6 +787,97 @@ Computational engine: ranger </code></pre>
 </div>
 <p>The most important predictors in whether a hotel stay had children or not were the daily cost for the room, the type of room reserved, the time between the creation of the reservation and the arrival date, and the type of room that was ultimately assigned.</p>
 <p>Let’s generate our last ROC curve to visualize. Since the event we are predicting is the first level in the <code>children</code> factor (“children”), we provide <code>roc_curve()</code> with the <a href="https://yardstick.tidymodels.org/reference/roc_curve.html#relevant-level">relevant class probability</a> <code>.pred_children</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>last_rf_fit <span class="sc">|&gt;</span>  </span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect_predictions</span>() <span class="sc">|&gt;</span>  </span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">roc_curve</span>(children, .pred_children) <span class="sc">|&gt;</span>  </span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">autoplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="A_predictive_modeling_case_study_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Based on these results, the validation set and test set performance statistics are very close, so we would have pretty high confidence that our random forest model with the selected hyperparameters would perform well when predicting new data.</p>
+</section>
+<section id="where-to-next" class="level2">
+<h2 class="anchored" data-anchor-id="where-to-next">WHERE TO NEXT</h2>
+<p>If you’ve made it to the end of this series of <em>Get Started</em> articles, we hope you feel ready to learn more! You now know the core <code>tidymodels</code> packages and how they fit together. After you are comfortable with the basics we introduced in this series, you can <a href="https://www.tidymodels.org/learn/">learn how to go farther</a> with <code>tidymodels</code> in your modeling and machine learning projects.</p>
+<p>Here are some more ideas for where to go next:</p>
+<p>Study up on statistics and modeling with our comprehensive [books](https://www.tidymodels.org/books/.</p>
+<p>Dig deeper into the <a href="https://www.tidymodels.org/packages/">package documentation sites</a> to find functions that meet your modeling needs. Use the <a href="https://www.tidymodels.org/find/">searchable tables</a> to explore what is possible.</p>
+<p>Keep up with the latest about tidymodels packages at the <a href="https://tidyverse.org/tags/tidymodels/">tidyverse blog</a>.</p>
+<p>Find ways to ask for <a href="https://www.tidymodels.org/help/">help</a> and <a href="https://www.tidymodels.org/contribute/">contribute to tidymodels</a> to help others.</p>
+<section id="happy-modeling" class="level3">
+<h3 class="anchored" data-anchor-id="happy-modeling">Happy modeling!</h3>
+</section>
+</section>
+<section id="session-information" class="level2">
+<h2 class="anchored" data-anchor-id="session-information">SESSION INFORMATION</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>R version 4.5.1 (2025-06-13)
+Platform: x86_64-redhat-linux-gnu
+Running under: Red Hat Enterprise Linux 9.6 (Plow)
+
+Matrix products: default
+BLAS/LAPACK: FlexiBLAS OPENBLAS-OPENMP;  LAPACK version 3.9.0
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+time zone: America/New_York
+tzcode source: system (glibc)
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] yardstick_1.3.2    workflowsets_1.1.1 workflows_1.3.0    tune_2.0.1        
+ [5] tailor_0.1.0       rsample_1.3.1      recipes_1.3.1      parsnip_1.3.3     
+ [9] modeldata_1.5.1    infer_1.0.9        dials_1.4.2        broom_1.0.10      
+[13] tidymodels_1.4.1   scales_1.4.0       lubridate_1.9.4    forcats_1.0.1     
+[17] stringr_1.5.2      dplyr_1.1.4        purrr_1.1.0        readr_2.1.5       
+[21] tidyr_1.3.1        tibble_3.3.0       ggplot2_4.0.0      tidyverse_2.0.0   
+[25] knitr_1.50        
+
+loaded via a namespace (and not attached):
+ [1] rlang_1.1.6         magrittr_2.0.4      furrr_0.3.1        
+ [4] compiler_4.5.1      vctrs_0.6.5         lhs_1.2.0          
+ [7] pkgconfig_2.0.3     shape_1.4.6.1       crayon_1.5.3       
+[10] fastmap_1.2.0       backports_1.5.0     labeling_0.4.3     
+[13] utf8_1.2.6          rmarkdown_2.30      prodlim_2025.04.28 
+[16] tzdb_0.5.0          bit_4.6.0           xfun_0.53          
+[19] glmnet_4.1-10       jsonlite_2.0.0      vip_0.4.1          
+[22] jpeg_0.1-11         parallel_4.5.1      R6_2.6.1           
+[25] stringi_1.8.7       RColorBrewer_1.1-3  ranger_0.17.0      
+[28] parallelly_1.45.1   rpart_4.1.24        Rcpp_1.1.0         
+[31] iterators_1.0.14    future.apply_1.20.0 Matrix_1.7-4       
+[34] splines_4.5.1       nnet_7.3-20         timechange_0.3.0   
+[37] tidyselect_1.2.1    rstudioapi_0.17.1   dichromat_2.0-0.1  
+[40] yaml_2.3.10         timeDate_4051.111   codetools_0.2-20   
+[43] curl_7.0.0          listenv_0.9.1       lattice_0.22-7     
+[46] withr_3.0.2         S7_0.2.0            evaluate_1.0.5     
+[49] future_1.67.0       survival_3.8-3      pillar_1.11.1      
+[52] foreach_1.5.2       clock_0.7.3         generics_0.1.4     
+[55] vroom_1.6.6         hms_1.1.4           globals_0.18.0     
+[58] class_7.3-23        glue_1.8.0          tools_4.5.1        
+[61] data.table_1.17.8   gower_1.0.2         grid_4.5.1         
+[64] ipred_0.9-15        cli_3.6.5           DiceDesign_1.10    
+[67] viridisLite_0.4.2   lava_1.8.1          gtable_0.3.6       
+[70] GPfit_1.0-9         digest_0.6.37       htmlwidgets_1.6.4  
+[73] farver_2.1.2        htmltools_0.5.8.1   lifecycle_1.0.4    
+[76] hardhat_1.4.2       bit64_4.6.0-1       MASS_7.3-65        
+[79] sparsevctrs_0.3.4  </code></pre>
+</div>
+</div>
 </section>
 
 </main>

@@ -333,7 +333,7 @@ rf_mod
 extract_parameter_set_dials(rf_mod)
 ```
 
-The mtry hyperparameter sets the number of predictor variables that each node in the decision tree “sees” and can learn about, so it can range from 1 to the total number of features present; when `mtry =` all possible features, the model is the same as bagging decision trees. The `min_n` hyperparameter sets the minimum `n` to split at any node.
+The `mtry` hyperparameter sets the number of predictor variables that each node in the decision tree “sees” and can learn about, so it can range from 1 to the total number of features present; when `mtry =` all possible features, the model is the same as bagging decision trees. The `min_n` hyperparameter sets the minimum `n` to split at any node.
 
 We will use a space-filling design to tune (a method of creating a parameter grid for hyperparameter tuning that is specifically designed to cover the parameter space as evenly and thoroughly as possible), with 25 candidate models:
 
@@ -398,7 +398,8 @@ bind_rows(rf_auc, lr_auc) |>
   geom_path(lwd = 1.5, alpha = 0.8) +
   geom_abline(lty = 3) + 
   coord_equal() + 
-  scale_color_viridis_d(option = "plasma", end = .6)
+  scale_color_viridis_d(option = "plasma", end = .6) + 
+  theme_bw() 
 ```
 
 The random forest is uniformly better across event probability thresholds.
@@ -439,7 +440,7 @@ last_rf_fit |>
 
 This ROC AUC value is pretty close to what we saw when we tuned the random forest model with the validation set, which is good news. That means that our estimate of how well our model would perform with new data was not too far off from how well our model actually performed with the unseen test data.
 
-We can access those variable importance scores via the `.workflow` column. We can [extract out the fit](https://tune.tidymodels.org/reference/extract-tune.html) from the workflow object, and then use the vip package to visualize the variable importance scores for the top 20 features:
+We can access those variable importance scores via the `.workflow` column. We can [extract out the fit](https://tune.tidymodels.org/reference/extract-tune.html) from the workflow object, and then use the `vip` package to visualize the variable importance scores for the top 20 features:
 
 ```{r}
 last_rf_fit |>  
@@ -450,3 +451,35 @@ last_rf_fit |>
 The most important predictors in whether a hotel stay had children or not were the daily cost for the room, the type of room reserved, the time between the creation of the reservation and the arrival date, and the type of room that was ultimately assigned.
 
 Let’s generate our last ROC curve to visualize. Since the event we are predicting is the first level in the `children` factor (“children”), we provide `roc_curve()` with the [relevant class probability](https://yardstick.tidymodels.org/reference/roc_curve.html#relevant-level) `.pred_children`:
+
+```{r}
+last_rf_fit |>  
+  collect_predictions() |>  
+  roc_curve(children, .pred_children) |>  
+  autoplot()
+```
+
+Based on these results, the validation set and test set performance statistics are very close, so we would have pretty high confidence that our random forest model with the selected hyperparameters would perform well when predicting new data.
+
+## WHERE TO NEXT
+
+If you’ve made it to the end of this series of _Get Started_ articles, we hope you feel ready to learn more! You now know the core `tidymodels` packages and how they fit together. After you are comfortable with the basics we introduced in this series, you can [learn how to go farther](https://www.tidymodels.org/learn/) with `tidymodels` in your modeling and machine learning projects.
+
+Here are some more ideas for where to go next:
+
+Study up on statistics and modeling with our comprehensive [books](https://www.tidymodels.org/books/.
+
+Dig deeper into the [package documentation sites](https://www.tidymodels.org/packages/) to find functions that meet your modeling needs. Use the [searchable tables](https://www.tidymodels.org/find/) to explore what is possible.
+
+Keep up with the latest about tidymodels packages at the [tidyverse blog](https://tidyverse.org/tags/tidymodels/).
+
+Find ways to ask for [help](https://www.tidymodels.org/help/) and [contribute to tidymodels](https://www.tidymodels.org/contribute/) to help others.
+
+### Happy modeling!
+
+## SESSION INFORMATION
+
+```{r, echo = FALSE}
+sessionInfo()
+```
+
