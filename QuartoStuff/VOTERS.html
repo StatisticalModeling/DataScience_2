@@ -93,7 +93,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on March 04, 2025 13:45:44 Eastern Standard Time</p>
+      <p class="date">Last modified on December 01, 2025 10:49:41 Eastern Standard Time</p>
     </div>
   </div>
   
@@ -593,7 +593,7 @@ $ id2    &lt;chr&gt; "Fold01", "Fold02", "Fold03", "Fold04", "Fold05", "Fold06",
 <li>sensitivity, and</li>
 <li>specificity.</li>
 </ul>
-<div class="cell" data-layout-align="center" data-hash="VOTERS_cache/html/unnamed-chunk-15_edd4c61a34978ce35e1468c93c27ec3a">
+<div class="cell" data-layout-align="center" data-hash="VOTERS_cache/html/unnamed-chunk-6_7057ddd09e647d23b3113142990d90d2">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Evaluating models with resampling. </span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>vote_wf <span class="sc">|&gt;</span> </span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fit_resamples</span>(</span>
@@ -626,7 +626,7 @@ $ id2    &lt;chr&gt; "Fold01", "Fold02", "Fold03", "Fold04", "Fold05", "Fold06",
 <p>Notice that this is the first time that this has happened in this course. In the first and second case studies we did, the more powerful machine learning algorithm outperformed the simpler model.</p>
 <p>The logistic regression model will likely be the best option, so we can evaluate its performance on the testing data. We can use the <code>last_fit()</code> function with a workflow to fit to the entire training set and evaluate on the testing set. You only need to give this function the split object!</p>
 <p>We can see that we did a better job identifying the people who voted than those who did not.</p>
-<div class="cell" data-layout-align="center" data-hash="VOTERS_cache/html/unnamed-chunk-16_f61ee37900ac73821bcb48f946f70cec">
+<div class="cell" data-layout-align="center" data-hash="VOTERS_cache/html/unnamed-chunk-7_aa0e64f32752d56d6ec378acf58b6540">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Who is working?</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>vote_final <span class="ot">&lt;-</span> vote_wf  <span class="sc">|&gt;</span> </span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">last_fit</span>(vote_split)</span>
@@ -652,7 +652,7 @@ Prediction     Did not vote Voted
 <li><p>Use <code>fit_resamples()</code> to evaluate how this logistic regression model performs on the cross-validation resamples.</p></li>
 <li><p>Compute the metrics <code>roc_auc</code>, <code>sensitivity</code>, and <code>specificity</code>.</p></li>
 </ul>
-<div class="cell" data-layout-align="center" data-hash="VOTERS_cache/html/unnamed-chunk-17_aa29d70367c551fe54134fc8a897c8bd">
+<div class="cell" data-layout-align="center" data-hash="VOTERS_cache/html/unnamed-chunk-8_75458447fafb06fc6f13430637549239">
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># all together now</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1234</span>)</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>vote_folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(vote_train, <span class="at">v =</span> <span class="dv">10</span>)</span>
@@ -682,7 +682,7 @@ Columns: 5
 $ splits       &lt;list&gt; [&lt;vfold_split[4817 x 536 x 5353 x 42]&gt;], [&lt;vfold_split[4…
 $ id           &lt;chr&gt; "Fold01", "Fold02", "Fold03", "Fold04", "Fold05", "Fold06…
 $ .metrics     &lt;list&gt; [&lt;tbl_df[3 x 4]&gt;], [&lt;tbl_df[3 x 4]&gt;], [&lt;tbl_df[3 x 4]&gt;],…
-$ .notes       &lt;list&gt; [&lt;tbl_df[0 x 3]&gt;], [&lt;tbl_df[0 x 3]&gt;], [&lt;tbl_df[0 x 3]&gt;],…
+$ .notes       &lt;list&gt; [&lt;tbl_df[0 x 4]&gt;], [&lt;tbl_df[0 x 4]&gt;], [&lt;tbl_df[0 x 4]&gt;],…
 $ .predictions &lt;list&gt; [&lt;tbl_df[536 x 6]&gt;], [&lt;tbl_df[536 x 6]&gt;], [&lt;tbl_df[536 x…</code></pre>
 </div>
 </div>
@@ -693,7 +693,7 @@ $ .predictions &lt;list&gt; [&lt;tbl_df[536 x 6]&gt;], [&lt;tbl_df[536 x 6]&gt;]
 <li><p>Now fit the resamples <code>vote_folds</code> to the random forest model.</p></li>
 <li><p>Compute the metrics <code>roc_auc</code>, <code>sensitivity</code>, and <code>specificity</code>.</p></li>
 </ul>
-<div class="cell" data-layout-align="center" data-hash="VOTERS_cache/html/unnamed-chunk-18_9bb6e84a200a1735e2a9fd195919f597">
+<div class="cell" data-layout-align="center" data-hash="VOTERS_cache/html/unnamed-chunk-9_a0e55a54e470c77d92e5e4dd7da3505c">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># rf model</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>rf_spec <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>()  <span class="sc">|&gt;</span> </span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">set_engine</span>(<span class="st">"ranger"</span>)  <span class="sc">|&gt;</span> </span>
@@ -718,7 +718,7 @@ Columns: 5
 $ splits       &lt;list&gt; [&lt;vfold_split[4817 x 536 x 5353 x 42]&gt;], [&lt;vfold_split[4…
 $ id           &lt;chr&gt; "Fold01", "Fold02", "Fold03", "Fold04", "Fold05", "Fold06…
 $ .metrics     &lt;list&gt; [&lt;tbl_df[3 x 4]&gt;], [&lt;tbl_df[3 x 4]&gt;], [&lt;tbl_df[3 x 4]&gt;],…
-$ .notes       &lt;list&gt; [&lt;tbl_df[0 x 3]&gt;], [&lt;tbl_df[0 x 3]&gt;], [&lt;tbl_df[0 x 3]&gt;],…
+$ .notes       &lt;list&gt; [&lt;tbl_df[0 x 4]&gt;], [&lt;tbl_df[0 x 4]&gt;], [&lt;tbl_df[0 x 4]&gt;],…
 $ .predictions &lt;list&gt; [&lt;tbl_df[536 x 6]&gt;], [&lt;tbl_df[536 x 6]&gt;], [&lt;tbl_df[536 x…</code></pre>
 </div>
 </div>
@@ -734,20 +734,20 @@ $ .predictions &lt;list&gt; [&lt;tbl_df[536 x 6]&gt;], [&lt;tbl_df[536 x 6]&gt;]
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">collect_metrics</span>(glm_res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 6
-  .metric     .estimator  mean     n std_err .config             
-  &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;               
-1 roc_auc     binary     0.718    10 0.0148  Preprocessor1_Model1
-2 sensitivity binary     0.606    10 0.0201  Preprocessor1_Model1
-3 specificity binary     0.702    10 0.00999 Preprocessor1_Model1</code></pre>
+  .metric     .estimator  mean     n std_err .config        
+  &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;chr&gt;          
+1 roc_auc     binary     0.718    10 0.0148  pre0_mod0_post0
+2 sensitivity binary     0.606    10 0.0201  pre0_mod0_post0
+3 specificity binary     0.702    10 0.00999 pre0_mod0_post0</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">collect_metrics</span>(rf_res)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 6
-  .metric     .estimator  mean     n  std_err .config             
-  &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;chr&gt;               
-1 roc_auc     binary     0.715    10 0.0222   Preprocessor1_Model1
-2 sensitivity binary     0        10 0        Preprocessor1_Model1
-3 specificity binary     1.00     10 0.000195 Preprocessor1_Model1</code></pre>
+  .metric     .estimator  mean     n  std_err .config        
+  &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;chr&gt;          
+1 roc_auc     binary     0.705    10 0.0228   pre0_mod0_post0
+2 sensitivity binary     0        10 0        pre0_mod0_post0
+3 specificity binary     1.000    10 0.000195 pre0_mod0_post0</code></pre>
 </div>
 </div>
 </section>

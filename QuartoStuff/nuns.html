@@ -91,7 +91,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">Last modified on March 06, 2025 09:32:22 Eastern Standard Time</p>
+      <p class="date">Last modified on December 01, 2025 10:50:19 Eastern Standard Time</p>
     </div>
   </div>
   
@@ -424,7 +424,7 @@ $ rating   &lt;dbl&gt; 5, 2, 3, 1, 5, 1, 1, 2, 1, 4, 1, 1, 5, 1, 5, 3, 5, 2, 3, 
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="nuns_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="nuns_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -778,7 +778,7 @@ Computational engine: rpart </code></pre>
 </section>
 <section id="time-to-tune" class="level2">
 <h2 class="anchored" data-anchor-id="time-to-tune">Time to tune</h2>
-<div class="cell" data-layout-align="center" data-hash="nuns_cache/html/unnamed-chunk-21_4045ce6e86d6a9ec9e560a88b2f7cd9d">
+<div class="cell" data-layout-align="center" data-hash="nuns_cache/html/unnamed-chunk-20_6a470276cef2a0900f7682086fd7e6a1">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>sisters_res <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(sisters_other, <span class="at">v=</span> <span class="dv">6</span>, <span class="at">repeats =</span> <span class="dv">2</span>)</span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -795,18 +795,18 @@ Computational engine: rpart </code></pre>
 # A tibble: 12 × 5
    splits               id      id2   .metrics           .notes          
    &lt;list&gt;               &lt;chr&gt;   &lt;chr&gt; &lt;list&gt;             &lt;list&gt;          
- 1 &lt;split [12047/2410]&gt; Repeat1 Fold1 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 3]&gt;
- 2 &lt;split [12047/2410]&gt; Repeat1 Fold2 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 3]&gt;
- 3 &lt;split [12047/2410]&gt; Repeat1 Fold3 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 3]&gt;
- 4 &lt;split [12048/2409]&gt; Repeat1 Fold4 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 3]&gt;
- 5 &lt;split [12048/2409]&gt; Repeat1 Fold5 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 3]&gt;
- 6 &lt;split [12048/2409]&gt; Repeat1 Fold6 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 3]&gt;
- 7 &lt;split [12047/2410]&gt; Repeat2 Fold1 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 3]&gt;
- 8 &lt;split [12047/2410]&gt; Repeat2 Fold2 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 3]&gt;
- 9 &lt;split [12047/2410]&gt; Repeat2 Fold3 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 3]&gt;
-10 &lt;split [12048/2409]&gt; Repeat2 Fold4 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 3]&gt;
-11 &lt;split [12048/2409]&gt; Repeat2 Fold5 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 3]&gt;
-12 &lt;split [12048/2409]&gt; Repeat2 Fold6 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 3]&gt;</code></pre>
+ 1 &lt;split [12047/2410]&gt; Repeat1 Fold1 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 4]&gt;
+ 2 &lt;split [12047/2410]&gt; Repeat1 Fold2 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 4]&gt;
+ 3 &lt;split [12047/2410]&gt; Repeat1 Fold3 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 4]&gt;
+ 4 &lt;split [12048/2409]&gt; Repeat1 Fold4 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 4]&gt;
+ 5 &lt;split [12048/2409]&gt; Repeat1 Fold5 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 4]&gt;
+ 6 &lt;split [12048/2409]&gt; Repeat1 Fold6 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 4]&gt;
+ 7 &lt;split [12047/2410]&gt; Repeat2 Fold1 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 4]&gt;
+ 8 &lt;split [12047/2410]&gt; Repeat2 Fold2 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 4]&gt;
+ 9 &lt;split [12047/2410]&gt; Repeat2 Fold3 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 4]&gt;
+10 &lt;split [12048/2409]&gt; Repeat2 Fold4 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 4]&gt;
+11 &lt;split [12048/2409]&gt; Repeat2 Fold5 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 4]&gt;
+12 &lt;split [12048/2409]&gt; Repeat2 Fold6 &lt;tibble [250 × 7]&gt; &lt;tibble [0 × 4]&gt;</code></pre>
 </div>
 </div>
 </section>
@@ -861,7 +861,7 @@ Computational engine: rpart </code></pre>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="nuns_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="864"></p>
+<p><img src="nuns_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="864"></p>
 </figure>
 </div>
 </div>
@@ -885,7 +885,7 @@ Computational engine: rpart </code></pre>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="nuns_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="864"></p>
+<p><img src="nuns_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" width="864"></p>
 </figure>
 </div>
 </div>
@@ -906,9 +906,9 @@ Computational engine: rpart </code></pre>
 <span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>best_tree</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 4
-  cost_complexity tree_depth num_comp .config              
-            &lt;dbl&gt;      &lt;int&gt;    &lt;int&gt; &lt;chr&gt;                
-1        0.000562          4        5 Preprocessor2_Model09</code></pre>
+  cost_complexity tree_depth num_comp .config         
+            &lt;dbl&gt;      &lt;int&gt;    &lt;int&gt; &lt;chr&gt;           
+1        0.000562          4        5 pre2_mod17_post0</code></pre>
 </div>
 </div>
 <ul>
@@ -985,13 +985,13 @@ Computational engine: rpart </code></pre>
 <td style="text-align: left;">rmse</td>
 <td style="text-align: left;">standard</td>
 <td style="text-align: right;">13.9608510</td>
-<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">pre0_mod0_post0</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">rsq</td>
 <td style="text-align: left;">standard</td>
 <td style="text-align: right;">0.2341628</td>
-<td style="text-align: left;">Preprocessor1_Model1</td>
+<td style="text-align: left;">pre0_mod0_post0</td>
 </tr>
 </tbody>
 </table>
@@ -1071,7 +1071,7 @@ Computational engine: ranger </code></pre>
 <span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(ranger_recipe)  <span class="sc">|&gt;</span>  </span>
 <span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(ranger_spec) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-layout-align="center" data-hash="nuns_cache/html/unnamed-chunk-30_3465d5031cf60e805ab8bb423fdda438">
+<div class="cell" data-layout-align="center" data-hash="nuns_cache/html/unnamed-chunk-28_efcbc7394b52130dcc5c99b5528222fb">
 <div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">8675309</span>)</span>
 <span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>ranger_tune <span class="ot">&lt;-</span></span>
 <span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tune_grid</span>(ranger_workflow, <span class="at">resamples =</span> sisters_res, <span class="at">grid =</span> <span class="dv">25</span>)</span>
@@ -1082,18 +1082,18 @@ Computational engine: ranger </code></pre>
 # A tibble: 12 × 5
    splits               id      id2   .metrics          .notes          
    &lt;list&gt;               &lt;chr&gt;   &lt;chr&gt; &lt;list&gt;            &lt;list&gt;          
- 1 &lt;split [12047/2410]&gt; Repeat1 Fold1 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 2 &lt;split [12047/2410]&gt; Repeat1 Fold2 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 3 &lt;split [12047/2410]&gt; Repeat1 Fold3 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 4 &lt;split [12048/2409]&gt; Repeat1 Fold4 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 5 &lt;split [12048/2409]&gt; Repeat1 Fold5 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 6 &lt;split [12048/2409]&gt; Repeat1 Fold6 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 7 &lt;split [12047/2410]&gt; Repeat2 Fold1 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 8 &lt;split [12047/2410]&gt; Repeat2 Fold2 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 3]&gt;
- 9 &lt;split [12047/2410]&gt; Repeat2 Fold3 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 3]&gt;
-10 &lt;split [12048/2409]&gt; Repeat2 Fold4 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 3]&gt;
-11 &lt;split [12048/2409]&gt; Repeat2 Fold5 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 3]&gt;
-12 &lt;split [12048/2409]&gt; Repeat2 Fold6 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 3]&gt;</code></pre>
+ 1 &lt;split [12047/2410]&gt; Repeat1 Fold1 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 4]&gt;
+ 2 &lt;split [12047/2410]&gt; Repeat1 Fold2 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 4]&gt;
+ 3 &lt;split [12047/2410]&gt; Repeat1 Fold3 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 4]&gt;
+ 4 &lt;split [12048/2409]&gt; Repeat1 Fold4 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 4]&gt;
+ 5 &lt;split [12048/2409]&gt; Repeat1 Fold5 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 4]&gt;
+ 6 &lt;split [12048/2409]&gt; Repeat1 Fold6 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 4]&gt;
+ 7 &lt;split [12047/2410]&gt; Repeat2 Fold1 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 4]&gt;
+ 8 &lt;split [12047/2410]&gt; Repeat2 Fold2 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 4]&gt;
+ 9 &lt;split [12047/2410]&gt; Repeat2 Fold3 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 4]&gt;
+10 &lt;split [12048/2409]&gt; Repeat2 Fold4 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 4]&gt;
+11 &lt;split [12048/2409]&gt; Repeat2 Fold5 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 4]&gt;
+12 &lt;split [12048/2409]&gt; Repeat2 Fold6 &lt;tibble [50 × 6]&gt; &lt;tibble [0 × 4]&gt;</code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
@@ -1102,9 +1102,9 @@ Computational engine: ranger </code></pre>
 <span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>ranger_best</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
-   mtry min_n .config              
-  &lt;int&gt; &lt;int&gt; &lt;chr&gt;                
-1    43     2 Preprocessor1_Model17</code></pre>
+   mtry min_n .config         
+  &lt;int&gt; &lt;int&gt; &lt;chr&gt;           
+1    22     3 pre0_mod09_post0</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>final_rwf <span class="ot">&lt;-</span> ranger_workflow <span class="sc">|&gt;</span> </span>
 <span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">finalize_workflow</span>(ranger_best)</span>
@@ -1123,9 +1123,9 @@ Model: rand_forest()
 Random Forest Model Specification (regression)
 
 Main Arguments:
-  mtry = 43
+  mtry = 22
   trees = 500
-  min_n = 2
+  min_n = 3
 
 Engine-Specific Arguments:
   importance = impurity
@@ -1151,17 +1151,17 @@ Computational engine: ranger </code></pre>
 <tr class="odd">
 <td style="text-align: left;">rmse</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">4.8458167</td>
+<td style="text-align: right;">4.9937351</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">rsq</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">0.9560506</td>
+<td style="text-align: right;">0.9541711</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">mae</td>
 <td style="text-align: left;">standard</td>
-<td style="text-align: right;">3.9594774</td>
+<td style="text-align: right;">4.0733559</td>
 </tr>
 </tbody>
 </table>
@@ -1175,7 +1175,7 @@ Computational engine: ranger </code></pre>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="nuns_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="nuns_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
