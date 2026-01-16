@@ -22,7 +22,7 @@ library(ggplot2)
 **Introduction to Statistical Modeling**: Introduction to Statistical Modeling is a continuation of Introduction to Data Management and Visualization with an emphasis on statistical modeling and reproducible reporting using professional tools.  Hypothesis testing is introduced via resampling, and bootstrapping is used to introduce estimation.  Cross-validation is used to evaluate and select models that take into account the bias-variance trade-off.  Supervised learning techniques discussed will include but are not limited to linear regression, regression trees, classification trees, and random forests.
 :::
 
-:::{.callout-tip title="Course Objectives"}
+:::{.callout-tip  icon=false title="Course Objectives"}
 * Students will learn to use a reproducible work flow for all assignments.
 
 * Students will improve their technology expertise.
@@ -35,7 +35,7 @@ library(ggplot2)
 :::
 
 
-:::{.callout-important title="Course Texts"}
+:::{.callout-important icon=false title="Course Texts"}
 * [_Tidy Modeling with `R`: A Framework for Modeling in the Tidyverse_](https://www.tmwr.org/) by Max Kuhn and Julia Silge
 
 * [_Feature Engineering and Selection: A Practical Approach for Predictive Models_](https://bookdown.org/max/FES/) by Max Kuhn and Kjell Johnson
@@ -50,12 +50,12 @@ library(ggplot2)
 :::
 
 
-:::{.callout-important title="Tentative Schedule and Course Pacing Guide"}
-Tentative course assignments and due dates are maintained [here](https://StatisticalModeling.github.io/DataScience_2/CoursePacing/STT3860CoursePacingS2025.html).
+:::{.callout-important icon=false title="Tentative Schedule and Course Pacing Guide"}
+Tentative course assignments and due dates are maintained [here](https://StatisticalModeling.github.io/DataScience_2/CoursePacing/STT3860CoursePacingS2026.html).
 :::
 
 
-:::{.callout-note title="Course Grading & Assessment"}
+:::{.callout-note icon=false title="Course Grading & Assessment"}
 * 20% of the course grade will come from sixteen [DataCamp](https://www.datacamp.com/home) chapters.
 
 * 40% of the course grade will come from four Quarto reproductions of Data Camp courses.
@@ -67,7 +67,7 @@ Tentative course assignments and due dates are maintained [here](https://Statist
 This course conforms with all Appalachian State University policies with respect to face coverings, academic integrity, disability services, class attendance, and student engagement.  The details of the policies may be found at <https://academicaffairs.appstate.edu/resources/syllabi-policy-and-statement-information>.  Please pay particular attention to the [student engagement statement](https://academicaffairs.appstate.edu/sites/academicaffairs.appstate.edu/files/gerber_resolution_student_workload_removed_approved_statement_per_mmccoughy_and_sedwards.pdf).
 :::
 
-:::{.callout-tip title="Computers and Software"}
+:::{.callout-tip icon=false title="Computers and Software"}
 This course will use the RStudio/POSIT workbench server  (https://mathr.appstate.edu/) that has the programs listed below and more installed.
 
 * [R](https://cran.r-project.org) 
@@ -86,7 +86,7 @@ If you have problems with your Appstate Username or Password visit [IT Support S
 :::
 
 
-:::{.callout-warning title="Required Technology"}
+:::{.callout-warning icon=false title="Required Technology"}
 
 * [RStudio Server](https://mathr.math.appstate.edu/)
 
@@ -96,7 +96,7 @@ If you have problems with your Appstate Username or Password visit [IT Support S
 
 * [Github Classroom Repository](https://github.com/STT3860-S2025)
 
-:::{.callout-note title="Technology used in this class is free"}
+:::{.callout-note icon=false title="Technology used in this class is free"}
 Note: All technology used in the class is either open source (free) or will be accessible to students enrolled in the course for no cost.
 :::
 
@@ -104,12 +104,12 @@ Note: All technology used in the class is either open source (free) or will be a
 
 
 
-:::{.callout-warning title="Course Pacing Guide/Assignments"}
+:::{.callout-warning icon=false title="Course Pacing Guide/Assignments"}
 The [Course Pacing Guide](https://statisticalmodeling.github.io/DataScience_2/CoursePacing/STT3860CoursePacingS2025.html) has all course assignments and due dates.
 :::
 
 
-:::{.callout-tip title="Faculty and Student Responsibilities"}
+:::{.callout-tip icon=false title="Faculty and Student Responsibilities"}
 * It is my (faculty) responsibility to explain and present the material you need to master for this course.  A detailed description of everything you need to do starting with day one to the Final Exam is provided in the course pacing guide which is available on day one of the course.
 
 * It is your (student) responsibility to learn the material and to seek help if you do not understand the material.  
@@ -119,10 +119,10 @@ Appalachian students are expected to make intensive engagement with courses thei
 :::
 
 
-:::{.callout-warning title="How To Do Well In This Course"}
+:::{.callout-warning icon=false title="How To Do Well In This Course"}
 The only way to learn statistics is to **DO** statistics, which includes using statistical software. Reading the textbook, learning the language, and practicing exercises using real data are critical to your learning and success. Class activities and assessments have been structured with these principles in mind.  You should read assigned textbook content and read/watch supplemental materials prior to coming to class.  When you read the assigned material, you should complete the problems (not just read about them) on your paper and computer. It will be easier to participate if you acquire some familiarity with the vocabulary and methods before we start to discuss and use them. You must “speak the language” (both statistics and R) to demonstrate your knowledge effectively.  If you come to class and have difficulty following the discussion, you should make sure you have read all of the assigned material and then go back and re-read the assigned material a second time.  Reading a technical book is not the same as a novel.  Most people, your instructor included, must read a technical section at least twice before understanding a topic.  If you are still having challenges after reading the assigned material twice and working the out the material on paper and the computer, it is your responsibility to seek help.  I am here to help and will be glad to assist you in your learning process.  Please make an appointment to visit with me on my [calendar](https://calendar.google.com/calendar/u/0/appointments/schedules/AcZssZ28eqvF16W8IOcBxYKxXymw--a6FO5q6P31carVkzQXWt3n6lBeZ-dc7pgdGtw7kMPCvsyk3D3m). 
 :::
 
-:::{.callout-warning title="How To Get Unstuck"}
+:::{.callout-warning icon=false title="How To Get Unstuck"}
 Well constructed questions will elicit answers more rapidly than poorly constructed questions.  This [video](https://www.youtube.com/watch?v=ZFaWxxzouCY&list=PLjTlxb-wKvXNSDfcKPFH2gzHGyjpeCZmJ&index=3) provides some background on asking questions.  This stackoverflow thread details how to create a [minimal R reproducible example](http://stackoverflow.com/questions/5963269/how-to-make-a-great-r-reproducible-example/5963610#5963610). Please read [How To Ask Questions The Smart Way](http://www.catb.org/~esr/faqs/smart-questions.html) by Eric Raymond and Rick Moen and heed their advice.
 :::
