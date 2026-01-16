@@ -105,7 +105,7 @@ Note: All technology used in the class is either open source (free) or will be a
 
 
 :::{.callout-warning icon=false title="Course Pacing Guide/Assignments"}
-The [Course Pacing Guide](https://statisticalmodeling.github.io/DataScience_2/CoursePacing/STT3860CoursePacingS2025.html) has all course assignments and due dates.
+The [Course Pacing Guide](https://statisticalmodeling.github.io/DataScience_2/CoursePacing/STT3860CoursePacingS2026.html) has all course assignments and due dates.
 :::
 
 
