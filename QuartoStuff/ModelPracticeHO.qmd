@@ -1,0 +1,163 @@
+---
+title: "In Class Practice"
+---
+
+```{r include=FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA, fig.align = "center", fig.width = 4, fig.height = 4, message = FALSE, warning = FALSE)
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+library(knitr)
+```
+
+The log10 transformations you created in DataCamp have been made for you and are saved in `house_prices`.
+
+```{r}
+library(moderndive) # loaded for data set house_prices
+head(house_prices)
+house_prices <- house_prices  |>  
+  mutate(log10_price = log10(price)) |> 
+  relocate(log10_price, .after = price)
+knitr::kable(head(house_prices))
+```
+
+* Use `ggplot2` to create a scatterplot of `log10_price` versus `bedrooms` and superimpose the best-fitting regression line.
+
+```{r}
+# Your code here
+
+```
+
+* Regress `log10_price` onto `bedrooms` using `lm()` and store the result in an object named `model_lm`.  Use the wrapper function `get_regression_table()` to show the output of `model_lm`.
+
+```{r}
+# Your code here
+
+```
+
+* Use indexing to store the estimate of the intercept in `b0` and the estimate of the slope in `b1`.
+
+```{r}
+# Your code here
+
+```
+
+* Use `geom_abline()` to add a layer to your previous scatterplot to verify the least squares line depicted from `geom_smooth()`.
+
+```{r}
+# Your code here
+
+```
+
+* There is one house that has 33 bedrooms.  While this could truly be the case, given the number of bedrooms in the other houses, this is probably a typo.  Remove the typo using `filter()` and recreate the plot.
+
+```{r}
+# Your code here
+
+```
+
+```{r}
+house_prices  <- house_prices |> 
+  mutate(log10_size = log10(sqft_living)) |> 
+  relocate(log10_size, .after = sqft_living)
+knitr::kable(head(house_prices))
+```
+
+* Fit a linear model with `log10_price` as a function of `log10_size` and `bedrooms`.  Store your model in an object named `model_price_2`
+
+```{r}
+# Your code here
+
+```
+
+::: {.callout-note}
+Accounting for the size of the house reverses the relationship of the number of bedrooms and price from positive to negative!
+:::
+
+* Use `model_price_2` to predict the price of a house that has 1000 square feet of living space and 3 bedrooms.  Report your prediction in both log10 dollars as well as dollars.
+
+```{r}
+# Your code here
+
+```
+
+* Fit a multiple regression of `log10_price` using `log10_size` and `waterfront` as the predictors. Recall that the data frame that contains these variables is `house_prices`.  Store the model in an object named `model_price_4`.  Show the regression table.
+
+```{r}
+# Your code here
+
+```
+
+* Create a scatterplot of `log10_price` versus ``log10_size` and superimpose lines from `model_price_4`
+
+```{r}
+# Your code here
+
+
+# or using moderndive wrapper geom_parallel_slopes()
+
+```
+
+## Sneak preview into using `tidymodels`
+
+We will use several functions from the `tidymodels` framework to perform a similar comparison between a model that uses `log10_size` and `waterfront` to predict `log10_price` versus a model that uses `log10_size` and `bedrooms` to predict `log10_price`.
+
+* Create a 50/50 split of the data set `house_prices` stratifying on `log10_price`.  Use the functions `initial_split()`, `training()`, and ``testing()` to create the **training** and **testing** data sets. Name the data sets `house_train` and `house_test` respectively.  Use a seed of 42 when creating the split.
+
+```{r}
+# Your code here
+library(tidymodels)
+# Create a split object
+set.seed(42)
+# Create a 50/50 split stratafied on price
+
+# Train and Test
+
+```
+
+
+* Create a linear model specification named `lm_model`.
+
+```{r}
+# Create lm specification
+lm_model <- linear_reg() |> 
+  set_engine("lm") |> 
+  set_mode("regression")
+```
+
+* Use the `lm_model` specification to fit a model where `log10_price` is regressed onto `log10_size` and `bedrooms`.  Store the result in an object named `lm_fit_2`. Use the `lm_model` specification to fit a model where `log10_price` is regressed onto `log10_size` and `waterfront`.  Store the result in an object named `lm_fit_4`. 
+
+```{r}
+
+```
+
+* Get predictions for `log10_price` using the `house_test` data for `lm_fit2`.
+
+```{r}
+# Your code here
+
+```
+
+* Get predictions for `log10_price` using the `house_test` data for `lm_fit4`.
+
+```{r}
+# Your code here
+
+
+```
+
+Compute the RMSE for `lm_fit2` and `lm_fit4` using the `rmse()` function from `yardstick`.
+
+```{r}
+# Your code here
+library(yardstick)
+
+```
+
+This time we will use the function `last_fit()` to cut down on the code which will use the split object `house_split` to fit the model using the **train** set and evaluate the model with the **test** set.
+
+```{r}
+# Your code here
+
+```
+
