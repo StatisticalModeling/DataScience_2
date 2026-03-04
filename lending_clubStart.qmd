@@ -12,6 +12,75 @@ library(modeldata)
 head(lending_club)
 ```
 
+```{r}
+library(tidymodels)
+library(modeldata)
+
+# 1. Load Data
+data("lending_club")
+
+# 2. Create Train/Test Sets
+set.seed(123)
+lc_split <- initial_split(lending_club, prop = 0.80, strata = funded_amnt)
+lc_train <- training(lc_split)
+lc_test  <- testing(lc_split)
+
+# 3. Create a Recipe (Preprocessing)
+# We handle categorical variables and remove zero-variance predictors
+lc_rec <- recipe(funded_amnt ~ ., data = lc_train) %>%
+  step_novel(all_nominal_predictors()) %>%
+  step_dummy(all_nominal_predictors()) %>%
+  step_zv(all_predictors()) %>%
+  step_normalize(all_predictors())
+
+# 4. Define 10-fold Cross-Validation
+lc_folds <- vfold_cv(lc_train, v = 10, strata = funded_amnt)
+
+---
+
+### Model Specifications (Parsnip)
+
+# Model 1: Linear Regression (Penalty tuning)
+lm_spec <- linear_reg(penalty = tune(), mixture = 1) %>%
+  set_engine("glmnet") %>%
+  set_mode("regression")
+
+# Model 2: Random Forest (Mtry tuning)
+rf_spec <- rand_forest(mtry = tune(), trees = 500, min_n = tune()) %>%
+  set_engine("ranger") %>%
+  set_mode("regression")
+
+# Model 3: XGBoost (Learning rate and Tree depth tuning)
+xgb_spec <- boost_tree(tree_depth = tune(), learn_rate = tune(), loss_reduction = tune()) %>%
+  set_engine("xgboost") %>%
+  set_mode("regression")
+
+---
+
+### Workflow and Tuning (Example for Linear Regression)
+
+# Create Workflow
+lc_workflow <- workflow() %>%
+  add_recipe(lc_rec) %>%
+  add_model(lm_spec)
+
+# Tune Model
+tuning_results <- tune_grid(
+  lc_workflow,
+  resamples = lc_folds,
+  grid = 10
+)
+
+# 5. Finalize Model and Evaluate on Test Set
+best_params <- select_best(tuning_results, metric = "rmse")
+final_wf <- finalize_workflow(lc_workflow, best_params)
+final_fit <- last_fit(final_wf, lc_split)
+
+# 6. Report Test RMSE and R-squared
+collect_metrics(final_fit)
+```
+
+
 ## Create `train` and `test` sets.
 
 ```{r}
