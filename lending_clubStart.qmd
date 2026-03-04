@@ -36,7 +36,6 @@ lc_rec <- recipe(funded_amnt ~ ., data = lc_train) %>%
 # 4. Define 10-fold Cross-Validation
 lc_folds <- vfold_cv(lc_train, v = 10, strata = funded_amnt)
 
----
 
 ### Model Specifications (Parsnip)
 
@@ -54,8 +53,6 @@ rf_spec <- rand_forest(mtry = tune(), trees = 500, min_n = tune()) %>%
 xgb_spec <- boost_tree(tree_depth = tune(), learn_rate = tune(), loss_reduction = tune()) %>%
   set_engine("xgboost") %>%
   set_mode("regression")
-
----
 
 ### Workflow and Tuning (Example for Linear Regression)
 
@@ -106,7 +103,7 @@ lc_rec <- recipe(funded_amnt ~ ., data = lc_train) |>
 ## Define 10-fold Cross-Validation
 
 ```{r}
-lc_folds <- vfold_cv(lc_train, v = 10, strata = funded_amnt)
+lc_folds <- vfold_cv(lc_train, v = 3, strata = funded_amnt)
 ```
 
 ## Create Models
@@ -147,7 +144,7 @@ lc_models <- workflow_set(
 # Run tuning across the grid for all models
 # Note: 'grid = 10' tries 10 random combinations per model
 grid_results <- lc_models |>
-  workflow_map("tune_grid", resamples = lc_folds, grid = 10, metrics = metric_set(rmse, rsq))
+  workflow_map("tune_grid", resamples = lc_folds, grid = 3, metrics = metric_set(rmse, rsq))
 ```
 
 ## Finalize Model and Evaluate on Test Set
