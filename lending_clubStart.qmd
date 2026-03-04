@@ -1,0 +1,105 @@
+---
+title: "Lending Club"
+format: html
+editor: source
+---
+
+## Loading the data
+
+```{r}
+library(tidymodels)
+library(modeldata)
+head(lending_club)
+```
+
+## Create `train` and `test` sets.
+
+```{r}
+set.seed(123)
+lc_split <- initial_split(lending_club, 
+                          prop = 0.80, 
+                          strata = funded_amnt)
+lc_train <- training(lc_split)
+lc_test  <- testing(lc_split)
+```
+
+## Create a Recipe (Preprocessing)
+
+```{r}
+# Handle categorical variables and remove zero-variance predictors
+lc_rec <- recipe(funded_amnt ~ ., data = lc_train) |>
+  step_novel(all_nominal_predictors()) |>
+  step_dummy(all_nominal_predictors()) |>
+  step_zv(all_predictors()) |>
+  step_normalize(all_predictors())
+```
+
+## Define 10-fold Cross-Validation
+
+```{r}
+lc_folds <- vfold_cv(lc_train, v = 10, strata = funded_amnt)
+```
+
+## Create Models
+
+```{r}
+# Model 1: Elastic Net Regression
+lm_spec <- linear_reg(penalty = tune(), mixture = tune()) |>
+  set_engine("glmnet") |>
+  set_mode("regression")
+
+# Model 2: Random Forest
+rf_spec <- rand_forest(mtry = tune(), trees = 500, min_n = tune()) |>
+  set_engine("ranger") |>
+  set_mode("regression")
+
+# Model 3: XGBoost
+xgb_spec <- boost_tree(tree_depth = tune(), learn_rate = tune(), 
+                       loss_reduction = tune(), stop_iter = 10) |>
+  set_engine("xgboost") |>
+  set_mode("regression")
+```
+
+## Workflow and Tuning
+
+`workflow_set`: Instead of writing separate tuning loops, this bundles your Linear, RF, and XGBoost models together to run them simultaneously.
+
+**Hyperparameter Grids**: It uses `grid = 10` to automatically pick 10 sensible candidate values for parameters like `mtry`, `learn_rate`, and `penalty`.
+
+Evaluation: It compares them using the 10-fold cross-validation required by Project One Directions and outputs the final metrics.
+
+```{r}
+# Combine all models into a set
+lc_models <- workflow_set(
+  preproc = list(simple = lc_rec),
+  models = list(linear = lm_spec, rf = rf_spec, xgboost = xgb_spec)
+)
+
+# Run tuning across the grid for all models
+# Note: 'grid = 10' tries 10 random combinations per model
+grid_results <- lc_models |>
+  workflow_map("tune_grid", resamples = lc_folds, grid = 10, metrics = metric_set(rmse, rsq))
+```
+
+## Finalize Model and Evaluate on Test Set
+
+```{r}
+autoplot(grid_results) # Visualizes RMSE vs R-squared across models
+best_result <- grid_results |> 
+  extract_workflow_set_result("simple_xgboost") |> 
+  select_best(metric = "rmse")
+
+# Final Fit to the Test Set
+final_fit <- grid_results |>
+  extract_workflow("simple_xgboost") |>
+  finalize_workflow(best_result) |>
+  last_fit(split = lc_split)
+
+# Display final Test RMSE and R-squared
+collect_metrics(final_fit)
+```
+
+
+
+
+
